@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.bingo.study.common.swagger.config.SpringFoxSwaggerConfig

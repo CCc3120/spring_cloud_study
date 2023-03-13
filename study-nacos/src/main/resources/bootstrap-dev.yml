@@ -1,0 +1,13 @@
+nacos:
+  host: 8.129.145.182
+#  host: 121.43.63.109
+  port: 8848
+#  port: 19713
+  namespace: d8ceeb54-0d8c-4c89-864a-a7c898bd8488
+#  namespace: dev
+#  group: dev
+  group: spring-cloud-study
+
+#test:
+#  name: zhangsan
+#  order: A1001

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.bingo</groupId>
+        <artifactId>spring_cloud_study</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>study-common</artifactId>
+
+    <description>
+        study-common公共模块
+    </description>
+
+    <modules>
+        <module>study-common-component</module>
+        <module>study-common-core</module>
+        <module>study-common-datasource</module>
+        <module>study-common-es</module>
+        <module>study-common-mongo</module>
+        <module>study-common-redis</module>
+        <module>study-common-swagger</module>
+    </modules>
+
+    <packaging>pom</packaging>
+
+</project>

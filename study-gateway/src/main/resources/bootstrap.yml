@@ -1,0 +1,34 @@
+server:
+  port: 8080
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: study-gateway
+
+  cloud:
+    loadbalancer:
+      nacos:
+        enabled: true
+    nacos:
+      discovery:
+        server-addr: ${nacos.host}:${nacos.port}
+        namespace: ${nacos.namespace}
+        group: ${nacos.group}
+      config:
+        server-addr: ${nacos.host}:${nacos.port}
+        namespace: ${nacos.namespace}
+        group: ${nacos.group}
+        file-extension: yaml
+        prefix: ${spring.application.name}
+#        共享配置，例如多个服务需要使用同一个数据库配置，则可以配置使用共享的数据库配置
+#        shared-configs:
+#          - ${spring.application.name}-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+    gateway:
+      loadbalancer:
+        use404: true
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true

@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.bingo.study.common.es.config.ElasticSearchConfig,\
+com.bingo.study.common.es.service.ElasticSearchServiceImpl
