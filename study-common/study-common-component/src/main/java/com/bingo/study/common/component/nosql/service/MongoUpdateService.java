@@ -31,7 +31,7 @@ public class MongoUpdateService implements NoSqlService {
         NoSqlWrapper wrapper = NoSqlUtil.build(model);
 
         Query query = new Query(Criteria.where("_id").is(wrapper.getModel().getFdId()));
-        if (mongoTemplate.count(query, wrapper.getModel().getClass()) > 0) {
+        if (mongoTemplate.count(query, wrapper.getCollection()) > 0) {
             Update update = new Update();
 
             NoSqlUtil.buildUpdate(update, wrapper);

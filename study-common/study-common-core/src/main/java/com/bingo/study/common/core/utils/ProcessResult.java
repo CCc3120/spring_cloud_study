@@ -1,5 +1,7 @@
 package com.bingo.study.common.core.utils;
 
+import lombok.Getter;
+
 /**
  * 业务处理结果返回，可包含成功返回的数据和失败返回的提示
  *
@@ -8,12 +10,12 @@ package com.bingo.study.common.core.utils;
 public class ProcessResult<T> {
 
     private Boolean isSuccess;
-
+    @Getter
     private T result;
-
+    @Getter
     private String message;
 
-    public ProcessResult(Boolean isSuccess) {
+    private ProcessResult(Boolean isSuccess) {
         this.isSuccess = isSuccess;
     }
 

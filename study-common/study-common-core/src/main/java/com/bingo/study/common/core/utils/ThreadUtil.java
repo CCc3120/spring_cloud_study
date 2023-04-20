@@ -60,8 +60,4 @@ public class ThreadUtil {
     public static <T> ProcessResult<String> groupHandle(List<T> list, ThreadHandle handle, int batchSize) {
         return groupHandle(list, handle, batchSize, DEFAULT_THREAD_POOL);
     }
-
-    public static void main(String[] args) {
-        new cn.hutool.core.thread.ThreadUtil();
-    }
 }

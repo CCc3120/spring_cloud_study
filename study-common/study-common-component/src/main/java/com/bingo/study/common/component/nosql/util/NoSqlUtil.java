@@ -1,6 +1,7 @@
 package com.bingo.study.common.component.nosql.util;
 
 import com.bingo.study.common.component.nosql.annotation.NoSql;
+import com.bingo.study.common.component.nosql.exception.NoSqlException;
 import com.bingo.study.common.component.nosql.wrapper.NoSqlWrapper;
 import com.bingo.study.common.core.interfaces.IBaseModel;
 import com.bingo.study.common.core.utils.ObjectUtil;
@@ -29,7 +30,7 @@ public class NoSqlUtil {
         NoSql noSql = AnnotationUtils.findAnnotation(model.getClass(), NoSql.class);
         if (noSql == null) {
             log.warn("{} Class not found @NoSql, please check it", model.getClass().getTypeName());
-            throw new RuntimeException();
+            throw new NoSqlException(model.getClass());
         }
 
         wrapper.setIndex(noSql.index());
@@ -42,9 +43,9 @@ public class NoSqlUtil {
             String collection;
             if (document != null) {
                 collection = StringUtil.isNull(document.collection()) ?
-                        StringUtil.firstToLowerCase(model.getClass().getSimpleName()) : document.collection();
+                        StringUtil.humpToUnderline(model.getClass().getSimpleName()) : document.collection();
             } else {
-                collection = StringUtil.firstToLowerCase(model.getClass().getSimpleName());
+                collection = StringUtil.humpToUnderline(model.getClass().getSimpleName());
             }
             wrapper.setCollection(collection);
         }
