@@ -24,7 +24,7 @@ public class RedisKeyUtil {
     public static String APP_PREFIX;
 
     static {
-        APP_PREFIX = SpringUtil.getValue("spring.application.name", String.class, "");
+        APP_PREFIX = SpringUtil.getValue("spring.application.name", String.class, "DEFAULT");
         if (StringUtil.isNull(APP_PREFIX)) {
             log.warn("application name is null");
         }
@@ -38,12 +38,36 @@ public class RedisKeyUtil {
     /**
      * 获取缓存key名称
      *
-     * @param prefix key前缀
-     * @param name   缓存key名称
+     * @param prefix    key前缀
+     * @param name      缓存key名称
+     * @param isForever 是否永久
      * @return
      */
     public static String getCacheKey(String prefix, String name, boolean isForever) {
         return getCacheKey(prefix, name, isForever, false);
+    }
+
+    /**
+     * 获取缓存key名称
+     *
+     * @param name         缓存key名称
+     * @param hasAppPrefix 是否带应用前缀
+     * @return
+     */
+    public static String getCacheKey(String name, boolean hasAppPrefix) {
+        return getCacheKey(null, name, false, hasAppPrefix);
+    }
+
+    /**
+     * 获取缓存key名称
+     *
+     * @param name         缓存key名称
+     * @param isForever    是否永久
+     * @param hasAppPrefix 是否带应用前缀
+     * @return
+     */
+    public static String getCacheKey(String name, boolean isForever, boolean hasAppPrefix) {
+        return getCacheKey(null, name, isForever, hasAppPrefix);
     }
 
     /**
@@ -62,7 +86,11 @@ public class RedisKeyUtil {
         if (isForever) {
             redisKey.append(CACHE_NAME_FOREVER).append(DECOLLATOR);
         }
-        redisKey.append(prefix).append(DECOLLATOR).append(name);
+
+        if (!StringUtil.isNull(prefix)) {
+            redisKey.append(prefix).append(DECOLLATOR);
+        }
+        redisKey.append(name);
         return redisKey.toString();
     }
 }

@@ -20,14 +20,14 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>com.bingo</groupId>-->
-<!--            <artifactId>study-common-core</artifactId>-->
-<!--        </dependency>-->
-
         <dependency>
             <groupId>com.bingo</groupId>
             <artifactId>study-common-component</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.bingo</groupId>
+            <artifactId>study-common-core</artifactId>
         </dependency>
     </dependencies>
 

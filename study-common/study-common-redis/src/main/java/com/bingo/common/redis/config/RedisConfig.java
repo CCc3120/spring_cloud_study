@@ -27,7 +27,8 @@ import java.time.Duration;
  */
 @EnableCaching // 开启缓存注解
 @Configuration
-//org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration优先该类中的RedisTemplate的bean，bean中就不会在此初始化了@ConditionalOnMissingBean(name = "redisTemplate")
+// org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration优先该类中的RedisTemplate的bean，
+// bean中就不会在此初始化了@ConditionalOnMissingBean(name = "redisTemplate")
 @AutoConfigureBefore(RedisAutoConfiguration.class)
 public class RedisConfig extends CachingConfigurerSupport {
 

@@ -3,13 +3,15 @@ package com.bingo.study.common.component.nosql.config;
 import com.bingo.study.common.component.nosql.service.EsUpdateService;
 import com.bingo.study.common.component.nosql.service.MongoUpdateService;
 import com.bingo.study.common.es.service.ElasticSearchService;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import com.bingo.study.common.mongo.config.MongoDBConfig;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 /**
+ * 通过自动装配实现
+ *
  * @Author h-bingo
  * @Date 2023-01-12 16:52
  * @Version 1.0
@@ -26,7 +28,7 @@ public class NoSqlAutoConfig {
     }
 
     @Bean
-    @ConditionalOnBean({MongoTemplate.class})
+    @ConditionalOnClass({MongoDBConfig.class})
     public MongoUpdateService mongoUpdateService(MongoTemplate mongoTemplate) {
         MongoUpdateService mongoUpdateService = new MongoUpdateService();
         mongoUpdateService.setMongoTemplate(mongoTemplate);

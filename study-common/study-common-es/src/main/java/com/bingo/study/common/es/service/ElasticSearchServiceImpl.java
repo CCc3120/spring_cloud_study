@@ -215,7 +215,7 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
 
         // 分页信息
         long from = (model.getPageNum() - 1) * model.getPageSize();
-        searchSourceBuilder.from((int) from).size((int) model.getPageSize());
+        searchSourceBuilder.from((int) from).size(model.getPageSize().intValue());
 
         // 排序
         if (StringUtil.isNotNull(model.getOrderProp())) {

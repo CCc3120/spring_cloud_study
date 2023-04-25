@@ -17,7 +17,8 @@ import java.util.Date;
  */
 @Getter
 @Setter
-@NoSql(index = ElasticSearchConstant.INDEX_TEACHER, type = "teacher", collection = "teacher", updateType = UpdateType.NOT_NULL)
+@NoSql(index = ElasticSearchConstant.INDEX_TEACHER, type = "teacher", collection = "teacher", updateType =
+        UpdateType.NOT_NULL)
 public class Teacher extends BaseModel {
 
     private String fdName;
@@ -31,4 +32,8 @@ public class Teacher extends BaseModel {
     private String fdIdCard;
 
     private String fdSex;
+
+    private Date fdCreateTime;
+
+    private Date fdUpdateTime;
 }

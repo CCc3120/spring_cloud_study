@@ -1,6 +1,10 @@
 package com.bingo.study.common.core.utils;
 
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.ListableBeanFactory;
+import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
@@ -12,15 +16,36 @@ import org.springframework.stereotype.Component;
  * @date 2022-04-28 16:23
  */
 @Component
-public class SpringUtil implements ApplicationContextAware {
+@ConditionalOnMissingBean(SpringUtil.class)
+public class SpringUtil implements ApplicationContextAware, BeanFactoryPostProcessor {
 
+    /**
+     * "@PostConstruct"注解标记的类中，由于ApplicationContext还未加载，导致空指针<br>
+     * 因此实现BeanFactoryPostProcessor注入ConfigurableListableBeanFactory实现bean的操作
+     */
+    private static ConfigurableListableBeanFactory beanFactory;
+    /**
+     * Spring应用上下文环境
+     */
     private static ApplicationContext applicationContext;
 
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        if (SpringUtil.applicationContext == null) {
-            SpringUtil.applicationContext = applicationContext;
-        }
+    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+        SpringUtil.beanFactory = beanFactory;
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) {
+        SpringUtil.applicationContext = applicationContext;
+    }
+
+    /**
+     * 获取{@link ListableBeanFactory}，可能为{@link ConfigurableListableBeanFactory} 或 {@link ApplicationContextAware}
+     *
+     * @return {@link ListableBeanFactory}
+     */
+    public static ListableBeanFactory getBeanFactory() {
+        return null == beanFactory ? applicationContext : beanFactory;
     }
 
     /**
@@ -42,7 +67,7 @@ public class SpringUtil implements ApplicationContextAware {
      * @return Object 一个以所给名字注册的bean的实例
      */
     public static <T> T getBean(String name) throws BeansException {
-        return (T) applicationContext.getBean(name);
+        return (T) getBeanFactory().getBean(name);
     }
 
     /**
@@ -52,7 +77,7 @@ public class SpringUtil implements ApplicationContextAware {
      * @return
      */
     public static <T> T getBean(Class<T> clz) throws BeansException {
-        return (T) applicationContext.getBean(clz);
+        return (T) getBeanFactory().getBean(clz);
     }
 
     /**
@@ -63,6 +88,6 @@ public class SpringUtil implements ApplicationContextAware {
      * @return
      */
     public static <T> T getBean(String name, Class<T> clazz) {
-        return applicationContext.getBean(name, clazz);
+        return getBeanFactory().getBean(name, clazz);
     }
 }

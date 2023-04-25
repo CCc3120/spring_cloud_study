@@ -1,15 +1,16 @@
 package com.bingo.test.demo;
 
+import cn.hutool.extra.spring.SpringUtil;
+import com.bingo.study.common.component.lock.LockType;
+import com.bingo.study.common.component.lock.annotation.RedisLock;
 import com.bingo.study.common.component.nosql.service.AbstractNoSqlUpdate;
 import com.bingo.study.common.component.nosql.service.EsUpdateService;
 import com.bingo.study.common.component.nosql.service.MongoUpdateService;
 import com.bingo.study.common.component.nosql.util.NoSqlUtil;
 import com.bingo.study.common.component.nosql.wrapper.NoSqlWrapper;
 import com.bingo.study.common.core.utils.JsonMapper;
-import com.bingo.study.common.core.utils.SpringUtil;
 import com.bingo.study.common.es.service.ElasticSearchService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
@@ -29,15 +30,22 @@ public class TeacherService extends AbstractNoSqlUpdate {
     @Autowired
     private ElasticSearchService elasticSearchService;
 
-    @Autowired
-    private EsUpdateService esUpdateService;
+    // @Autowired
+    // private EsUpdateService esUpdateService;
+    //
+    // @Autowired(required = false)
+    // private MongoUpdateService mongoUpdateService;
+    //
+    // @Autowired
+    // private SpringUtil springUtil;
 
-    @Autowired(required = false)
-    private MongoUpdateService mongoUpdateService;
 
-    @Autowired
-    private SpringUtil springUtil;
-
+    @RedisLock(hasId = true, lockType = LockType.SYNC, waitTime = 4000, leaseTime = 2000, key = "testLock")
+    public String testLock(String fdId, Teacher teacher) throws InterruptedException {
+        log.info(Thread.currentThread().getName() + "===执行中");
+        Thread.sleep(3000);
+        return "testLock";
+    }
 
     public void insert(Teacher teacher) {
 
@@ -70,10 +78,11 @@ public class TeacherService extends AbstractNoSqlUpdate {
     @Override
     public void afterPropertiesSet() throws Exception {
         this.addNoSqlService(SpringUtil.getBean(EsUpdateService.class));
-        try {
-            this.addNoSqlService(SpringUtil.getBean(MongoUpdateService.class));
-        } catch (BeansException e) {
-            System.out.println("MongoUpdateService异常");
-        }
+        this.addNoSqlService(SpringUtil.getBean(MongoUpdateService.class));
+        // try {
+        //     this.addNoSqlService(SpringUtil.getBean(MongoUpdateService.class));
+        // } catch (BeansException e) {
+        //     System.out.println("MongoUpdateService异常");
+        // }
     }
 }

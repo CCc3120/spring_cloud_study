@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @ClassName BaseSearchModel
@@ -26,6 +27,9 @@ public class BaseSearchModel implements Serializable {
     @ApiModelProperty("搜索字段")
     private String searchProp;
 
+    @ApiModelProperty("搜索字段列表（需手动设置，若搜索字段为空，则取该字段）")
+    private List<String> searchPropList;
+
     @ApiModelProperty("排序类型 升序asc 降序desc")
     private String orderType = ASC;
 
@@ -33,8 +37,8 @@ public class BaseSearchModel implements Serializable {
     private String orderProp;
 
     @ApiModelProperty("页大小")
-    private long pageSize = PAGE_SIZE;
+    private Long pageSize;
 
     @ApiModelProperty("页码")
-    private long pageNum = PAGE_NUM;
+    private Long pageNum;
 }

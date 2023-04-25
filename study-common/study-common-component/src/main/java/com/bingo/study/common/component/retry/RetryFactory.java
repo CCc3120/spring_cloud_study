@@ -3,6 +3,8 @@ package com.bingo.study.common.component.retry;
 import com.bingo.study.common.core.utils.JsonMapper;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.function.Supplier;
+
 /**
  * 重试机制
  */
@@ -12,41 +14,44 @@ public class RetryFactory {
     /**
      * 默认重试次数
      */
-    public static final int DAFAULT_TIME = 3;
+    public static final int DEFAULT_TIME = 3;
 
     /**
      * 任务重试
      *
-     * @param retryService
+     * @param supplier
      * @return
-     * @throws Throwable
      */
-    public static Object retry(RetryService retryService) throws Throwable {
-        return retry(retryService, DAFAULT_TIME);
+    public static <T> T retry(Supplier<T> supplier) {
+        return retry(supplier, DEFAULT_TIME);
     }
 
-
     /**
      * 任务重试
      *
-     * @param retryService
+     * @param supplier
      * @param times
      * @return
-     * @throws Throwable
      */
-    public static Object retry(RetryService retryService, int times) throws Throwable {
+    public static <T> T retry(Supplier<T> supplier, int times) {
         try {
             log.info("任务重试剩余次数：{}", times);
-            Object exec = retryService.exec();
-            log.info("任务执行结果：{}", JsonMapper.getInstance().toJsonString(exec));
-            return exec;
-        } catch (Throwable e) {
+            T t = supplier.get();
+            log.info("任务执行结果：{}", JsonMapper.getInstance().toJsonString(t));
+            return t;
+        } catch (Exception e) {
             if (times > 1) {
-                return retry(retryService, --times);
+                return retry(supplier, --times);
             } else {
                 log.info("任务重试执行失败");
                 throw e;
             }
         }
+    }
+
+    public static void main(String[] args) {
+        String retry = retry(() -> {
+            throw new RuntimeException();
+        });
     }
 }

@@ -18,15 +18,18 @@
         <dependency>
             <groupId>org.elasticsearch.client</groupId>
             <artifactId>elasticsearch-rest-high-level-client</artifactId>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.elasticsearch</groupId>
             <artifactId>elasticsearch</artifactId>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>com.bingo</groupId>
             <artifactId>study-common-core</artifactId>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

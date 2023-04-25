@@ -59,7 +59,7 @@ public abstract class BaseModel implements IBaseModel, Serializable {
                 }
                 try {
                     rtnVal.append(methodList[i].getName().substring(3), methodList[i].invoke(this));
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
             }
             return rtnVal.toString().replaceAll("@[^\\[]+\\[\\r\\n", "[\r\n");

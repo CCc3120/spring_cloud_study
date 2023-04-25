@@ -1,41 +1,42 @@
 package com.bingo.study.common.core.page;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
-import com.bingo.study.common.core.utils.ObjectUtil;
-
-import java.util.HashMap;
+import java.io.Serializable;
 
 /**
  * @author bingo
  * @date 2022-03-24 10:34
  */
-public class AjaxResult extends HashMap<String, Object> {
+@Data
+@ApiModel("响应结果")
+public class AjaxResult<T> implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    @ApiModelProperty("状态码")
+    private String code;
 
-    /**
-     * 状态码
-     */
-    private static final String CODE_TAG = "code";
+    @ApiModelProperty("和code绑定的枚举提示")
+    private String message;
 
-    /**
-     * 返回内容
-     */
-    private static final String MSG_TAG = "message";
+    @ApiModelProperty("错误提示")
+    private String errMsg;
 
-    /**
-     * 数据对象
-     */
-    private static final String DATA_TAG = "data";
+    @ApiModelProperty("响应数据")
+    private T data;
 
     protected AjaxResult() {
     }
 
-    protected AjaxResult(String code, String message, Object data) {
-        super.put(CODE_TAG, code);
-        super.put(MSG_TAG, message);
-        if (!ObjectUtil.equals(data, null)) {
-            super.put(DATA_TAG, data);
-        }
+    protected AjaxResult(String code, String message, String errMsg, T data) {
+        this.code = code;
+        this.message = message;
+        this.errMsg = errMsg;
+        this.data = data;
+    }
+
+    public boolean checkIsSuccess() {
+        return HttpStatusEnum.SUCCESS.getCode().equals(this.code);
     }
 }
