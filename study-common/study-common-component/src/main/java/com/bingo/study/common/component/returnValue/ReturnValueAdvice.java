@@ -6,6 +6,7 @@ import com.bingo.study.common.component.returnValue.handler.DefaultValueHandler;
 import com.bingo.study.common.component.returnValue.handler.ReturnValueHandler;
 import com.bingo.study.common.core.page.AjaxResult;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.core.MethodParameter;
@@ -33,7 +34,7 @@ import java.util.List;
 @Slf4j
 @ControllerAdvice
 @ConditionalOnMissingBean(ReturnValueAdvice.class)
-public class ReturnValueAdvice implements ResponseBodyAdvice<AjaxResult> {
+public class ReturnValueAdvice implements ResponseBodyAdvice<AjaxResult>, InitializingBean {
 
     @Autowired
     private DefaultValueHandler defaultValueHandler;
@@ -129,5 +130,10 @@ public class ReturnValueAdvice implements ResponseBodyAdvice<AjaxResult> {
             annotation = AnnotationUtils.findAnnotation(method.getDeclaringClass(), ReturnField.class);
         }
         return annotation;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        log.info("系统全局返回值处理功能已开启，如需忽略功能请在接口添加: @ReturnField(enable = false)");
     }
 }

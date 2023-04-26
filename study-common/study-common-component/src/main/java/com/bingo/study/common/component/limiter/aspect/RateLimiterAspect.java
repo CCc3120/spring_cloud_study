@@ -22,6 +22,7 @@ import org.redisson.api.RRateLimiter;
 import org.redisson.api.RateIntervalUnit;
 import org.redisson.api.RateType;
 import org.redisson.api.RedissonClient;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.data.redis.core.script.RedisScript;
@@ -40,7 +41,7 @@ import java.util.stream.Collectors;
 @Aspect
 @Component
 @ConditionalOnMissingBean(RateLimiterAspect.class)
-public class RateLimiterAspect {
+public class RateLimiterAspect implements InitializingBean {
 
     private static final String LIMITER_KEY = "rateLimiter:";
 
@@ -154,5 +155,10 @@ public class RateLimiterAspect {
         }
         res.append(")");
         return res.toString();
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        log.info("接口限流功能已开启，请在需要限流接口添加: @RateLimiter");
     }
 }

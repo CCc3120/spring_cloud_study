@@ -17,6 +17,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.stereotype.Component;
@@ -39,7 +40,7 @@ import java.util.stream.Collectors;
 @Aspect
 @Component
 @ConditionalOnMissingBean(RedisLockAspect.class)
-public class RedisLockAspect {
+public class RedisLockAspect implements InitializingBean {
 
     private static final String REDIS_KEY_PREFIX = "redisLock:";
 
@@ -202,5 +203,10 @@ public class RedisLockAspect {
         }
         res.append(")");
         return res.toString();
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        log.info("Redis分布式锁功能已开启，请在加锁方法添加: @RedisLock");
     }
 }

@@ -8,6 +8,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
@@ -26,7 +27,7 @@ import java.lang.reflect.Method;
 @Aspect
 @Component
 @ConditionalOnMissingBean(DeprecatedInterfaceSeeAspect.class)
-public class DeprecatedInterfaceSeeAspect {
+public class DeprecatedInterfaceSeeAspect implements InitializingBean {
 
     private static final String DEPRECATED_INTERFACE_TIP = "接口已失效，请使用：%s";
 
@@ -64,5 +65,10 @@ public class DeprecatedInterfaceSeeAspect {
             }
         }
         return proceed;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        log.info("接口删除提示功能已开启，请在即将删除的接口添加: @DeprecatedInterfaceSee");
     }
 }
