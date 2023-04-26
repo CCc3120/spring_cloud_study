@@ -3,10 +3,14 @@ package com.bingo.test.demo;
 import cn.hutool.extra.spring.SpringUtil;
 import com.bingo.common.redis.service.RedisService;
 import com.bingo.study.common.component.deprecatedInterface.annotation.DeprecatedInterfaceSee;
+import com.bingo.study.common.component.limiter.LimitRealize;
+import com.bingo.study.common.component.limiter.LimitType;
+import com.bingo.study.common.component.limiter.annotation.RateLimiter;
 import com.bingo.study.common.component.nosql.service.EsUpdateService;
 import com.bingo.study.common.component.returnValue.annotation.ReturnField;
 import com.bingo.study.common.core.page.AjaxResult;
 import com.bingo.study.common.core.page.AjaxResultFactory;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,6 +32,19 @@ public class TestController {
 
     @Autowired
     private TeacherService teacherService;
+
+    @Autowired
+    private RedissonClient redissonClient;
+
+    @RateLimiter(count = 5, time = 10, limitType = LimitType.DEFAULT, limitRealize = LimitRealize.TOKEN_BUCKET)
+    @ReturnField(enable = false)
+    @RequestMapping(path = "/testLimiter", method = RequestMethod.GET)
+    public AjaxResult<String> testLimiter() {
+
+
+
+        return AjaxResultFactory.success();
+    }
 
     @ReturnField(enable = false)
     @RequestMapping(path = "/testLock", method = RequestMethod.GET)

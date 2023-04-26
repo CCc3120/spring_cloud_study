@@ -15,6 +15,7 @@ import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -39,8 +40,8 @@ public class RedisConfig extends CachingConfigurerSupport {
      * @return
      */
     @Bean
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
-        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+    public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(connectionFactory);
 
         // 使用Jackson2JsonRedisSerializer来序列化和反序列化redis的value值（默认使用JDK的序列化方式）
@@ -73,7 +74,7 @@ public class RedisConfig extends CachingConfigurerSupport {
      * @return
      */
     @Bean
-    public CacheManager cacheManager(RedisTemplate<String, Object> redisTemplate) {
+    public CacheManager cacheManager(RedisTemplate<Object, Object> redisTemplate) {
         // 采用redis缓存配置 自定义缓存数据序列化方式和有效期限
         RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
                 // 使用和redisTemplate一致的对key进行数据类型转换
@@ -90,5 +91,50 @@ public class RedisConfig extends CachingConfigurerSupport {
                 // 配置同步修改或删除 put/evict
                 .transactionAware()
                 .build();
+    }
+
+    @Bean(name = "rateLimiterScript")
+    public DefaultRedisScript<Long> rateLimiterScript() {
+        DefaultRedisScript<Long> redisScript = new DefaultRedisScript<>();
+        redisScript.setScriptText(limitScriptText());
+        redisScript.setResultType(Long.class);
+        return redisScript;
+    }
+
+    /**
+     * 限流脚本
+     */
+    private String limitScriptText() {
+        return "local key = KEYS[1]\n" +
+                "local count = tonumber(ARGV[1])\n" +
+                "local time = tonumber(ARGV[2])\n" +
+                "local current = redis.call('get', key);\n" +
+                "if current and tonumber(current) > count then\n" +
+                "    return tonumber(current);\n" +
+                "end\n" +
+                "current = redis.call('incr', key)\n" +
+                "if tonumber(current) == 1 then\n" +
+                "    redis.call('expire', key, time)\n" +
+                "end\n" +
+                "return tonumber(current);";
+    }
+
+    private String slidingWindowText() {
+        return "local key = KEYS[1]\n" +
+                "local currentTime = tonumber(ARGV[1])\n" +
+                "local ttl = tonumber(ARGV[2])\n" +
+                "local windowTime = tonumber(ARGV[3]) --\n" +
+                "local limitCount = tonumber(ARGV[4])\n" +
+                "local value = tonumber(ARGV[5])\n" +
+                "redis.call('zremrangebyscore', key, 0, currentTime - windowTime)\n" +
+                "local currentNum = tonumber(redis.call('zcard', key))\n" +
+                "local next = currentNum + 1\n" +
+                "if next > limitCount then\n" +
+                "return 0;\n" +
+                "else\n" +
+                "redis.call(\"zadd\", key, currentTime, value)\n" +
+                "redis.call(\"expire\", key, ttl)\n" +
+                "return next\n" +
+                "end";
     }
 }

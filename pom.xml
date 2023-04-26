@@ -68,6 +68,11 @@
                 <scope>import</scope>
             </dependency>
 
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
+            </dependency>
+
             <!--mysql-->
             <dependency>
                 <groupId>mysql</groupId>

@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 public class RedisService {
 
     @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    private RedisTemplate<Object, Object> redisTemplate;
 
     /**
      * 判断 key 是否存在
@@ -28,6 +28,16 @@ public class RedisService {
      */
     public Boolean exists(String key) {
         return redisTemplate.hasKey(key);
+    }
+
+    /**
+     * 获取过期时间
+     *
+     * @param key 键
+     * @return
+     */
+    public Long expire(String key) {
+        return redisTemplate.getExpire(key);
     }
 
     /**
@@ -112,27 +122,31 @@ public class RedisService {
      * @param collection 多个对象
      * @return
      */
-    public long deleteObject(Collection collection) {
+    public long deleteObject(Collection<Object> collection) {
         return redisTemplate.delete(collection);
     }
 
-    public ValueOperations<String, Object> opsForValue() {
+    public RedisTemplate<Object, Object> redisTemplate() {
+        return redisTemplate;
+    }
+
+    public ValueOperations<Object, Object> opsForValue() {
         return redisTemplate.opsForValue();
     }
 
-    public HashOperations<String, String, Object> opsForHash() {
+    public HashOperations<Object, Object, Object> opsForHash() {
         return redisTemplate.opsForHash();
     }
 
-    public ListOperations<String, Object> opsForList() {
+    public ListOperations<Object, Object> opsForList() {
         return redisTemplate.opsForList();
     }
 
-    public SetOperations<String, Object> opsForSet() {
+    public SetOperations<Object, Object> opsForSet() {
         return redisTemplate.opsForSet();
     }
 
-    public ZSetOperations<String, Object> opsForZSet() {
+    public ZSetOperations<Object, Object> opsForZSet() {
         return redisTemplate.opsForZSet();
     }
 }
