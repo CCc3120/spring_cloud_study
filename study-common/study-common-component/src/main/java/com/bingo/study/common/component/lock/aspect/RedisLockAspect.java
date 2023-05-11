@@ -65,12 +65,13 @@ public class RedisLockAspect implements InitializingBean {
         log.debug("RedisLock Key: {}", key);
         RLock rLock = redissonClient.getLock(key);
         if (lock.lockType() == LockType.MUTEX) {
-            if (rLock.isLocked()) {
-                log.warn("当前方法已被加锁[{}]", getMethodIntactName(joinPoint));
-                return null;
-            }
-            rLock.lock(lock.leaseTime(), TimeUnit.MILLISECONDS);
             try {
+                if (rLock.isLocked()) {
+                    log.warn("当前方法已被加锁[{}]", getMethodIntactName(joinPoint));
+                    return null;
+                }
+
+                rLock.lock(lock.leaseTime(), TimeUnit.MILLISECONDS);
                 // 执行方法
                 return callBack.doWork();
             } finally {
@@ -79,12 +80,13 @@ public class RedisLockAspect implements InitializingBean {
                 }
             }
         } else if (lock.lockType() == LockType.AUTO_RENEWAL_MUTEX) {
-            if (rLock.isLocked()) {
-                log.warn("当前方法已被加锁[{}]", getMethodIntactName(joinPoint));
-                return null;
-            }
-            rLock.lock();
             try {
+                if (rLock.isLocked()) {
+                    log.warn("当前方法已被加锁[{}]", getMethodIntactName(joinPoint));
+                    return null;
+                }
+
+                rLock.lock();
                 // 执行方法
                 return callBack.doWork();
             } finally {
@@ -93,34 +95,36 @@ public class RedisLockAspect implements InitializingBean {
                 }
             }
         } else if (lock.lockType() == LockType.SYNC) {
-            if (rLock.tryLock(lock.waitTime(), lock.leaseTime(), TimeUnit.MILLISECONDS)) {
-                try {
+            try {
+                boolean tryLock = rLock.tryLock(lock.waitTime(), lock.leaseTime(), TimeUnit.MILLISECONDS);
+                if (tryLock) {
                     // 执行方法
                     return callBack.doWork();
-                } finally {
-                    if (rLock.isLocked() && rLock.isHeldByCurrentThread()) {
-                        rLock.unlock();
-                    }
+                } else {
+                    String methodName = getMethodIntactName(joinPoint);
+                    log.error("RedisLock获取锁失败[{}]", methodName);
+                    throw new RedisLockException(String.format("RedisLock获取锁失败[%s]", methodName));
                 }
-            } else {
-                String methodName = getMethodIntactName(joinPoint);
-                log.error("RedisLock获取锁失败[{}]", methodName);
-                throw new RedisLockException(String.format("RedisLock获取锁失败[%s]", methodName));
+            } finally {
+                if (rLock.isLocked() && rLock.isHeldByCurrentThread()) {
+                    rLock.unlock();
+                }
             }
         } else if (lock.lockType() == LockType.AUTO_RENEWAL_SYNC) {
-            if (rLock.tryLock(lock.waitTime(), TimeUnit.MILLISECONDS)) {
-                try {
+            try {
+                boolean tryLock = rLock.tryLock(lock.waitTime(), TimeUnit.MILLISECONDS);
+                if (tryLock) {
                     // 执行方法
                     return callBack.doWork();
-                } finally {
-                    if (rLock.isLocked() && rLock.isHeldByCurrentThread()) {
-                        rLock.unlock();
-                    }
+                } else {
+                    String methodName = getMethodIntactName(joinPoint);
+                    log.error("RedisLock获取锁失败[{}]", methodName);
+                    throw new RedisLockException(String.format("RedisLock获取锁失败[%s]", methodName));
                 }
-            } else {
-                String methodName = getMethodIntactName(joinPoint);
-                log.error("RedisLock获取锁失败[{}]", methodName);
-                throw new RedisLockException(String.format("RedisLock获取锁失败[%s]", methodName));
+            } finally {
+                if (rLock.isLocked() && rLock.isHeldByCurrentThread()) {
+                    rLock.unlock();
+                }
             }
         }
         String methodName = getMethodIntactName(joinPoint);
