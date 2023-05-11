@@ -40,6 +40,12 @@
             <artifactId>druid-spring-boot-starter</artifactId>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.bingo</groupId>
+            <artifactId>study-common-core</artifactId>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
 </project>

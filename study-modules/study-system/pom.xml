@@ -20,10 +20,10 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>com.alibaba.cloud</groupId>-->
-<!--            <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.alibaba.cloud</groupId>-->
+        <!--            <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>-->
+        <!--        </dependency>-->
 
         <dependency>
             <groupId>com.bingo</groupId>
@@ -33,6 +33,16 @@
         <dependency>
             <groupId>com.bingo</groupId>
             <artifactId>study-common-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.bingo</groupId>
+            <artifactId>study-common-datasource</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
         </dependency>
     </dependencies>
 

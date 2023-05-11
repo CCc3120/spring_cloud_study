@@ -5,7 +5,6 @@ import com.bingo.study.common.core.page.PageResult;
 import com.bingo.study.common.core.utils.JsonMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,7 +17,6 @@ import java.util.Map;
  * @Version 1.0
  */
 @Slf4j
-@Component
 @ConditionalOnMissingBean(PageValueHandler.class)
 public class PageValueHandler implements ReturnValueHandler {
     @Override

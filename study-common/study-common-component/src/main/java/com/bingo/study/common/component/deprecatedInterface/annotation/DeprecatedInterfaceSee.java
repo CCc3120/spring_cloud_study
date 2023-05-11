@@ -20,14 +20,14 @@ public @interface DeprecatedInterfaceSee {
     String value() default "";
 
     /**
-     * FeignClient类
+     * 新方法类
      *
      * @return
      */
-    Class<?> feign() default DeprecatedInterfaceSee.class;
+    Class<?> clazz() default DeprecatedInterfaceSee.class;
 
     /**
-     * FeignClient类方法
+     * 新方法名
      *
      * @return
      */

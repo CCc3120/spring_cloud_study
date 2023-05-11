@@ -17,9 +17,9 @@ public class MemoryRedisCache implements Cache {
 
     public static final String CACHE_TYPE = "MemoryRedisCache";
 
-    private String namespace = "MemoryRedisCache";
+    private final String namespace = "MemoryRedisCache";
 
-    private static Map<String, Object> memoryCache = new ConcurrentHashMap<>();
+    private static final Map<String, Object> memoryCache = new ConcurrentHashMap<>();
     private Type type;
 
     private RedisService redisService;

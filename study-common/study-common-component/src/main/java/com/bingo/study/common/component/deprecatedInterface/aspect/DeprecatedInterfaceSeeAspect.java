@@ -11,7 +11,6 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.lang.reflect.Method;
@@ -25,7 +24,6 @@ import java.lang.reflect.Method;
  */
 @Slf4j
 @Aspect
-@Component
 @ConditionalOnMissingBean(DeprecatedInterfaceSeeAspect.class)
 public class DeprecatedInterfaceSeeAspect implements InitializingBean {
 
@@ -39,32 +37,56 @@ public class DeprecatedInterfaceSeeAspect implements InitializingBean {
     public Object doAround(ProceedingJoinPoint joinPoint, DeprecatedInterfaceSee deprecatedInterfaceSee)
             throws Throwable {
         Object proceed = joinPoint.proceed();
-        if (proceed instanceof AjaxResult) {
-            AjaxResult ajaxResult = (AjaxResult) proceed;
-            if (ajaxResult.checkIsSuccess()) {
-                if (StringUtils.isNotBlank(deprecatedInterfaceSee.value())) {
-                    ajaxResult.setMessage(String.format(DEPRECATED_INTERFACE_TIP, deprecatedInterfaceSee.value()));
-                } else if (deprecatedInterfaceSee.feign() != DeprecatedInterfaceSee.class
-                        && StringUtils.isNotBlank(deprecatedInterfaceSee.method())) {
-                    Method[] methods = deprecatedInterfaceSee.feign().getMethods();
-                    for (Method method : methods) {
-                        if (method.getName().equalsIgnoreCase(deprecatedInterfaceSee.method())) {
-                            RequestMapping requestMapping = method.getAnnotation(RequestMapping.class);
-                            FeignClient feignClient = deprecatedInterfaceSee.feign().getAnnotation(FeignClient.class);
-                            if (feignClient != null) {
-                                ajaxResult.setMessage(String.format(DEPRECATED_INTERFACE_TIP,
-                                        feignClient.path() + requestMapping.value()[0]));
-                            } else {
-                                ajaxResult.setMessage(String.format(DEPRECATED_INTERFACE_TIP,
-                                        requestMapping.value()[0]));
-                            }
-                            return proceed;
-                        }
+        if (!(proceed instanceof AjaxResult)) {
+            return proceed;
+        }
+
+        AjaxResult<?> ajaxResult = (AjaxResult<?>) proceed;
+        if (!ajaxResult.checkIsSuccess()) {
+            return proceed;
+        }
+
+        if (StringUtils.isNotBlank(deprecatedInterfaceSee.value())) {
+            ajaxResult.setMessage(String.format(DEPRECATED_INTERFACE_TIP, deprecatedInterfaceSee.value()));
+            return proceed;
+        } else if (deprecatedInterfaceSee.clazz() != DeprecatedInterfaceSee.class
+                && StringUtils.isNotBlank(deprecatedInterfaceSee.method())) {
+            Method[] methods = deprecatedInterfaceSee.clazz().getMethods();
+            for (Method method : methods) {
+                if (method.getName().equalsIgnoreCase(deprecatedInterfaceSee.method())) {
+                    RequestMapping requestMapping = method.getAnnotation(RequestMapping.class);
+                    FeignClient feignClient = deprecatedInterfaceSee.clazz().getAnnotation(FeignClient.class);
+
+                    if (feignClient != null) {
+                        ajaxResult.setMessage(String.format(DEPRECATED_INTERFACE_TIP,
+                                feignClient.path() + getRequestMappingValue(requestMapping)));
+                        return proceed;
                     }
+
+                    RequestMapping typeMapping = deprecatedInterfaceSee.clazz().getAnnotation(RequestMapping.class);
+                    if (typeMapping != null) {
+                        ajaxResult.setMessage(String.format(DEPRECATED_INTERFACE_TIP,
+                                getRequestMappingValue(typeMapping) + getRequestMappingValue(requestMapping)));
+                        return proceed;
+                    }
+
+                    ajaxResult.setMessage(String.format(DEPRECATED_INTERFACE_TIP, requestMapping.value()[0]));
+                    return proceed;
                 }
             }
         }
         return proceed;
+    }
+
+    private String getRequestMappingValue(RequestMapping requestMapping) {
+        if (requestMapping.value().length > 0) {
+            return requestMapping.value()[0];
+        }
+
+        if (requestMapping.path().length > 0) {
+            return requestMapping.path()[0];
+        }
+        return "";
     }
 
     @Override

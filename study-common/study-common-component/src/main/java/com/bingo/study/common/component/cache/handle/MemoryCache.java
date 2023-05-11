@@ -14,7 +14,7 @@ public class MemoryCache implements Cache {
 
     public static final String CACHE_TYPE = "MemoryCache";
 
-    private static Map<String, Object> memoryCache = new ConcurrentHashMap<>();
+    private static final Map<String, Object> memoryCache = new ConcurrentHashMap<>();
 
     private Type type;
 

@@ -20,7 +20,6 @@ import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -38,7 +37,6 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Aspect
-@Component
 @ConditionalOnMissingBean(RedisLockAspect.class)
 public class RedisLockAspect implements InitializingBean {
 

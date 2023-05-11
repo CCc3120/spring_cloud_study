@@ -193,6 +193,12 @@
                 <artifactId>study-common-swagger</artifactId>
                 <version>${study.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.bingo</groupId>
+                <artifactId>study-common-datasource</artifactId>
+                <version>${study.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

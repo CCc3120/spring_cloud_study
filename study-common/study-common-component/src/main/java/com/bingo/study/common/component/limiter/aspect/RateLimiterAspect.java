@@ -26,10 +26,12 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.data.redis.core.script.RedisScript;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -39,7 +41,6 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Aspect
-@Component
 @ConditionalOnMissingBean(RateLimiterAspect.class)
 public class RateLimiterAspect implements InitializingBean {
 

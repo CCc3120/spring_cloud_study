@@ -3,7 +3,6 @@ package com.bingo.study.common.component.returnValue.handler;
 import com.bingo.study.common.core.utils.JsonMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +13,6 @@ import java.util.Map;
  * @Version 1.0
  */
 @Slf4j
-@Component
 @ConditionalOnMissingBean(DefaultValueHandler.class)
 public class DefaultValueHandler implements ReturnValueHandler {
     @Override

@@ -6,6 +6,10 @@ import com.bingo.study.common.component.limiter.LimitType;
 import java.lang.annotation.*;
 
 /**
+ * 默认每 60 秒每 ip 访问 100 次
+ * <p>
+ * 默认采用redission令牌桶的方式
+ *
  * @Author h-bingo
  * @Date 2023-04-26 09:26
  * @Version 1.0

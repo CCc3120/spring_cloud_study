@@ -12,7 +12,7 @@ public class RedisCache implements Cache {
 
     public static final String CACHE_TYPE = "RedisCache";
 
-    private String namespace = "RedisCache";
+    private final String namespace = "RedisCache";
 
     private Type type;
 

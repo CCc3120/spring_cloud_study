@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.core.NamedThreadLocal;
-import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -26,13 +25,12 @@ import java.util.Map;
  * @Date 2023-04-26 14:47
  * @Version 1.0
  */
-@Component
 @ConditionalOnMissingBean(HttpLogHandlerInterceptor.class)
 public class HttpLogHandlerInterceptor implements HandlerInterceptor, InitializingBean {
 
     private static final Logger log = LoggerFactory.getLogger("[ === Request LOG === ]");
 
-    private static NamedThreadLocal<Long> COST_TIME = new NamedThreadLocal<>("HttpLogHandlerInterceptor");
+    private static final NamedThreadLocal<Long> COST_TIME = new NamedThreadLocal<>("HttpLogHandlerInterceptor");
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
