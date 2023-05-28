@@ -28,6 +28,7 @@ public class RedisKeyUtil {
         if (StringUtil.isNull(APP_PREFIX)) {
             log.warn("application name is null");
         }
+        APP_PREFIX = StringUtil.join(APP_PREFIX.split("-"), ":");
     }
 
     /**

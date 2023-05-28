@@ -112,7 +112,7 @@ public class StringUtil {
         if (separator == null) {
             separator = "";
         }
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         for (int i = 0; i < array.length; ++i) {
             if (i > 0) {
                 buf.append(separator);
@@ -143,7 +143,7 @@ public class StringUtil {
             return ((first == null) ? "" : first.toString());
         }
 
-        StringBuffer buf = new StringBuffer(256);
+        StringBuilder buf = new StringBuilder(256);
         if (first != null) {
             buf.append(first);
         }

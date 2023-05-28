@@ -10,6 +10,7 @@ import com.bingo.study.common.core.enums.DescEnum;
 public enum LimitType implements DescEnum {
 
     DEFAULT("全局默认"),
+    USER("根据用户限流"),
     IP("根据IP限流"),
 
 

@@ -1,20 +1,18 @@
 package com.bingo.study.common.component.lock.aspect;
 
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ArrayUtil;
 import com.bingo.common.redis.util.RedisKeyUtil;
 import com.bingo.study.common.component.lock.LockType;
 import com.bingo.study.common.component.lock.RedisLockCallBack;
 import com.bingo.study.common.component.lock.annotation.RedisLock;
 import com.bingo.study.common.component.lock.exception.RedisLockException;
-import com.bingo.study.common.core.utils.JsonMapper;
+import com.bingo.study.common.core.utils.AspectUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.aspectj.lang.reflect.MethodSignature;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.InitializingBean;
@@ -22,11 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * RedisLockAspect 实现
@@ -67,7 +61,7 @@ public class RedisLockAspect implements InitializingBean {
         if (lock.lockType() == LockType.MUTEX) {
             try {
                 if (rLock.isLocked()) {
-                    log.warn("当前方法已被加锁[{}]", getMethodIntactName(joinPoint));
+                    log.info("当前方法已被加锁[{}]", AspectUtil.getMethodIntactName(joinPoint));
                     return null;
                 }
 
@@ -82,7 +76,7 @@ public class RedisLockAspect implements InitializingBean {
         } else if (lock.lockType() == LockType.AUTO_RENEWAL_MUTEX) {
             try {
                 if (rLock.isLocked()) {
-                    log.warn("当前方法已被加锁[{}]", getMethodIntactName(joinPoint));
+                    log.info("当前方法已被加锁[{}]", AspectUtil.getMethodIntactName(joinPoint));
                     return null;
                 }
 
@@ -101,7 +95,7 @@ public class RedisLockAspect implements InitializingBean {
                     // 执行方法
                     return callBack.doWork();
                 } else {
-                    String methodName = getMethodIntactName(joinPoint);
+                    String methodName = AspectUtil.getMethodIntactName(joinPoint);
                     log.error("RedisLock获取锁失败[{}]", methodName);
                     throw new RedisLockException(String.format("RedisLock获取锁失败[%s]", methodName));
                 }
@@ -117,7 +111,7 @@ public class RedisLockAspect implements InitializingBean {
                     // 执行方法
                     return callBack.doWork();
                 } else {
-                    String methodName = getMethodIntactName(joinPoint);
+                    String methodName = AspectUtil.getMethodIntactName(joinPoint);
                     log.error("RedisLock获取锁失败[{}]", methodName);
                     throw new RedisLockException(String.format("RedisLock获取锁失败[%s]", methodName));
                 }
@@ -127,8 +121,8 @@ public class RedisLockAspect implements InitializingBean {
                 }
             }
         }
-        String methodName = getMethodIntactName(joinPoint);
-        log.error("RedisLock锁类型异常[{}]", methodName);
+        String methodName = AspectUtil.getMethodIntactName(joinPoint);
+        log.warn("RedisLock锁类型异常[{}]", methodName);
         throw new RedisLockException(String.format("RedisLock锁类型异常[%s]", methodName));
     }
 
@@ -142,13 +136,9 @@ public class RedisLockAspect implements InitializingBean {
     private void checkParam(ProceedingJoinPoint joinPoint, Object[] args, RedisLock lock) {
         if (lock.hasId()) {
             if (ArrayUtil.isEmpty(args) || args[0] == null) {
-                String methodName = getMethodIntactName(joinPoint);
-                Map<String, Object> map = new HashMap<>();
-                map.put("reason", "方法第一个参数缺失");
-                map.put("args", args);
-                map.put("method", methodName);
-                log.error("方法第一个参数缺失，method = {}，args = {}", methodName, Arrays.toString(args));
-                throw new RedisLockException(JsonMapper.getInstance().toJsonString(map));
+                String methodName = AspectUtil.getMethodIntactName(joinPoint);
+                log.error("加锁对象id参数缺失，method = {}，args = {}", methodName, Arrays.toString(args));
+                throw new RedisLockException("加锁对象id参数缺失");
             }
         }
     }
@@ -166,11 +156,11 @@ public class RedisLockAspect implements InitializingBean {
      * @Return java.lang.String
      * @Date 2023-04-25 10:54
      */
-    private String getLockKey(ProceedingJoinPoint joinPoint, Object[] args, RedisLock lock) throws NoSuchMethodException {
+    private String getLockKey(ProceedingJoinPoint joinPoint, Object[] args, RedisLock lock) {
         StringBuilder key = new StringBuilder(REDIS_KEY_PREFIX);
 
         if (StringUtils.isBlank(lock.key())) {
-            key.append(getMethodIntactName(joinPoint));
+            key.append(AspectUtil.getMethodIntactName(joinPoint));
         } else {
             key.append(lock.key());
         }
@@ -180,31 +170,6 @@ public class RedisLockAspect implements InitializingBean {
         }
 
         return RedisKeyUtil.getCacheKey(key.toString(), false, true);
-    }
-
-    /**
-     * 获取完整的方法名
-     * <p>
-     * 例如本方法：com.bingo.study.common.component.lock.aspect.RedisLockAspect.getMethodIntactName(ProceedingJoinPoint)
-     *
-     * @Param [joinPoint]
-     * @Return java.lang.String
-     * @Date 2023-04-25 14:13
-     */
-    private String getMethodIntactName(ProceedingJoinPoint joinPoint) {
-        String className = joinPoint.getTarget().getClass().getTypeName();
-        MethodSignature ms = (MethodSignature) joinPoint.getSignature();
-        String methodName = ms.getName();
-        Class<?>[] parameterTypes = ms.getParameterTypes();
-        List<String> collect = Arrays.stream(parameterTypes).map(Class::getSimpleName).collect(Collectors.toList());
-
-        StringBuilder res = new StringBuilder(className);
-        res.append(".").append(methodName).append("(");
-        if (!CollectionUtil.isEmpty(collect)) {
-            res.append(StringUtils.join(collect, ","));
-        }
-        res.append(")");
-        return res.toString();
     }
 
     @Override

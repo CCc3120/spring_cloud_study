@@ -1,23 +1,22 @@
 package com.bingo.study.common.component.limiter.aspect;
 
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.SystemClock;
 import cn.hutool.core.util.RandomUtil;
 import com.bingo.common.redis.service.RedisService;
 import com.bingo.common.redis.util.RedisKeyUtil;
 import com.bingo.study.common.component.limiter.LimitRealize;
 import com.bingo.study.common.component.limiter.LimitType;
+import com.bingo.study.common.component.limiter.LimitUserFactory;
 import com.bingo.study.common.component.limiter.annotation.RateLimiter;
 import com.bingo.study.common.component.limiter.exception.RateLimiterException;
+import com.bingo.study.common.core.utils.AspectUtil;
 import com.bingo.study.common.core.utils.IPUtil;
 import com.bingo.study.common.core.utils.ServletUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
-import org.aspectj.lang.reflect.MethodSignature;
 import org.redisson.api.RRateLimiter;
 import org.redisson.api.RateIntervalUnit;
 import org.redisson.api.RateType;
@@ -28,11 +27,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.data.redis.core.script.RedisScript;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @Author h-bingo
@@ -55,6 +51,9 @@ public class RateLimiterAspect implements InitializingBean {
     @Autowired
     private RedissonClient redissonClient;
 
+    @Autowired(required = false)
+    private LimitUserFactory limitUserFactory;
+
     @Pointcut("@annotation(com.bingo.study.common.component.limiter.annotation.RateLimiter)")
     public void rateLimiter() {
     }
@@ -72,18 +71,14 @@ public class RateLimiterAspect implements InitializingBean {
 
     private void tokenBucket(JoinPoint point, RateLimiter limiter) {
         String redisLimiterKey = getRedisLimiterKey(point, limiter);
-        // Long expire = redisService.expire(redisLimiterKey);
-        // if (expire == null || expire == -1) {
-        //     redisService.deleteObject(redisLimiterKey);
-        // }
         RRateLimiter rateLimiter = redissonClient.getRateLimiter(redisLimiterKey);
         if (rateLimiter.getConfig() == null) {
             rateLimiter.trySetRate(RateType.OVERALL, limiter.count(), limiter.time(), RateIntervalUnit.SECONDS);
         }
         if (!rateLimiter.tryAcquire(1)) {
+            log.info("方法已限流: {}", redisLimiterKey);
             throw new RateLimiterException("访问过于频繁，请稍候再试");
         }
-        log.info("限制请求,拿到令牌桶,缓存key'{}'", redisLimiterKey);
     }
 
     private void fixedWindow(JoinPoint point, RateLimiter limiter) {
@@ -91,9 +86,9 @@ public class RateLimiterAspect implements InitializingBean {
         Long number = redisService.redisTemplate().execute(redisScript, Collections.singletonList(redisLimiterKey),
                 limiter.count(), limiter.time());
         if (number == null || number > limiter.count()) {
+            log.info("方法已限流: {}", redisLimiterKey);
             throw new RateLimiterException("访问过于频繁，请稍候再试");
         }
-        log.info("限制请求'{}',当前请求'{}',缓存key'{}'", limiter.count(), number, redisLimiterKey);
     }
 
     private void slidingWindow(JoinPoint point, RateLimiter limiter) {
@@ -103,19 +98,19 @@ public class RateLimiterAspect implements InitializingBean {
                 currentTime - limiter.time() * 1000, currentTime);
         int currentCount = range == null ? 0 : range.size();
         if (currentCount >= limiter.count()) { // size 从0开始
+            log.info("方法已限流: {}", redisLimiterKey);
             throw new RateLimiterException("访问过于频繁，请稍候再试");
         }
         // 移除过期的
         redisService.opsForZSet().removeRangeByScore(redisLimiterKey, 0, currentTime - limiter.time() * 1000);
         // 添加当前时间值
         redisService.opsForZSet().add(redisLimiterKey, currentTime + RandomUtil.randomInt(), currentTime);
-        log.info("限制请求'{}',当前请求'{}',缓存key'{}'", limiter.count(), currentCount, redisLimiterKey);
     }
 
     /**
      * 获取限流key
      * <p>
-     * 组成：applicationName + {@link RateLimiterAspect#LIMITER_KEY} + 方法名 + 限流方式 + （ip）
+     * 组成：applicationName + {@link RateLimiterAspect#LIMITER_KEY} + 方法名 + 限流方式 + （ip）（用户id）
      *
      * @Param [point, limiter]
      * @Return java.lang.String
@@ -123,39 +118,20 @@ public class RateLimiterAspect implements InitializingBean {
      */
     private String getRedisLimiterKey(JoinPoint point, RateLimiter limiter) {
         StringBuilder builder = new StringBuilder(LIMITER_KEY);
-        builder.append(getMethodIntactName(point));
+        builder.append(AspectUtil.getMethodIntactName(point));
         builder.append(":").append(limiter.limitRealize().name());
 
         if (limiter.limitType() == LimitType.IP) {
             builder.append(":").append(IPUtil.getIpAddr(ServletUtil.getRequest()));
+        } else if (limiter.limitType() == LimitType.USER) {
+            if (limitUserFactory == null) {
+                log.warn("未实现获取用户id方法: {}", LimitUserFactory.class.getTypeName());
+                throw new RateLimiterException("未实现获取用户id方法");
+            }
+            builder.append(":").append(limitUserFactory.getUserId());
         }
 
         return RedisKeyUtil.getCacheKey(builder.toString(), false, true);
-    }
-
-    /**
-     * 获取完整的方法名
-     * <p>
-     * 例如本方法：com.bingo.study.common.component.limiter.aspect.RateLimiterAspect.getMethodIntactName(ProceedingJoinPoint)
-     *
-     * @Param [joinPoint]
-     * @Return java.lang.String
-     * @Date 2023-04-25 14:13
-     */
-    private String getMethodIntactName(JoinPoint point) {
-        String className = point.getTarget().getClass().getTypeName();
-        MethodSignature ms = (MethodSignature) point.getSignature();
-        String methodName = ms.getName();
-        Class<?>[] parameterTypes = ms.getParameterTypes();
-        List<String> collect = Arrays.stream(parameterTypes).map(Class::getSimpleName).collect(Collectors.toList());
-
-        StringBuilder res = new StringBuilder(className);
-        res.append(".").append(methodName).append("(");
-        if (!CollectionUtil.isEmpty(collect)) {
-            res.append(StringUtils.join(collect, ","));
-        }
-        res.append(")");
-        return res.toString();
     }
 
     @Override
