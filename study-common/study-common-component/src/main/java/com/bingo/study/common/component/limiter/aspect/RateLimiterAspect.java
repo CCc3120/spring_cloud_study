@@ -72,9 +72,10 @@ public class RateLimiterAspect implements InitializingBean {
     private void tokenBucket(JoinPoint point, RateLimiter limiter) {
         String redisLimiterKey = getRedisLimiterKey(point, limiter);
         RRateLimiter rateLimiter = redissonClient.getRateLimiter(redisLimiterKey);
-        if (rateLimiter.getConfig() == null) {
-            rateLimiter.trySetRate(RateType.OVERALL, limiter.count(), limiter.time(), RateIntervalUnit.SECONDS);
-        }
+        // if (rateLimiter.getConfig() == null) {
+        // 设置令牌桶速率
+        rateLimiter.trySetRate(RateType.OVERALL, limiter.count(), limiter.time(), RateIntervalUnit.SECONDS);
+        // }
         if (!rateLimiter.tryAcquire(1)) {
             log.info("方法已限流: {}", redisLimiterKey);
             throw new RateLimiterException("访问过于频繁，请稍候再试");
@@ -85,7 +86,7 @@ public class RateLimiterAspect implements InitializingBean {
         String redisLimiterKey = getRedisLimiterKey(point, limiter);
         Long number = redisService.redisTemplate().execute(redisScript, Collections.singletonList(redisLimiterKey),
                 limiter.count(), limiter.time());
-        if (number == null || number > limiter.count()) {
+        if (number != null && number > limiter.count()) {
             log.info("方法已限流: {}", redisLimiterKey);
             throw new RateLimiterException("访问过于频繁，请稍候再试");
         }
