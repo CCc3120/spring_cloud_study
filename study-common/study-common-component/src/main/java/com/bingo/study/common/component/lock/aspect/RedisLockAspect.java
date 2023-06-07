@@ -69,9 +69,7 @@ public class RedisLockAspect implements InitializingBean {
                 // 执行方法
                 return callBack.doWork();
             } finally {
-                if (rLock.isLocked() && rLock.isHeldByCurrentThread()) {
-                    rLock.unlock();
-                }
+                unLock(rLock);
             }
         } else if (lock.lockType() == LockType.AUTO_RENEWAL_MUTEX) {
             try {
@@ -84,9 +82,7 @@ public class RedisLockAspect implements InitializingBean {
                 // 执行方法
                 return callBack.doWork();
             } finally {
-                if (rLock.isLocked() && rLock.isHeldByCurrentThread()) {
-                    rLock.unlock();
-                }
+                unLock(rLock);
             }
         } else if (lock.lockType() == LockType.SYNC) {
             try {
@@ -100,9 +96,7 @@ public class RedisLockAspect implements InitializingBean {
                     throw new RedisLockException(String.format("RedisLock获取锁失败[%s]", methodName));
                 }
             } finally {
-                if (rLock.isLocked() && rLock.isHeldByCurrentThread()) {
-                    rLock.unlock();
-                }
+                unLock(rLock);
             }
         } else if (lock.lockType() == LockType.AUTO_RENEWAL_SYNC) {
             try {
@@ -116,14 +110,18 @@ public class RedisLockAspect implements InitializingBean {
                     throw new RedisLockException(String.format("RedisLock获取锁失败[%s]", methodName));
                 }
             } finally {
-                if (rLock.isLocked() && rLock.isHeldByCurrentThread()) {
-                    rLock.unlock();
-                }
+                unLock(rLock);
             }
         }
         String methodName = AspectUtil.getMethodIntactName(joinPoint);
         log.warn("RedisLock锁类型异常[{}]", methodName);
         throw new RedisLockException(String.format("RedisLock锁类型异常[%s]", methodName));
+    }
+
+    private void unLock(RLock rLock) {
+        if (rLock.isLocked() && rLock.isHeldByCurrentThread()) {
+            rLock.unlock();
+        }
     }
 
     /**
