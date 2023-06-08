@@ -61,8 +61,9 @@ public class RedisLockAspect implements InitializingBean {
         if (lock.lockType() == LockType.MUTEX) {
             try {
                 if (rLock.isLocked()) {
-                    log.info("当前方法已被加锁[{}]", AspectUtil.getMethodIntactName(joinPoint));
-                    return null;
+                    String methodName = AspectUtil.getMethodIntactName(joinPoint);
+                    log.info("当前方法已被加锁[{}]", methodName);
+                    throw new RedisLockException(String.format("RedisLock获取锁失败[%s]", methodName));
                 }
 
                 rLock.lock(lock.leaseTime(), TimeUnit.MILLISECONDS);
@@ -74,8 +75,9 @@ public class RedisLockAspect implements InitializingBean {
         } else if (lock.lockType() == LockType.AUTO_RENEWAL_MUTEX) {
             try {
                 if (rLock.isLocked()) {
-                    log.info("当前方法已被加锁[{}]", AspectUtil.getMethodIntactName(joinPoint));
-                    return null;
+                    String methodName = AspectUtil.getMethodIntactName(joinPoint);
+                    log.info("当前方法已被加锁[{}]", methodName);
+                    throw new RedisLockException(String.format("RedisLock获取锁失败[%s]", methodName));
                 }
 
                 rLock.lock();
