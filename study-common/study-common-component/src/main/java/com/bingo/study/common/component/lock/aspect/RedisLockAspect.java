@@ -94,7 +94,7 @@ public class RedisLockAspect implements InitializingBean {
                     return callBack.doWork();
                 } else {
                     String methodName = AspectUtil.getMethodIntactName(joinPoint);
-                    log.error("RedisLock获取锁失败[{}]", methodName);
+                    log.info("RedisLock获取锁失败[{}]", methodName);
                     throw new RedisLockException(String.format("RedisLock获取锁失败[%s]", methodName));
                 }
             } finally {
@@ -108,7 +108,7 @@ public class RedisLockAspect implements InitializingBean {
                     return callBack.doWork();
                 } else {
                     String methodName = AspectUtil.getMethodIntactName(joinPoint);
-                    log.error("RedisLock获取锁失败[{}]", methodName);
+                    log.info("RedisLock获取锁失败[{}]", methodName);
                     throw new RedisLockException(String.format("RedisLock获取锁失败[%s]", methodName));
                 }
             } finally {
