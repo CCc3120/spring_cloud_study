@@ -1,9 +1,9 @@
 package com.bingo.study.common.component.lock.aspect;
 
-import cn.hutool.core.util.ArrayUtil;
 import com.bingo.common.redis.util.RedisKeyUtil;
 import com.bingo.study.common.component.lock.LockType;
 import com.bingo.study.common.component.lock.RedisLockCallBack;
+import com.bingo.study.common.component.lock.annotation.LockId;
 import com.bingo.study.common.component.lock.annotation.RedisLock;
 import com.bingo.study.common.component.lock.exception.RedisLockException;
 import com.bingo.study.common.core.utils.AspectUtil;
@@ -13,12 +13,15 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
@@ -45,11 +48,9 @@ public class RedisLockAspect implements InitializingBean {
 
     @Around(value = "redisLock()&&@annotation(lock)")
     public Object doAround(ProceedingJoinPoint joinPoint, RedisLock lock) throws Throwable {
-        Object[] args = joinPoint.getArgs();
+        Object lockId = checkParam(joinPoint, lock);
 
-        checkParam(joinPoint, args, lock);
-
-        String lockKey = getLockKey(joinPoint, args, lock);
+        String lockKey = getLockKey(joinPoint, lockId, lock);
 
         return doLock(joinPoint, lock, lockKey, joinPoint::proceed);
     }
@@ -127,20 +128,31 @@ public class RedisLockAspect implements InitializingBean {
     }
 
     /**
-     * 若hasId为true，则第一个参数必须不为空
+     * 若hasId为true，必须要有一个唯一的参数作为加锁key的一部分，并且这个参数要用 {@link LockId} 注解标识
      *
-     * @Param [joinPoint, args, lock]
+     * @Param [joinPoint, lock]
      * @Return void
      * @Date 2023-04-25 11:02
      */
-    private void checkParam(ProceedingJoinPoint joinPoint, Object[] args, RedisLock lock) {
+    private Object checkParam(ProceedingJoinPoint joinPoint, RedisLock lock) {
         if (lock.hasId()) {
-            if (ArrayUtil.isEmpty(args) || args[0] == null) {
-                String methodName = AspectUtil.getMethodIntactName(joinPoint);
-                log.error("加锁对象id参数缺失，method = {}，args = {}", methodName, Arrays.toString(args));
-                throw new RedisLockException("加锁对象id参数缺失");
+            Object[] args = joinPoint.getArgs();
+            MethodSignature ms = (MethodSignature) joinPoint.getSignature();
+            Method method = ms.getMethod();
+            Parameter[] parameters = method.getParameters();
+            if (parameters != null && parameters.length > 0) {
+                for (int i = 0; i < parameters.length; i++) {
+                    LockId annotation = parameters[i].getAnnotation(LockId.class);
+                    if (annotation != null) {
+                        return args[i];
+                    }
+                }
             }
+            String methodName = AspectUtil.getMethodIntactName(joinPoint);
+            log.error("缺少 @LockId 标识的唯一参数，method = {}，args = {}", methodName, Arrays.toString(args));
+            throw new RedisLockException("缺少 @LockId 标识的唯一参数");
         }
+        return null;
     }
 
     /**
@@ -152,11 +164,11 @@ public class RedisLockAspect implements InitializingBean {
      * <p>
      * {@link RedisLock#key()} 为空则用方法名取代
      *
-     * @Param [joinPoint, args, lock]
+     * @Param [joinPoint, lockId, lock]
      * @Return java.lang.String
      * @Date 2023-04-25 10:54
      */
-    private String getLockKey(ProceedingJoinPoint joinPoint, Object[] args, RedisLock lock) {
+    private String getLockKey(ProceedingJoinPoint joinPoint, Object lockId, RedisLock lock) throws NoSuchMethodException {
         StringBuilder key = new StringBuilder(REDIS_KEY_PREFIX);
 
         if (StringUtils.isBlank(lock.key())) {
@@ -166,7 +178,7 @@ public class RedisLockAspect implements InitializingBean {
         }
 
         if (lock.hasId()) {
-            key.append(":").append(args[0]);
+            key.append(":").append(lockId);
         }
 
         return RedisKeyUtil.getCacheKey(key.toString(), false, true);
