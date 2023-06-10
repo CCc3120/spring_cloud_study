@@ -49,76 +49,40 @@ public class RedisLockAspect implements InitializingBean {
     @Around(value = "redisLock()&&@annotation(lock)")
     public Object doAround(ProceedingJoinPoint joinPoint, RedisLock lock) throws Throwable {
         Object lockId = checkParam(joinPoint, lock);
-
         String lockKey = getLockKey(joinPoint, lockId, lock);
 
-        return doLock(joinPoint, lock, lockKey, joinPoint::proceed);
-    }
-
-    private Object doLock(ProceedingJoinPoint joinPoint, RedisLock lock, String key, RedisLockCallBack callBack)
-            throws Throwable {
-        log.debug("RedisLock Key: {}", key);
-        RLock rLock = redissonClient.getLock(key);
         if (lock.lockType() == LockType.MUTEX) {
-            try {
-                if (rLock.isLocked()) {
-                    String methodName = AspectUtil.getMethodIntactName(joinPoint);
-                    log.info("当前方法已被加锁[{}]", methodName);
-                    throw new RedisLockException(String.format("RedisLock获取锁失败[%s]", methodName));
-                }
-
-                rLock.lock(lock.leaseTime(), TimeUnit.MILLISECONDS);
-                // 执行方法
-                return callBack.doWork();
-            } finally {
-                unLock(rLock);
-            }
+            return doLock(joinPoint, 0, lock.leaseTime(), lockKey, joinPoint::proceed);
         } else if (lock.lockType() == LockType.AUTO_RENEWAL_MUTEX) {
-            try {
-                if (rLock.isLocked()) {
-                    String methodName = AspectUtil.getMethodIntactName(joinPoint);
-                    log.info("当前方法已被加锁[{}]", methodName);
-                    throw new RedisLockException(String.format("RedisLock获取锁失败[%s]", methodName));
-                }
-
-                rLock.lock();
-                // 执行方法
-                return callBack.doWork();
-            } finally {
-                unLock(rLock);
-            }
+            return doLock(joinPoint, 0, -1, lockKey, joinPoint::proceed);
         } else if (lock.lockType() == LockType.SYNC) {
-            try {
-                boolean tryLock = rLock.tryLock(lock.waitTime(), lock.leaseTime(), TimeUnit.MILLISECONDS);
-                if (tryLock) {
-                    // 执行方法
-                    return callBack.doWork();
-                } else {
-                    String methodName = AspectUtil.getMethodIntactName(joinPoint);
-                    log.info("RedisLock获取锁失败[{}]", methodName);
-                    throw new RedisLockException(String.format("RedisLock获取锁失败[%s]", methodName));
-                }
-            } finally {
-                unLock(rLock);
-            }
+            return doLock(joinPoint, lock.waitTime(), lock.leaseTime(), lockKey, joinPoint::proceed);
         } else if (lock.lockType() == LockType.AUTO_RENEWAL_SYNC) {
-            try {
-                boolean tryLock = rLock.tryLock(lock.waitTime(), TimeUnit.MILLISECONDS);
-                if (tryLock) {
-                    // 执行方法
-                    return callBack.doWork();
-                } else {
-                    String methodName = AspectUtil.getMethodIntactName(joinPoint);
-                    log.info("RedisLock获取锁失败[{}]", methodName);
-                    throw new RedisLockException(String.format("RedisLock获取锁失败[%s]", methodName));
-                }
-            } finally {
-                unLock(rLock);
-            }
+            return doLock(joinPoint, lock.waitTime(), -1, lockKey, joinPoint::proceed);
         }
         String methodName = AspectUtil.getMethodIntactName(joinPoint);
         log.warn("RedisLock锁类型异常[{}]", methodName);
         throw new RedisLockException(String.format("RedisLock锁类型异常[%s]", methodName));
+    }
+
+    private Object doLock(ProceedingJoinPoint joinPoint, long waitTime, long leaseTime, String lockKey,
+            RedisLockCallBack callBack) throws Throwable {
+        log.info("RedisLock Key: {}", lockKey);
+
+        RLock rLock = redissonClient.getLock(lockKey);
+        try {
+            boolean tryLock = rLock.tryLock(waitTime, leaseTime, TimeUnit.MILLISECONDS);
+            if (tryLock) {
+                // 执行方法
+                return callBack.doWork();
+            } else {
+                String methodName = AspectUtil.getMethodIntactName(joinPoint);
+                log.info("RedisLock获取锁失败[{}]", methodName);
+                throw new RedisLockException(String.format("RedisLock获取锁失败[%s]", methodName));
+            }
+        } finally {
+            unLock(rLock);
+        }
     }
 
     private void unLock(RLock rLock) {
@@ -160,7 +124,7 @@ public class RedisLockAspect implements InitializingBean {
      * key 组成 applicationName + {@link RedisLockAspect#REDIS_KEY_PREFIX} + {@link RedisLock#key()}
      * <p>
      * 如果 {@link RedisLock#hasId()} 为true
-     * key 组成 applicationName + {@link RedisLockAspect#REDIS_KEY_PREFIX} + {@link RedisLock#key()} + 方法第一个参数
+     * key 组成 applicationName + {@link RedisLockAspect#REDIS_KEY_PREFIX} + {@link RedisLock#key()} + 方法 @LockId 参数
      * <p>
      * {@link RedisLock#key()} 为空则用方法名取代
      *

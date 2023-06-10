@@ -3,7 +3,7 @@ package com.bingo.study.common.component.lock.annotation;
 import java.lang.annotation.*;
 
 /**
- * 加锁key参数注解
+ * 标记参数为 lockKey 的一部分
  *
  * @Author h-bingo
  * @Date 2023-06-08 14:40

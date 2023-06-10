@@ -5,6 +5,8 @@ import com.bingo.study.common.component.lock.LockType;
 import java.lang.annotation.*;
 
 /**
+ * redis锁注解
+ *
  * @Author h-bingo
  * @Date 2023-04-24 16:59
  * @Version 1.0
