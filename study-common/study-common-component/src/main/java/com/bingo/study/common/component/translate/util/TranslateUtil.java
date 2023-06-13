@@ -5,9 +5,12 @@ import cn.hutool.core.util.ReflectUtil;
 import com.bingo.study.common.component.translate.annotation.Translate;
 import com.bingo.study.common.component.translate.constant.TranslateType;
 import com.bingo.study.common.component.translate.wrapper.TranslateFieldWrapper;
+import com.bingo.study.common.core.dict.IDictTranslateService;
 import com.bingo.study.common.core.enums.CodeDescEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -23,9 +26,17 @@ import java.util.concurrent.ConcurrentHashMap;
  * @Version 1.0
  */
 @Slf4j
+@ConditionalOnMissingBean(TranslateUtil.class)
 public class TranslateUtil {
 
     private static final Map<Class<?>, List<TranslateFieldWrapper>> TRAN_FIELD_CACHE = new ConcurrentHashMap<>();
+
+    private static IDictTranslateService dictTranslateService;
+
+    @Autowired(required = false)
+    public void setDictTranslateService(IDictTranslateService dictTranslateService) {
+        TranslateUtil.dictTranslateService = dictTranslateService;
+    }
 
     /**
      * 翻译列表
@@ -58,13 +69,16 @@ public class TranslateUtil {
 
         for (TranslateFieldWrapper fieldWrapper : list) {
             if (fieldWrapper.getTranslateType() == TranslateType.ENUM) {
+                // 枚举翻译
                 CodeDescEnum.enumTran(ReflectUtil.getFieldValue(t, fieldWrapper.getField()),
                         getEnumValues(fieldWrapper.getEnumClass()),
                         stringCodeDescEnum -> ReflectUtil.setFieldValue(t, fieldWrapper.getFullField(),
                                 stringCodeDescEnum.getDesc()));
             } else if (fieldWrapper.getTranslateType() == TranslateType.DICT) {
-                // TODO 结合字典完成，字典缓存
-
+                // 字典翻译
+                dictTranslateService.dictTran((String) ReflectUtil.getFieldValue(t, fieldWrapper.getField()),
+                        fieldWrapper.getDictType(), dictTranslateModel -> ReflectUtil.setFieldValue(t,
+                                fieldWrapper.getFullField(), dictTranslateModel.getName()));
             }
         }
     }
@@ -81,6 +95,7 @@ public class TranslateUtil {
             return null;
         }
 
+        // 类翻译字段缓存
         if (TRAN_FIELD_CACHE.containsKey(obj.getClass())) {
             return TRAN_FIELD_CACHE.get(obj.getClass());
         }
@@ -116,9 +131,15 @@ public class TranslateUtil {
                 translateField.setField(field);
 
                 if (StringUtils.isBlank(annotation.fillName())) {
+                    // 填充覆盖自身字段
                     translateField.setFullField(field);
                 } else {
-                    translateField.setFullField(ReflectUtil.getField(clazz, annotation.fillName()));
+                    // 获取填充字段，若填充字段为空，则跳过该字段翻译
+                    Field fullField = ReflectUtil.getField(clazz, annotation.fillName());
+                    if (fullField == null) {
+                        break;
+                    }
+                    translateField.setFullField(fullField);
                 }
 
                 translateFieldList.add(translateField);
