@@ -9,6 +9,7 @@ import com.bingo.study.common.core.dict.IDictTranslateService;
 import com.bingo.study.common.core.enums.CodeDescEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 
@@ -27,7 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Slf4j
 @ConditionalOnMissingBean(TranslateUtil.class)
-public class TranslateUtil {
+public class TranslateUtil implements InitializingBean {
 
     private static final Map<Class<?>, List<TranslateFieldWrapper>> TRAN_FIELD_CACHE = new ConcurrentHashMap<>();
 
@@ -74,7 +75,7 @@ public class TranslateUtil {
                         getEnumValues(fieldWrapper.getEnumClass()),
                         stringCodeDescEnum -> ReflectUtil.setFieldValue(t, fieldWrapper.getFullField(),
                                 stringCodeDescEnum.getDesc()));
-            } else if (fieldWrapper.getTranslateType() == TranslateType.DICT) {
+            } else if (fieldWrapper.getTranslateType() == TranslateType.DICT && dictTranslateService != null) {
                 // 字典翻译
                 dictTranslateService.dictTran((String) ReflectUtil.getFieldValue(t, fieldWrapper.getField()),
                         fieldWrapper.getDictType(), dictTranslateModel -> ReflectUtil.setFieldValue(t,
@@ -192,5 +193,10 @@ public class TranslateUtil {
             log.warn("{} 枚举值获取异常", clazz.getTypeName());
             return (T[]) new CodeDescEnum[0];
         }
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        log.info("字典 or 枚举翻译功能已开启，详情使用 @Translate 注解");
     }
 }
