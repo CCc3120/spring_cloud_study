@@ -12,5 +12,12 @@ import java.lang.annotation.*;
 @Documented
 @Retention(value = RetentionPolicy.RUNTIME)
 @Target(value = {ElementType.PARAMETER})
-public @interface LockId {
+public @interface LockKey {
+
+    /**
+     * key的别名
+     *
+     * @return
+     */
+    String alias() default "";
 }

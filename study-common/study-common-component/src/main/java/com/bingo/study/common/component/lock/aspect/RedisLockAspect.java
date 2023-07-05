@@ -3,10 +3,11 @@ package com.bingo.study.common.component.lock.aspect;
 import com.bingo.common.redis.util.RedisKeyUtil;
 import com.bingo.study.common.component.lock.LockType;
 import com.bingo.study.common.component.lock.RedisLockCallBack;
-import com.bingo.study.common.component.lock.annotation.LockId;
+import com.bingo.study.common.component.lock.annotation.LockKey;
 import com.bingo.study.common.component.lock.annotation.RedisLock;
 import com.bingo.study.common.component.lock.exception.RedisLockException;
 import com.bingo.study.common.core.utils.AspectUtil;
+import com.bingo.study.common.core.utils.JsonMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -23,6 +24,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -92,39 +94,46 @@ public class RedisLockAspect implements InitializingBean {
     }
 
     /**
-     * 若hasId为true，必须要有一个唯一的参数作为加锁key的一部分，并且这个参数要用 {@link LockId} 注解标识
+     * 若singleton为true，必须要有一个唯一的参数作为加锁key的一部分，并且这个参数要用 {@link LockKey} 注解标识
      *
      * @Param [joinPoint, lock]
      * @Return void
      * @Date 2023-04-25 11:02
      */
     private Object checkParam(ProceedingJoinPoint joinPoint, RedisLock lock) {
-        if (lock.hasId()) {
-            Object[] args = joinPoint.getArgs();
-            MethodSignature ms = (MethodSignature) joinPoint.getSignature();
-            Method method = ms.getMethod();
-            Parameter[] parameters = method.getParameters();
-            if (parameters != null && parameters.length > 0) {
-                for (int i = 0; i < parameters.length; i++) {
-                    LockId annotation = parameters[i].getAnnotation(LockId.class);
-                    if (annotation != null) {
+        if (!lock.singleton()) {
+            return null;
+        }
+
+        Object[] args = joinPoint.getArgs();
+        MethodSignature ms = (MethodSignature) joinPoint.getSignature();
+        Method method = ms.getMethod();
+        Parameter[] parameters = method.getParameters();
+        if (parameters != null && parameters.length > 0) {
+            for (int i = 0; i < parameters.length; i++) {
+                LockKey annotation = parameters[i].getAnnotation(LockKey.class);
+                if (annotation != null) {
+                    if (StringUtils.isBlank(annotation.alias())) {
                         return args[i];
                     }
+                    HashMap hashMap =
+                            JsonMapper.getInstance().fromJson(JsonMapper.getInstance().toJsonString(args[i]),
+                                    HashMap.class);
+                    return hashMap.get(annotation.alias());
                 }
             }
-            String methodName = AspectUtil.getMethodIntactName(joinPoint);
-            log.error("缺少 @LockId 标识的唯一参数，method = {}，args = {}", methodName, Arrays.toString(args));
-            throw new RedisLockException("缺少 @LockId 标识的唯一参数");
         }
-        return null;
+        String methodName = AspectUtil.getMethodIntactName(joinPoint);
+        log.error("缺少 @LockKey 标识的唯一参数，method = {}，args = {}", methodName, Arrays.toString(args));
+        throw new RedisLockException("缺少 @LockKey 标识的唯一参数");
     }
 
     /**
-     * 如果 {@link RedisLock#hasId()} 为false
+     * 如果 {@link RedisLock#singleton()} 为false
      * key 组成 applicationName + {@link RedisLockAspect#REDIS_KEY_PREFIX} + {@link RedisLock#key()}
      * <p>
-     * 如果 {@link RedisLock#hasId()} 为true
-     * key 组成 applicationName + {@link RedisLockAspect#REDIS_KEY_PREFIX} + {@link RedisLock#key()} + 方法 @LockId 参数
+     * 如果 {@link RedisLock#singleton()} 为true
+     * key 组成 applicationName + {@link RedisLockAspect#REDIS_KEY_PREFIX} + {@link RedisLock#key()} + 方法 @LockKey 参数
      * <p>
      * {@link RedisLock#key()} 为空则用方法名取代
      *
@@ -141,7 +150,7 @@ public class RedisLockAspect implements InitializingBean {
             key.append(lock.key());
         }
 
-        if (lock.hasId()) {
+        if (lock.singleton()) {
             key.append(":").append(lockId);
         }
 

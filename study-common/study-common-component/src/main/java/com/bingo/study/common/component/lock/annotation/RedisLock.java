@@ -17,14 +17,15 @@ import java.lang.annotation.*;
 public @interface RedisLock {
 
     /**
-     * 值为 true时 ：取方法的第一个参数作为加锁key值的一部分，此时方法第一个参数必须传加锁对象的唯一id值，对对象进行加锁
+     * 值为 true时 ：取 {@link LockKey} 标记的参数作为加锁key值的一部分，配合 {@link LockKey} 使用
+     * <p>
      * 值为 false时：任何情况都对整个方法加锁
      * <p>
      * 例如：对一件商品进行秒杀，需要传入商品id，商品id作为锁key值的一部分
      *
      * @return
      */
-    boolean hasId() default false;
+    boolean singleton() default false;
 
     /**
      * 锁类型
