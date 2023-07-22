@@ -46,6 +46,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.springframework.retry</groupId>
+            <artifactId>spring-retry</artifactId>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
             <groupId>com.bingo</groupId>
             <artifactId>study-common-core</artifactId>
             <scope>compile</scope>

@@ -2,6 +2,7 @@ package com.bingo.test.demo;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.bingo.study.common.component.lock.LockType;
+import com.bingo.study.common.component.lock.annotation.LockKey;
 import com.bingo.study.common.component.lock.annotation.RedisLock;
 import com.bingo.study.common.component.nosql.service.AbstractNoSqlUpdate;
 import com.bingo.study.common.component.nosql.service.EsUpdateService;
@@ -43,7 +44,7 @@ public class TeacherService extends AbstractNoSqlUpdate {
     @RedisLock(hasId = true, lockType = LockType.SYNC, waitTime = 4000, leaseTime = 2000, key = "testLock")
     public String testLock(String fdId, Teacher teacher) throws InterruptedException {
         log.info(Thread.currentThread().getName() + "===执行中");
-        Thread.sleep(3000);
+        Thread.sleep(3 * 1000);
         return "testLock";
     }
 

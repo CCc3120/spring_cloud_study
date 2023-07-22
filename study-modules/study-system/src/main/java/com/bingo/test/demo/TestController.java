@@ -8,6 +8,7 @@ import com.bingo.study.common.component.limiter.LimitType;
 import com.bingo.study.common.component.limiter.annotation.RateLimiter;
 import com.bingo.study.common.component.nosql.service.EsUpdateService;
 import com.bingo.study.common.component.returnValue.annotation.ReturnField;
+import com.bingo.study.common.component.translate.util.TranslateUtil;
 import com.bingo.study.common.core.page.AjaxResult;
 import com.bingo.study.common.core.page.AjaxResultFactory;
 import org.redisson.api.RedissonClient;
@@ -46,18 +47,24 @@ public class TestController {
         return AjaxResultFactory.success();
     }
 
+    @RequestMapping(path = "/testTranslate", method = RequestMethod.GET)
+    public AjaxResult<String> testTranslate() {
+        TranslateUtil bean = SpringUtil.getBean(TranslateUtil.class);
+        return AjaxResultFactory.success();
+    }
+
     @ReturnField(enable = false)
     @RequestMapping(path = "/testLock", method = RequestMethod.GET)
     public AjaxResult<String> testLock() throws InterruptedException {
-        String data = teacherService.testLock("123", new Teacher());
+        String data = teacherService.testLock(new Teacher(), "123");
         return AjaxResultFactory.success(data);
     }
 
     @ReturnField(enable = false)
     @RequestMapping(path = "/testType", method = RequestMethod.GET)
     public String testType() throws InterruptedException {
-        String data = teacherService.testLock("123", new Teacher());
-        return data;
+        // String data = teacherService.testLock("123", new Teacher());
+        return "data";
     }
 
     @DeprecatedInterfaceSee(value = "/test01")
