@@ -1,36 +1,17 @@
+server:
+  port: 8081
+
 spring:
+  profiles:
+#    active: dev
+    include: db
   application:
     name: study-system
-  #=================================redis配置=================================
-  redis:
-    #地址
-    host:
-    #端口
-    port:
-    # Redis数据库索引（默认为0）
-    database:
-    #Login password
-    password:
-    #Read timeout
-    timeout: 3s
-    #connect timeout
-    connect-timeout: 10s
-    # redission 替换调了 lettuce
-#    lettuce:
-#      pool:
-#        # 连接池中的最小空闲连接
-#        min-idle: 0
-#        # 连接池中的最大空闲连接
-#        max-idle: 0
-#        # 连接池的最大数据库连接数（使用负值表示没有限制）
-#        max-active: 8
-#        #连接池最大阻塞等待时间（使用负值表示没有限制）
-#        max-wait: -1ms
-#=================================swagger3.0报错问题兼容=================================
+  #=================================swagger3.0报错问题兼容=================================
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
-#=================================jackson=================================
+  #=================================jackson=================================
   jackson:
     #    date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
@@ -41,16 +22,60 @@ spring:
       INDENT_OUTPUT: true
     deserialization:
       FAIL_ON_UNKNOWN_PROPERTIES: false
-#=================================mongo配置=================================
-mongodb:
-  #      uri: mongodb://服务器IP:端口 #无密码
-  #      uri: mongodb://用户名:密码@服务器IP:端口/数据库名 mongodb://localhost/test
-  host:
-  port:
-  username:
-  password:
-  database:
-#=================================es配置=================================
-#集群配置格式，";"分号分割 例如：http:xx.xx.xx.xx:xx;http:xx.xx.xx.xx:xx;http:xx.xx.xx.xx:xx
-es:
-  hostUrls:
+
+#=================================日志=================================
+#Logback：logback-spring.xml, logback-spring.groovy, logback.xml, logback.groovy
+#Log4j：log4j-spring.properties, log4j-spring.xml, log4j.properties, log4j.xml
+#Log4j2：log4j2-spring.xml, log4j2.xml
+#JDK (Java Util Logging)：logging.properties
+#配置日志文件路径 不使用以上名称可自行配置
+logging:
+  config: classpath:logback-spring.xml
+  file:
+    path: ./logs
+
+log:
+  level: debug
+
+
+powerjob:
+  worker:
+#    app-name: powerjob-worker-samples
+#    port: 27777
+#    server-address: 127.0.0.1:7700
+#    store-strategy: disk
+#    max-result-length: 4096
+#    max-appended-wf-context-length: 4096
+    enabled: false
+#    enable-test-mode: false
+#    protocol: http
+#  server.port=8081
+#  spring.jpa.open-in-view=false
+#  ########### PowerJob-worker properties. ###########
+#  # Whether to enable PowerJob Worker, default is true
+#  powerjob.worker.enabled=true
+#  # Turn on test mode and do not force the server connection to be verified
+#  powerjob.worker.enable-test-mode=false
+#  # Transport port, default is 27777
+#  powerjob.worker.port=27777
+#  # Application name, used for grouping applications. Recommend to set the same value as project name.
+#  powerjob.worker.app-name=powerjob-worker-samples
+#  # Address of PowerJob-server node(s). Ip:port or domain. Multiple addresses should be separated with comma.
+#  powerjob.worker.server-address=127.0.0.1:7700
+#  # transport protocol between server and worker
+#  powerjob.worker.protocol=http
+#  # Store strategy of H2 database. disk or memory. Default value is disk.
+#  powerjob.worker.store-strategy=disk
+#  # Max length of result. Results that are longer than the value will be truncated.
+#  powerjob.worker.max-result-length=4096
+#  # Max length of appended workflow context . Appended workflow context value that is longer than the value will be ignore.
+#  powerjob.worker.max-appended-wf-context-length=4096
+
+
+# 镜像：registry-hz.rubikstack.com/lichen/ms-schedule:4.3.2-a21914d9-20230620
+# 需要新增数据库：ms-schedule
+# 新数据库执行附件sql脚本
+
+# 新增固定频率任务（5秒执行一次），任务正常运行，直接编辑任务改成cron表达式（3分钟一次），
+# 编辑完保存成功，实际效果未生效，依然是以固定频率5秒一次执行，并且关闭任务后任务依然执行无法停止，
+# 最后在任务实例中停止实例才把任务彻底停止执行

@@ -2,6 +2,7 @@ package com.bingo.test.demo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author h-bingo
@@ -98,7 +99,20 @@ public class TestMain {
 
     public static void main(String[] args) {
 
+        // Teacher teacher = new Teacher() ;
+        //
+        // teacher.setFdId("123");
+        // teacher.setFdName("qwe");
+        // System.out.println(JsonMapper.getInstance().toJsonString(teacher));
 
+        List<String> list = new ArrayList<>();
+
+        list.add("a");
+        list.add("b");
+        list.add("c");
+
+        List<String> a = list.stream().filter(s -> s.equals("a")).collect(Collectors.toList());
+        System.out.println(a);
     }
 
     private void print(char[][] board) {

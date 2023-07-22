@@ -13,11 +13,10 @@ import com.bingo.study.common.core.page.AjaxResult;
 import com.bingo.study.common.core.page.AjaxResultFactory;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Author h-bingo
@@ -37,11 +36,46 @@ public class TestController {
     @Autowired
     private RedissonClient redissonClient;
 
-    @RateLimiter(count = 5, time = 10, limitType = LimitType.DEFAULT, limitRealize = LimitRealize.TOKEN_BUCKET)
+    @RequestMapping(path = "/testParam/{fdId}", method = RequestMethod.GET)
+    public AjaxResult<List<String>> testParam(@PathVariable("fdId") String fdId, @RequestParam("id") List<String> id) {
+        // try {
+        //     teacherService.exceSql();
+        // } catch (Exception e) {
+        //     System.out.println(e.getMessage());
+        // }
+
+        // teacherService.exceMaster();
+
+        // teacherService.exceSlave();
+
+        // teacherService.exceSqlTransactional();
+        id.add(fdId);
+        return AjaxResultFactory.success(id);
+    }
+
+    // @RateLimiter(count = 5, time = 10, limitType = LimitType.DEFAULT, limitRealize = LimitRealize.TOKEN_BUCKET)
     @ReturnField(enable = false)
+    @RequestMapping(path = "/testDataSource", method = RequestMethod.GET)
+    public AjaxResult<String> testDataSource() {
+        // try {
+        //     teacherService.exceSql();
+        // } catch (Exception e) {
+        //     System.out.println(e.getMessage());
+        // }
+
+        // teacherService.exceMaster();
+
+        // teacherService.exceSlave();
+
+        teacherService.exceSqlTransactional();
+
+        return AjaxResultFactory.success();
+    }
+
+    @RateLimiter(count = 5, time = 10, limitType = LimitType.DEFAULT, limitRealize = LimitRealize.TOKEN_BUCKET)
+    // @ReturnField(enable = false)
     @RequestMapping(path = "/testLimiter", method = RequestMethod.GET)
     public AjaxResult<String> testLimiter() {
-
 
 
         return AjaxResultFactory.success();
@@ -67,7 +101,7 @@ public class TestController {
         return "data";
     }
 
-    @DeprecatedInterfaceSee(value = "/test01")
+    @DeprecatedInterfaceSee(clazz = TestController.class, method = "testType")
     @ReturnField(specify = {"fdName", "fdSex"})
     @RequestMapping(path = "/advice", method = RequestMethod.GET)
     public AjaxResult<Teacher> test00() {
@@ -146,6 +180,11 @@ public class TestController {
 
         teacherService.delete(teacher);
 
+        return AjaxResultFactory.success();
+    }
+
+    @RequestMapping(path = "/test", method = RequestMethod.GET)
+    public AjaxResult test() {
         return AjaxResultFactory.success();
     }
 
