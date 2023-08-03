@@ -9,7 +9,7 @@ import java.util.List;
  * @Date 2023-08-01 15:00
  * @Version 1.0
  */
-public interface IBaseTreeModel extends IBaseModel {
+public interface IBaseTreeModel<T extends IBaseTreeModel> extends IBaseModel {
 
     // private String fdParentId;
 
@@ -17,9 +17,9 @@ public interface IBaseTreeModel extends IBaseModel {
 
     void setFdParentId(String fdParentId);
 
-    // private List<IBaseTreeModel> fdChildList;
+    // private List<? extends IBaseTreeModel> fdChildList;
 
-    List<IBaseTreeModel> getFdChildList();
+    List<T> getFdChildList();
 
-    void setFdChildList(List<IBaseTreeModel> fdChildList);
+    void setFdChildList(List<T> fdChildList);
 }

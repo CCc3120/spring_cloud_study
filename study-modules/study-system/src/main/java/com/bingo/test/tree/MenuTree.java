@@ -13,7 +13,7 @@ import java.util.List;
  */
 @AllArgsConstructor
 @Data
-public class MenuTree implements IBaseTreeModel {
+public class MenuTree implements IBaseTreeModel<MenuTree> {
 
     private String fdName;
 
@@ -21,5 +21,5 @@ public class MenuTree implements IBaseTreeModel {
 
     private String fdParentId;
 
-    private List<IBaseTreeModel> fdChildList;
+    private List<MenuTree> fdChildList;
 }

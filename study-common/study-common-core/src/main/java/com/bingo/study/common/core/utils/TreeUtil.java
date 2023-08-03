@@ -8,6 +8,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
+ * 经测试：up方法在数据量大的时候优势大，group方法没什么优势 -_-!
+ *
  * @Author h-bingo
  * @Date 2023-08-01 15:05
  * @Version 1.0
@@ -67,8 +69,86 @@ public class TreeUtil {
         }
     }
 
+    /**
+     * 构造树结构(向下查找法)
+     *
+     * @param treeModelList
+     * @param <T>
+     * @return
+     */
     public static <T extends IBaseTreeModel> List<T> buildTreeToDown(List<T> treeModelList) {
-        return null;
+        return buildTreeToDown(treeModelList, false, null);
+    }
+
+    /**
+     * 构造树结构(向下查找法)
+     *
+     * @param treeModelList
+     * @param sort
+     * @param comparator
+     * @param <T>
+     * @return
+     */
+    public static <T extends IBaseTreeModel> List<T> buildTreeToDown(List<T> treeModelList, boolean sort,
+            Comparator<T> comparator) {
+        if (sort) {
+            treeModelList.sort(comparator);
+        }
+
+        List<T> result = new ArrayList<>();
+
+        List<String> idList = treeModelList.stream().map(IBaseTreeModel::getFdId).collect(Collectors.toList());
+
+        for (T next : treeModelList) {
+            // 父节点查找子节点
+            if (!idList.contains(next.getFdParentId())) {
+                // 查找子节点
+                recursionFnTree(treeModelList, next);
+
+                result.add(next);
+            }
+        }
+
+        if (result.isEmpty()) {
+            return treeModelList;
+        }
+        return result;
+    }
+
+    /**
+     * 递归获取子集
+     *
+     * @param treeModelList
+     * @param t
+     * @param <T>
+     */
+    private static <T extends IBaseTreeModel> void recursionFnTree(List<T> treeModelList, T t) {
+        // 获取子节点列表
+        List<T> chirldList = getChirldList(treeModelList, t);
+        if (!CollectionUtil.isEmpty(chirldList)) {
+            t.setFdChildList(chirldList);
+            for (T v : chirldList) {
+                recursionFnTree(treeModelList, v);
+            }
+        }
+    }
+
+    /**
+     * 查找子节点
+     *
+     * @param treeModelList
+     * @param t
+     * @param <T>
+     * @return
+     */
+    private static <T extends IBaseTreeModel> List<T> getChirldList(List<T> treeModelList, T t) {
+        List<T> list = new ArrayList<>();
+        for (T v : treeModelList) {
+            if (v.getFdParentId().equals(t.getFdId())) {
+                list.add(v);
+            }
+        }
+        return list;
     }
 
     /**
@@ -120,7 +200,7 @@ public class TreeUtil {
         for (T value : values) {
             T t = map.get(value.getFdParentId());
             if (t != null && !t.getFdId().equals(value.getFdId())) {
-                List<IBaseTreeModel> fdChildList = t.getFdChildList();
+                List fdChildList = t.getFdChildList();
                 if (fdChildList == null) {
                     fdChildList = new ArrayList<>();
                     t.setFdChildList(fdChildList);
