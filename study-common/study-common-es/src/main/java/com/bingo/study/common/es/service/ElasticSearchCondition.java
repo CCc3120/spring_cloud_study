@@ -4,7 +4,7 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 
 /**
  * @ClassName ElasticSearchCondition
- * @Description TODO
+ * @Description
  * @Author h-bingo
  * @Date 2022-12-13 14:51
  * @Version 1.0

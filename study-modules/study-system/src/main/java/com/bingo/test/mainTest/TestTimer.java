@@ -22,7 +22,7 @@ public class TestTimer {
             public void run() {
                 System.out.println(Thread.currentThread().getName() + "执行了" + System.currentTimeMillis());
             }
-        }, 1000 * 1);
+        }, 1000 * 2);
         // timer.s
 
 

@@ -2,7 +2,6 @@ package com.bingo.test.demo;
 
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.stereotype.Component;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -12,7 +11,7 @@ import java.util.TimerTask;
  * @Date 2023-06-28 15:17
  * @Version 1.0
  */
-@Component
+// @Component
 public class TestTimer implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {

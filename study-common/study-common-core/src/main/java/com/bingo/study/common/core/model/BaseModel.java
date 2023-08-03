@@ -13,6 +13,8 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 
 /**
+ * 域模型基类
+ *
  * @author bingo
  * @date 2022-03-25 13:37
  */

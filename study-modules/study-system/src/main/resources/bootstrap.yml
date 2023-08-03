@@ -40,13 +40,13 @@ log:
 
 powerjob:
   worker:
+    enabled: false
 #    app-name: powerjob-worker-samples
 #    port: 27777
 #    server-address: 127.0.0.1:7700
 #    store-strategy: disk
 #    max-result-length: 4096
 #    max-appended-wf-context-length: 4096
-    enabled: false
 #    enable-test-mode: false
 #    protocol: http
 #  server.port=8081

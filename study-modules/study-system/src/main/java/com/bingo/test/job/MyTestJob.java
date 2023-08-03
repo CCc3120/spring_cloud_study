@@ -1,7 +1,6 @@
 package com.bingo.test.job;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import tech.powerjob.worker.core.processor.ProcessResult;
 import tech.powerjob.worker.core.processor.TaskContext;
 import tech.powerjob.worker.core.processor.sdk.BasicProcessor;
@@ -12,7 +11,7 @@ import tech.powerjob.worker.core.processor.sdk.BasicProcessor;
  * @Version 1.0
  */
 @Slf4j
-@Component
+// @Component
 public class MyTestJob implements BasicProcessor {
 
     @Override
