@@ -26,7 +26,7 @@ public class TreeDemo {
         }
     }
 
-    public static List<MenuTree> radom() {
+    public static List<MenuTree> random() {
         Set<MenuTree> set = new HashSet<>();
         String[] id = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9",};
         String[] id2 = {"00", "10", "20", "30", "40", "50", "60", "70", "80", "90",};
@@ -87,7 +87,7 @@ public class TreeDemo {
 
         Stopwatch stopwatch = Stopwatch.createStarted();
 
-        List<MenuTree> modelList = TreeUtil.buildTreeToUp(radom(), true, Comparator.comparing(MenuTree::getFdId));
+        List<MenuTree> modelList = TreeUtil.buildTreeToUp(random(), true, Comparator.comparing(MenuTree::getFdId));
 
         stopwatch.stop();
         System.out.println("up: " + stopwatch);
@@ -139,7 +139,7 @@ public class TreeDemo {
 
         Stopwatch stopwatch = Stopwatch.createStarted();
 
-        List<MenuTree> modelList = TreeUtil.buildTreeToDown(radom(), true, Comparator.comparing(MenuTree::getFdId));
+        List<MenuTree> modelList = TreeUtil.buildTreeToDown(random(), true, Comparator.comparing(MenuTree::getFdId));
 
         stopwatch.stop();
         System.out.println("down: " + stopwatch);
@@ -191,7 +191,7 @@ public class TreeDemo {
 
         Stopwatch stopwatch = Stopwatch.createStarted();
 
-        List<MenuTree> modelList = TreeUtil.buildTreeToGroup(radom(), true, Comparator.comparing(MenuTree::getFdId));
+        List<MenuTree> modelList = TreeUtil.buildTreeToGroup(random(), true, Comparator.comparing(MenuTree::getFdId));
 
         stopwatch.stop();
         System.out.println("group: " + stopwatch);

@@ -1,0 +1,38 @@
+server:
+  port: 80
+
+  servlet:
+    encoding:
+      force-request: true
+      force-response: true
+
+spring:
+  application:
+    name: file-check
+
+  jackson:
+    #    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    locale: zh
+    default-property-inclusion: non_null
+    serialization:
+      #      FAIL_ON_EMPTY_BEANS: false
+      INDENT_OUTPUT: true
+    deserialization:
+      FAIL_ON_UNKNOWN_PROPERTIES: false
+
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 2KB
+      location: ./temp
+      max-file-size: 200MB
+      max-request-size: 215MB
+
+logging:
+  config: classpath:logback-spring.xml
+  file:
+    path: ./logs
+
+log:
+  level: info

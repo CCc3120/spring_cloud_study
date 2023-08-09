@@ -16,6 +16,7 @@
 
     <modules>
         <module>study-system</module>
+        <module>file-check</module>
     </modules>
 
     <packaging>pom</packaging>
