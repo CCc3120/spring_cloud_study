@@ -42,7 +42,7 @@ public class DeprecatedInterfaceSeeAspect implements InitializingBean {
         }
 
         AjaxResult<?> ajaxResult = (AjaxResult<?>) proceed;
-        if (!ajaxResult.checkIsSuccess()) {
+        if (!ajaxResult.success()) {
             return proceed;
         }
 

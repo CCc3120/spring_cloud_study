@@ -1,4 +1,4 @@
-package com.bingo.study.common.component.returnValue.handler;
+package com.bingo.study.common.component.responseBodyHandle.handler;
 
 import com.bingo.study.common.core.utils.JsonMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -13,8 +13,8 @@ import java.util.Map;
  * @Version 1.0
  */
 @Slf4j
-@ConditionalOnMissingBean(DefaultValueHandler.class)
-public class DefaultValueHandler implements ReturnValueHandler {
+@ConditionalOnMissingBean(DefaultResponseBodyHandler.class)
+public class DefaultResponseBodyHandler implements ResponseBodyHandler {
     @Override
     public boolean support(Object obj) {
         return false;
@@ -23,7 +23,7 @@ public class DefaultValueHandler implements ReturnValueHandler {
     @Override
     public Object ignore(Object obj, String[] ignore) {
         String string = JsonMapper.getInstance().toJsonString(obj);
-        Map map = JsonMapper.getInstance().fromJson(string, Map.class);
+        Map<?, ?> map = JsonMapper.getInstance().fromJson(string, Map.class);
         for (String s : ignore) {
             map.remove(s);
         }
@@ -34,7 +34,7 @@ public class DefaultValueHandler implements ReturnValueHandler {
     public Object specify(Object obj, String[] specify) {
         Map<Object, Object> rtn = new HashMap<>();
         String string = JsonMapper.getInstance().toJsonString(obj);
-        Map map = JsonMapper.getInstance().fromJson(string, Map.class);
+        Map<?, ?> map = JsonMapper.getInstance().fromJson(string, Map.class);
         for (String s : specify) {
             rtn.put(s, map.get(s));
         }

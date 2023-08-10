@@ -36,7 +36,7 @@ public class AjaxResult<T> implements Serializable {
         this.data = data;
     }
 
-    public boolean checkIsSuccess() {
+    public boolean success() {
         return HttpStatusEnum.SUCCESS.getCode().equals(this.code);
     }
 }

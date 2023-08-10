@@ -1,4 +1,4 @@
-package com.bingo.study.common.component.returnValue;
+package com.bingo.study.common.component.responseBodyHandle;
 
 import com.bingo.study.common.core.enums.CodeDescEnum;
 

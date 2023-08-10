@@ -1,8 +1,8 @@
 package com.bingo.test;
 
+import com.bingo.study.common.component.responseBodyHandle.annotation.EnableResponseBodyHandler;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.retry.annotation.EnableRetry;
 
 
 // @EnableAspectJAutoProxy // 启用AOP，springboot自动装配所以不用加
@@ -13,7 +13,7 @@ import org.springframework.retry.annotation.EnableRetry;
 // @EnableRedisLock
 // @EnableTranslate
 // @EnableDeprecatedInterfaceSee
-// @EnableReturnValue
+@EnableResponseBodyHandler
 // @ServletComponentScan
 // @SpringBootApplication(exclude = {DruidDataSourceAutoConfigure.class})
 // @EnableRetry // 启用spring retry 功能

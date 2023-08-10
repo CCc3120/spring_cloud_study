@@ -1,6 +1,6 @@
 package com.bingo.test.translate;
 
-import com.bingo.study.common.component.returnValue.IgnoreField;
+import com.bingo.study.common.component.responseBodyHandle.IgnoreField;
 import com.bingo.study.common.component.translate.annotation.Translate;
 import com.bingo.study.common.component.translate.constant.TranslateType;
 import lombok.Data;

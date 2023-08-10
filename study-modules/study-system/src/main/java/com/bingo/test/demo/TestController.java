@@ -7,7 +7,7 @@ import com.bingo.study.common.component.limiter.LimitRealize;
 import com.bingo.study.common.component.limiter.LimitType;
 import com.bingo.study.common.component.limiter.annotation.RateLimiter;
 import com.bingo.study.common.component.nosql.service.EsUpdateService;
-import com.bingo.study.common.component.returnValue.annotation.ReturnField;
+import com.bingo.study.common.component.responseBodyHandle.annotation.ResponseBodyHandleMark;
 import com.bingo.study.common.component.translate.util.TranslateUtil;
 import com.bingo.study.common.core.page.AjaxResult;
 import com.bingo.study.common.core.page.AjaxResultFactory;
@@ -54,7 +54,7 @@ public class TestController {
     }
 
     // @RateLimiter(count = 5, time = 10, limitType = LimitType.DEFAULT, limitRealize = LimitRealize.TOKEN_BUCKET)
-    @ReturnField(enable = false)
+    // @ResponseBodyFieldFilter(enable = false)
     @RequestMapping(path = "/testDataSource", method = RequestMethod.GET)
     public AjaxResult<String> testDataSource() {
         // try {
@@ -87,14 +87,14 @@ public class TestController {
         return AjaxResultFactory.success();
     }
 
-    @ReturnField(enable = false)
+    // @ResponseBodyFieldFilter(enable = false)
     @RequestMapping(path = "/testLock", method = RequestMethod.GET)
     public AjaxResult<String> testLock() throws InterruptedException {
         String data = teacherService.testLock(new Teacher(), "123");
         return AjaxResultFactory.success(data);
     }
 
-    @ReturnField(enable = false)
+    @ResponseBodyHandleMark(filedFilter = false)
     @RequestMapping(path = "/testType", method = RequestMethod.GET)
     public String testType() throws InterruptedException {
         // String data = teacherService.testLock("123", new Teacher());
@@ -102,7 +102,7 @@ public class TestController {
     }
 
     @DeprecatedInterfaceSee(clazz = TestController.class, method = "testType")
-    @ReturnField(specify = {"fdName", "fdSex"})
+    @ResponseBodyHandleMark()
     @RequestMapping(path = "/advice", method = RequestMethod.GET)
     public AjaxResult<Teacher> test00() {
         Teacher teacher = new Teacher();
@@ -117,6 +117,21 @@ public class TestController {
 
 
         return AjaxResultFactory.success(teacher);
+    }
+
+    @ResponseBodyHandleMark(filedFilter = false, wrapper = false)
+    @RequestMapping(path = "/test000", method = RequestMethod.GET)
+    public Teacher test000() {
+        Teacher teacher = new Teacher();
+        teacher.setFdName("张三");
+        teacher.setFdAge(20);
+        teacher.setFdBirthday(new Date());
+        teacher.setFdNo("ZX002");
+        teacher.setFdIdCard("182934567879036251");
+        teacher.setFdSex("男");
+        teacher.setFdCreateTime(new Date());
+        teacher.setFdUpdateTime(new Date());
+        return teacher;
     }
 
     @RequestMapping(path = "/test01")
