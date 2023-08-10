@@ -17,10 +17,7 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
-import org.redisson.api.RRateLimiter;
-import org.redisson.api.RateIntervalUnit;
-import org.redisson.api.RateType;
-import org.redisson.api.RedissonClient;
+import org.redisson.api.*;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -72,10 +69,22 @@ public class RateLimiterAspect implements InitializingBean {
     private void tokenBucket(JoinPoint point, RateLimiter limiter) {
         String redisLimiterKey = getRedisLimiterKey(point, limiter);
         RRateLimiter rateLimiter = redissonClient.getRateLimiter(redisLimiterKey);
-        // if (rateLimiter.getConfig() == null) {
-        // 设置令牌桶速率
-        rateLimiter.trySetRate(RateType.OVERALL, limiter.count(), limiter.time(), RateIntervalUnit.SECONDS);
-        // }
+
+        if (!rateLimiter.isExists()) {
+            // 设置令牌桶速率
+            rateLimiter.trySetRate(RateType.OVERALL, limiter.count(), limiter.time(), RateIntervalUnit.SECONDS);
+        }
+
+        RateLimiterConfig rateLimiterConfig = rateLimiter.getConfig();
+
+        if (rateLimiterConfig.getRate() != limiter.count()
+                || rateLimiterConfig.getRateInterval() != RateIntervalUnit.SECONDS.toMillis(limiter.time())) {
+
+            // 如果和之前配置不一样，则删除，重新设置
+            rateLimiter.delete();
+            rateLimiter.trySetRate(RateType.OVERALL, limiter.count(), limiter.time(), RateIntervalUnit.SECONDS);
+        }
+
         if (!rateLimiter.tryAcquire(1)) {
             log.info("方法已限流: {}", redisLimiterKey);
             throw new RateLimiterException("访问过于频繁，请稍候再试");

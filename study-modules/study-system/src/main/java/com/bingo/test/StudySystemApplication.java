@@ -1,6 +1,6 @@
 package com.bingo.test;
 
-import com.bingo.study.common.component.responseBodyHandle.annotation.EnableResponseBodyHandler;
+import com.bingo.study.common.component.limiter.annotation.EnableRateLimiter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -9,11 +9,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 // @EnableDynamicTransaction
 // @EnableDynamicDB
 // @EnableHttpLogInterceptor
-// @EnableRateLimiter
+@EnableRateLimiter
 // @EnableRedisLock
 // @EnableTranslate
 // @EnableDeprecatedInterfaceSee
-@EnableResponseBodyHandler
+// @EnableResponseBodyHandler
 // @ServletComponentScan
 // @SpringBootApplication(exclude = {DruidDataSourceAutoConfigure.class})
 // @EnableRetry // 启用spring retry 功能

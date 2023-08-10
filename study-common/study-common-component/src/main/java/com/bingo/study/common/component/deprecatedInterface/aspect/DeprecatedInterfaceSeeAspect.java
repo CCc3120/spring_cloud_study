@@ -70,7 +70,8 @@ public class DeprecatedInterfaceSeeAspect implements InitializingBean {
                         return proceed;
                     }
 
-                    ajaxResult.setMessage(String.format(DEPRECATED_INTERFACE_TIP, requestMapping.value()[0]));
+                    ajaxResult.setMessage(String.format(DEPRECATED_INTERFACE_TIP,
+                            getRequestMappingValue(requestMapping)));
                     return proceed;
                 }
             }

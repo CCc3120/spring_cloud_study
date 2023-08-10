@@ -62,19 +62,19 @@ public class DefaultResponseBodyWrapperFilter implements ResponseBodyAdvice<Obje
             AjaxResult result = (AjaxResult) body;
             result.setData(process(result.getData(), responseBodyHandleMark));
             return result;
-        }
-
-        Object data = process(body, responseBodyHandleMark);
-        if (body instanceof String) {
-            if (responseBodyHandleMark == null || responseBodyHandleMark.wrapper()) {
-                return JsonMapper.getInstance().toJsonString(AjaxResultFactory.success(data));
-            }
         } else {
-            if (responseBodyHandleMark == null || responseBodyHandleMark.wrapper()) {
-                return AjaxResultFactory.success(data);
+            Object data = process(body, responseBodyHandleMark);
+            if (body instanceof String) {
+                if (responseBodyHandleMark == null || responseBodyHandleMark.wrapper()) {
+                    return JsonMapper.getInstance().toJsonString(AjaxResultFactory.success(data));
+                }
+            } else {
+                if (responseBodyHandleMark == null || responseBodyHandleMark.wrapper()) {
+                    return AjaxResultFactory.success(data);
+                }
             }
+            return data;
         }
-        return data;
     }
 
     private Object process(Object data, ResponseBodyHandleMark responseBodyHandleMark) {

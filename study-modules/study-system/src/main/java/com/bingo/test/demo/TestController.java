@@ -76,8 +76,7 @@ public class TestController {
     // @ReturnField(enable = false)
     @RequestMapping(path = "/testLimiter", method = RequestMethod.GET)
     public AjaxResult<String> testLimiter() {
-
-
+        System.out.println("执行。。。。");
         return AjaxResultFactory.success();
     }
 
