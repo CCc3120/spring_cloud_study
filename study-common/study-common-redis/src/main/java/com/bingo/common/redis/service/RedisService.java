@@ -1,6 +1,5 @@
 package com.bingo.common.redis.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Component;
 
@@ -14,11 +13,15 @@ import java.util.concurrent.TimeUnit;
  * @Date 2023-01-04 10:00
  * @Version 1.0
  */
+@SuppressWarnings({"unused"})
 @Component
 public class RedisService {
 
-    @Autowired
-    private RedisTemplate<Object, Object> redisTemplate;
+    private final RedisTemplate<Object, Object> redisTemplate;
+
+    public RedisService(RedisTemplate<Object, Object> redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
 
     /**
      * 判断 key 是否存在
@@ -34,7 +37,7 @@ public class RedisService {
      * 获取过期时间
      *
      * @param key 键
-     * @return
+     * @return 返回key的过期时间
      */
     public Long expire(String key) {
         return redisTemplate.getExpire(key);
@@ -93,6 +96,7 @@ public class RedisService {
      * @param unit    时间单位
      * @return true=设置成功；false=设置失败
      */
+    @SuppressWarnings({"all"})
     public boolean expire(String key, long timeout, TimeUnit unit) {
         return redisTemplate.expire(key, timeout, unit);
     }
@@ -103,6 +107,7 @@ public class RedisService {
      * @param key 缓存键值
      * @return 缓存键值对应的数据
      */
+    @SuppressWarnings({"unchecked"})
     public <T> T getCacheObject(String key) {
         return (T) opsForValue().get(key);
     }
@@ -112,6 +117,7 @@ public class RedisService {
      *
      * @param key
      */
+    @SuppressWarnings({"all"})
     public boolean deleteObject(String key) {
         return redisTemplate.delete(key);
     }
@@ -122,6 +128,7 @@ public class RedisService {
      * @param collection 多个对象
      * @return
      */
+    @SuppressWarnings({"all"})
     public long deleteObject(Collection<Object> collection) {
         return redisTemplate.delete(collection);
     }

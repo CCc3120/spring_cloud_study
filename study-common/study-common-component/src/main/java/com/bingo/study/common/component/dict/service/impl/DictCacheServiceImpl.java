@@ -31,7 +31,6 @@ public abstract class DictCacheServiceImpl<C extends IDictCategoryModel, D exten
 
     /***
      * key组成
-     *
      * applicationName + DICT_TYPE_KEY/DICT_DATA_KEY
      *
      * @Param [type, keyMark]
@@ -67,6 +66,7 @@ public abstract class DictCacheServiceImpl<C extends IDictCategoryModel, D exten
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<D> getDictCache(String type) {
         String dataKey = getDictCacheKey(DICT_DATA_KEY, getDictDataKey());
         return (List<D>) redisService.opsForHash().get(dataKey, type);
@@ -84,6 +84,7 @@ public abstract class DictCacheServiceImpl<C extends IDictCategoryModel, D exten
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Map<C, List<D>> getDictCache() {
         String categoryKey = getDictCacheKey(DICT_CATEGORY_KEY, getDictCategoryKey());
         String dataKey = getDictCacheKey(DICT_DATA_KEY, getDictDataKey());
