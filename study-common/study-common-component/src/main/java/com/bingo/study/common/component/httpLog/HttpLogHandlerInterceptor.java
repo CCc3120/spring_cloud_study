@@ -3,6 +3,7 @@ package com.bingo.study.common.component.httpLog;
 import cn.hutool.core.date.SystemClock;
 import com.bingo.study.common.core.utils.IPUtil;
 import com.bingo.study.common.core.utils.JsonMapper;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -14,8 +15,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -50,10 +49,11 @@ public class HttpLogHandlerInterceptor implements HandlerInterceptor, Initializi
             //     String body = argsArrayToString()
             // }
 
+            // 全局异常捕获后，异常不会来到这里
             if (ex != null) {
                 paramMap.put("errorType", ex.getClass().getTypeName());
                 paramMap.put("errorMsg", ex.getMessage());
-                paramMap.put("errorStack", getExceptionStack(ex));
+                paramMap.put("errorStack", ExceptionUtils.getStackTrace(ex));
             }
 
             long costTime = SystemClock.now() - COST_TIME.get();
@@ -102,15 +102,6 @@ public class HttpLogHandlerInterceptor implements HandlerInterceptor, Initializi
                 || obj instanceof HttpServletRequest
                 || obj instanceof HttpServletResponse
                 || obj instanceof BindingResult;
-    }
-
-    private String getExceptionStack(Throwable e) {
-        if (e == null) {
-            return null;
-        }
-        StringWriter sw = new StringWriter();
-        e.printStackTrace(new PrintWriter(sw));
-        return sw.toString();
     }
 
     @Override

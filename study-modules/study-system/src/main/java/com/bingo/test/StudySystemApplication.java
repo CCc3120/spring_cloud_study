@@ -1,6 +1,6 @@
 package com.bingo.test;
 
-import com.bingo.study.common.component.dict.translate.annotation.EnableTranslate;
+import com.bingo.study.common.component.httpLog.EnableHttpLogInterceptor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -8,10 +8,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 // @EnableAspectJAutoProxy // 启用AOP，springboot自动装配所以不用加
 // @EnableDynamicTransaction
 // @EnableDynamicDB
-// @EnableHttpLogInterceptor
+@EnableHttpLogInterceptor
 // @EnableRateLimiter
 // @EnableRedisLock
-@EnableTranslate
+// @EnableTranslate
 // @EnableDeprecatedInterfaceSee
 // @EnableResponseBodyHandler
 // @ServletComponentScan

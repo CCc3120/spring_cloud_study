@@ -45,7 +45,7 @@ public class TestController {
     private IDictService<DictType, DictData> dictService;
 
     @RequestMapping(path = "/testParam/{fdId}", method = RequestMethod.GET)
-    public AjaxResult<List<String>> testParam(@PathVariable("fdId") String fdId, @RequestParam("id") List<String> id) {
+    public AjaxResult<List<String>> testParam(@PathVariable("fdId") String fdId, @RequestParam(value = "id", required = false) List<String> id) {
         // try {
         //     teacherService.exceSql();
         // } catch (Exception e) {
