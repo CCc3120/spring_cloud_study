@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
  * @author bingo
  * @date 2022-04-28 16:23
  */
+@SuppressWarnings("unused")
 @Component
 @ConditionalOnMissingBean(SpringUtil.class)
 public class SpringUtil implements ApplicationContextAware, BeanFactoryPostProcessor {
@@ -66,6 +67,7 @@ public class SpringUtil implements ApplicationContextAware, BeanFactoryPostProce
      * @param name
      * @return Object 一个以所给名字注册的bean的实例
      */
+    @SuppressWarnings("unchecked")
     public static <T> T getBean(String name) throws BeansException {
         return (T) getBeanFactory().getBean(name);
     }

@@ -1,12 +1,11 @@
 package com.bingo.study.common.core.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
 import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import java.util.Iterator;
@@ -17,9 +16,9 @@ import java.util.Iterator;
  * @author bingo
  * @date 2022-03-23 17:44
  */
+@Slf4j
+@SuppressWarnings({"unused"})
 public class StringUtil {
-
-    private static Logger logger = LoggerFactory.getLogger(StringUtil.class);
 
     //==========分割符===========
     public static final String SEPARATOR_SEMICOLON = ";";
@@ -37,7 +36,7 @@ public class StringUtil {
      * @return
      */
     public static boolean isNull(String str) {
-        return str == null || str.trim().length() == 0;
+        return str == null || str.trim().isEmpty();
     }
 
     /**
@@ -66,7 +65,7 @@ public class StringUtil {
      * @return 若字符串不为null或长度不为0，则返回<code>true</code>。
      */
     public static boolean hasLength(String str) {
-        return (str != null && str.length() > 0);
+        return (str != null && !str.isEmpty());
     }
 
     /**
@@ -82,7 +81,7 @@ public class StringUtil {
             try {
                 ret = Integer.parseInt(value);
             } catch (NumberFormatException e) {
-                ret = defaultValue;
+                log.warn("字符串转数字异常", e);
             }
         }
         return ret;
@@ -143,7 +142,7 @@ public class StringUtil {
             return ((first == null) ? "" : first.toString());
         }
 
-        StringBuilder buf = new StringBuilder(256);
+        StringBuilder buf = new StringBuilder();
         if (first != null) {
             buf.append(first);
         }
@@ -196,7 +195,7 @@ public class StringUtil {
         try {
             return PinyinHelper.toHanYuPinyinString(message, format, separate, retain);
         } catch (BadHanyuPinyinOutputFormatCombination e) {
-            logger.warn("字符串转化为拼音出现异常：" + e);
+            log.warn("字符串转化为拼音出现异常：" + e);
             return null;
         }
     }
@@ -251,9 +250,5 @@ public class StringUtil {
             }
         }
         return sb.toString().toLowerCase();
-    }
-
-    public static void main(String[] args) {
-        System.out.println(humpToUnderline("String"));
     }
 }

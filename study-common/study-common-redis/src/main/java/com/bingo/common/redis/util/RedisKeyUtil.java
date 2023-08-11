@@ -1,8 +1,9 @@
 package com.bingo.common.redis.util;
 
-import com.bingo.study.common.core.utils.SpringUtil;
 import com.bingo.study.common.core.utils.StringUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 /**
  * redis key 操作工具类
@@ -11,24 +12,23 @@ import lombok.extern.slf4j.Slf4j;
  * @date 2022-04-27 16:18
  */
 @Slf4j
+@SuppressWarnings("unused")
+@Component
 public class RedisKeyUtil {
 
     /**
      * 分割符
      */
-    public static final String DECOLLATOR = StringUtil.SEPARATOR_COLON;
+    public static final String SEPARATOR_COLON = StringUtil.SEPARATOR_COLON;
 
     /**
      * 应用前缀
      */
     public static String APP_PREFIX;
 
-    static {
-        APP_PREFIX = SpringUtil.getValue("spring.application.name", String.class, "DEFAULT");
-        if (StringUtil.isNull(APP_PREFIX)) {
-            log.warn("application name is null");
-        }
-        APP_PREFIX = StringUtil.join(APP_PREFIX.split("-"), ":");
+    @Value("${spring.application.name}")
+    public void setAppPrefix(String appPrefix) {
+        RedisKeyUtil.APP_PREFIX = StringUtil.join(appPrefix.split("-"), ":");
     }
 
     /**
@@ -82,16 +82,17 @@ public class RedisKeyUtil {
     public static String getCacheKey(String prefix, String name, boolean isForever, boolean hasAppPrefix) {
         StringBuilder redisKey = new StringBuilder();
         if (hasAppPrefix) {
-            redisKey.append(APP_PREFIX).append(DECOLLATOR);
+            redisKey.append(APP_PREFIX).append(SEPARATOR_COLON);
         }
         if (isForever) {
-            redisKey.append(CACHE_NAME_FOREVER).append(DECOLLATOR);
+            redisKey.append(CACHE_NAME_FOREVER).append(SEPARATOR_COLON);
         }
 
         if (!StringUtil.isNull(prefix)) {
-            redisKey.append(prefix).append(DECOLLATOR);
+            redisKey.append(prefix).append(SEPARATOR_COLON);
         }
         redisKey.append(name);
         return redisKey.toString();
     }
 }
+
