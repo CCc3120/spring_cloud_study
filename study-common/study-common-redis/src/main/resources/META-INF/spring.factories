@@ -1,3 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 com.bingo.common.redis.config.RedisConfig,\
-com.bingo.common.redis.service.RedisService
+com.bingo.common.redis.service.RedisService,\
+com.bingo.common.redis.util.RedisKeyUtil

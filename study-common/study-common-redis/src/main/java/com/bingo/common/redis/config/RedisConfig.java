@@ -119,22 +119,22 @@ public class RedisConfig extends CachingConfigurerSupport {
                 "return tonumber(current);";
     }
 
-    private String slidingWindowText() {
-        return "local key = KEYS[1]\n" +
-                "local currentTime = tonumber(ARGV[1])\n" +
-                "local ttl = tonumber(ARGV[2])\n" +
-                "local windowTime = tonumber(ARGV[3]) --\n" +
-                "local limitCount = tonumber(ARGV[4])\n" +
-                "local value = tonumber(ARGV[5])\n" +
-                "redis.call('zremrangebyscore', key, 0, currentTime - windowTime)\n" +
-                "local currentNum = tonumber(redis.call('zcard', key))\n" +
-                "local next = currentNum + 1\n" +
-                "if next > limitCount then\n" +
-                "return 0;\n" +
-                "else\n" +
-                "redis.call(\"zadd\", key, currentTime, value)\n" +
-                "redis.call(\"expire\", key, ttl)\n" +
-                "return next\n" +
-                "end";
-    }
+    // private String slidingWindowText() {
+    //     return "local key = KEYS[1]\n" +
+    //             "local currentTime = tonumber(ARGV[1])\n" +
+    //             "local ttl = tonumber(ARGV[2])\n" +
+    //             "local windowTime = tonumber(ARGV[3]) --\n" +
+    //             "local limitCount = tonumber(ARGV[4])\n" +
+    //             "local value = tonumber(ARGV[5])\n" +
+    //             "redis.call('zremrangebyscore', key, 0, currentTime - windowTime)\n" +
+    //             "local currentNum = tonumber(redis.call('zcard', key))\n" +
+    //             "local next = currentNum + 1\n" +
+    //             "if next > limitCount then\n" +
+    //             "return 0;\n" +
+    //             "else\n" +
+    //             "redis.call(\"zadd\", key, currentTime, value)\n" +
+    //             "redis.call(\"expire\", key, ttl)\n" +
+    //             "return next\n" +
+    //             "end";
+    // }
 }
