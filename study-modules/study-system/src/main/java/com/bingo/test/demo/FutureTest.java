@@ -1,5 +1,9 @@
 package com.bingo.test.demo;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.*;
 import java.util.function.*;
 
@@ -28,6 +32,37 @@ public class FutureTest {
         // test7();
         //
         // test8();
+
+
+        List<String> orderNo = new ArrayList<>();
+
+        Map<String,String> map = new HashMap<>();
+        for (String s : orderNo) {
+            boolean flag = true;// 假如s加锁成功
+            if(flag){
+                map.put(s,"加锁成功的key");
+            }
+        }
+
+        for (Map.Entry<String, String> stringStringEntry : map.entrySet()) {
+            // 执行
+            // 释放锁
+        }
+
+
+        CompletableFuture<Boolean> booleanCompletableFuture = CompletableFuture.supplyAsync(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+
+                return false;
+            }
+        }).whenComplete(new BiConsumer<Boolean, Throwable>() {
+            @Override
+            public void accept(Boolean aBoolean, Throwable throwable) {
+
+
+            }
+        });
 
 
 

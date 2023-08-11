@@ -1,6 +1,6 @@
 package com.bingo.test;
 
-import com.bingo.study.common.component.limiter.annotation.EnableRateLimiter;
+import com.bingo.study.common.component.dict.translate.annotation.EnableTranslate;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -9,9 +9,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 // @EnableDynamicTransaction
 // @EnableDynamicDB
 // @EnableHttpLogInterceptor
-@EnableRateLimiter
+// @EnableRateLimiter
 // @EnableRedisLock
-// @EnableTranslate
+@EnableTranslate
 // @EnableDeprecatedInterfaceSee
 // @EnableResponseBodyHandler
 // @ServletComponentScan

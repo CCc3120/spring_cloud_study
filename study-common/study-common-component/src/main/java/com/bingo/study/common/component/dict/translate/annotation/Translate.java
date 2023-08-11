@@ -1,6 +1,6 @@
-package com.bingo.study.common.component.translate.annotation;
+package com.bingo.study.common.component.dict.translate.annotation;
 
-import com.bingo.study.common.component.translate.constant.TranslateType;
+import com.bingo.study.common.component.dict.translate.constant.TranslateType;
 import com.bingo.study.common.core.enums.CodeDescEnum;
 
 import java.lang.annotation.*;

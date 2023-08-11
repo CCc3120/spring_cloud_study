@@ -47,6 +47,6 @@ public abstract class BaseException extends RuntimeException {
     public String getStackTraceMessage() {
         StringWriter writer = new StringWriter();
         this.printStackTrace(new PrintWriter(writer, true));
-        return writer.toString();
+        return writer.getBuffer().toString();
     }
 }

@@ -1,8 +1,7 @@
 package com.bingo.test.mainTest;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import cn.hutool.core.exceptions.ExceptionUtil;
+import org.apache.commons.lang.exception.ExceptionUtils;
 
 /**
  * @Author h-bingo
@@ -11,6 +10,33 @@ import java.util.Map;
  */
 public class TestMainClass {
     public static void main(String[] args) {
+
+        try {
+            int a = 1 / 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            String s = ExceptionUtil.stacktraceToString(e);
+
+            System.out.println(s);
+
+            String s1 = ExceptionUtil.stacktraceToOneLineString(e);
+
+            System.out.println(s1);
+
+            String stackTrace = ExceptionUtils.getStackTrace(e);
+
+            System.out.println(stackTrace);
+
+            String stackTrace1 = org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace(e);
+
+
+            System.out.println(stackTrace1);
+
+        }
+
+
+
         // Object o1, o2 = o1 = new Object();
 
         // System.out.println(o1.hashCode());
@@ -52,17 +78,17 @@ public class TestMainClass {
         //
         // System.out.println(c);
         // // a
-        Object key = "q";
+        // Object key = "q";
         //
-        hashValue(key);
-
-        int a = 60 + 1024;
-        int b = 1023;
-        int c = a & b;
-
-        System.out.println(c);
-
-        Map<String, String> map = new HashMap<>();
+        // hashValue(key);
+        //
+        // int a = 60 + 1024;
+        // int b = 1023;
+        // int c = a & b;
+        //
+        // System.out.println(c);
+        //
+        // Map<String, String> map = new HashMap<>();
         // System.out.println(32 & 16);
 
         // System.out.println( 15 & 20);
@@ -77,9 +103,9 @@ public class TestMainClass {
         // System.out.println(9 & 12);
 
 
-        double d = 0.1538;
-
-        System.out.println(d * 100);
+        // double d = 0.1538;
+        //
+        // System.out.println(d * 100);
         //     id     parentId    name
         //     0        0          qqq
         //     1        0          www
@@ -90,8 +116,8 @@ public class TestMainClass {
         //     选中 李四和王五  => 结果是 2 ｜ 4 = 6 （数据库存6）
         //     取值时，循环所有项 6 & 2 > 0 即选中
 
-        Date date = ((((((((((new Date()))))))))));
-        System.out.println(date);
+        // Date date = ((((((((((new Date()))))))))));
+        // System.out.println(date);
     }
 
     public static void hashValue(Object key) {

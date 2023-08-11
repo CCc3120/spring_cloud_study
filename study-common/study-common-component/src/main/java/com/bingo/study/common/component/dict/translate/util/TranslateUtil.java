@@ -1,16 +1,16 @@
-package com.bingo.study.common.component.translate.util;
+package com.bingo.study.common.component.dict.translate.util;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ReflectUtil;
-import com.bingo.study.common.component.translate.annotation.Translate;
-import com.bingo.study.common.component.translate.constant.TranslateType;
-import com.bingo.study.common.component.translate.wrapper.TranslateFieldWrapper;
-import com.bingo.study.common.core.dict.IDictTranslateService;
+import com.bingo.study.common.component.dict.service.IDictTranslateService;
+import com.bingo.study.common.component.dict.translate.annotation.Translate;
+import com.bingo.study.common.component.dict.translate.constant.TranslateType;
+import com.bingo.study.common.component.dict.translate.wrapper.TranslateFieldWrapper;
+import com.bingo.study.common.core.dict.IDictDataModel;
 import com.bingo.study.common.core.enums.CodeDescEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 
 import java.lang.reflect.Field;
@@ -32,12 +32,14 @@ public class TranslateUtil implements InitializingBean {
 
     private static final Map<Class<?>, List<TranslateFieldWrapper>> TRAN_FIELD_CACHE = new ConcurrentHashMap<>();
 
-    private static IDictTranslateService dictTranslateService;
+    private static  IDictTranslateService<? extends IDictDataModel> dictTranslateService;
 
+    /*
+    @TODO 待完成，多类型字典翻译
     @Autowired(required = false)
-    public void setDictTranslateService(IDictTranslateService dictTranslateService) {
+    public <D extends IDictDataModel> void setDictTranslateService(IDictTranslateService<D> dictTranslateService) {
         TranslateUtil.dictTranslateService = dictTranslateService;
-    }
+    } */
 
     /**
      * 翻译列表

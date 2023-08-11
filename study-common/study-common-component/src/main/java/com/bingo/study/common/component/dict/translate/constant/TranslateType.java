@@ -1,4 +1,4 @@
-package com.bingo.study.common.component.translate.constant;
+package com.bingo.study.common.component.dict.translate.constant;
 
 import com.bingo.study.common.core.enums.DescEnum;
 

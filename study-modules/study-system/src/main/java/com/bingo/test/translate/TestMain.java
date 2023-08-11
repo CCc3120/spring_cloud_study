@@ -1,7 +1,7 @@
 package com.bingo.test.translate;
 
+import com.bingo.study.common.component.dict.translate.util.TranslateUtil;
 import com.bingo.study.common.component.responseBodyHandle.IgnoreField;
-import com.bingo.study.common.component.translate.util.TranslateUtil;
 
 import java.util.ArrayList;
 import java.util.List;

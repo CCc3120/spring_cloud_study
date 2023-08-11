@@ -3,20 +3,22 @@ package com.bingo.test.demo;
 import cn.hutool.extra.spring.SpringUtil;
 import com.bingo.common.redis.service.RedisService;
 import com.bingo.study.common.component.deprecatedInterface.annotation.DeprecatedInterfaceSee;
+import com.bingo.study.common.component.dict.service.IDictService;
+import com.bingo.study.common.component.dict.translate.util.TranslateUtil;
 import com.bingo.study.common.component.limiter.LimitRealize;
 import com.bingo.study.common.component.limiter.LimitType;
 import com.bingo.study.common.component.limiter.annotation.RateLimiter;
 import com.bingo.study.common.component.nosql.service.EsUpdateService;
 import com.bingo.study.common.component.responseBodyHandle.annotation.ResponseBodyHandleMark;
-import com.bingo.study.common.component.translate.util.TranslateUtil;
 import com.bingo.study.common.core.page.AjaxResult;
 import com.bingo.study.common.core.page.AjaxResultFactory;
+import com.bingo.test.translate.dict.DictData;
+import com.bingo.test.translate.dict.DictType;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @Author h-bingo
@@ -33,8 +35,14 @@ public class TestController {
     @Autowired
     private TeacherService teacherService;
 
+    // @Autowired
+    // private IDictCacheService dictCacheService;
+
     @Autowired
     private RedissonClient redissonClient;
+
+    @Autowired
+    private IDictService<DictType, DictData> dictService;
 
     @RequestMapping(path = "/testParam/{fdId}", method = RequestMethod.GET)
     public AjaxResult<List<String>> testParam(@PathVariable("fdId") String fdId, @RequestParam("id") List<String> id) {
@@ -202,4 +210,41 @@ public class TestController {
         return AjaxResultFactory.success();
     }
 
+    @RequestMapping(path = "/testDict", method = RequestMethod.GET)
+    public AjaxResult testDict() {
+        Map<DictType, List<DictData>> map = new LinkedHashMap<>();
+        for (int i = 0; i < 5; i++) {
+            DictType dictType = new DictType();
+            dictType.setName("类型名" + i);
+            dictType.setType("type-" + i);
+
+            List<DictData> list = new ArrayList<>();
+            for (int j = 0; j < 5; j++) {
+                DictData data = new DictData();
+                data.setCode(i + "||" + j);
+                data.setName("字典数据" + j);
+                data.setType("type-" + i);
+                list.add(data);
+            }
+
+            map.put(dictType, list);
+        }
+
+        // dictCacheService.setDictCache(map);
+
+        // List<DictData> dictCache = dictCacheService.getDictCache("type-0");
+        //
+        // DictData data = dictCacheService.getDictCache("0||2", "type-0");
+        //
+        // Map<DictType, List<DictData>> dictCache1 = dictCacheService.getDictCache();
+
+        // dictCacheService.refreshDictCache();
+        // dictCacheService.refreshDictCache(map);
+
+        // dictCacheService.removeDictCache();
+
+        dictService.refreshDict(map);
+
+        return AjaxResultFactory.success();
+    }
 }

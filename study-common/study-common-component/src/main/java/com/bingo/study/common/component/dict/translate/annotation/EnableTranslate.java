@@ -1,6 +1,6 @@
-package com.bingo.study.common.component.translate.annotation;
+package com.bingo.study.common.component.dict.translate.annotation;
 
-import com.bingo.study.common.component.translate.util.TranslateUtil;
+import com.bingo.study.common.component.dict.translate.util.TranslateUtil;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;

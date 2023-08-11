@@ -1,4 +1,6 @@
-package com.bingo.study.common.core.dict;
+package com.bingo.study.common.component.dict.service;
+
+import com.bingo.study.common.core.dict.IDictDataModel;
 
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -10,16 +12,16 @@ import java.util.function.Consumer;
  * @Date 2023-06-13 09:32
  * @Version 1.0
  */
-public interface IDictTranslateService {
+public interface IDictTranslateService<D extends IDictDataModel> {
 
     /**
      * 查询字典
      *
      * @Param [code, type]
-     * @Return java.util.Optional<com.bingo.study.common.core.dict.IDictBase>
+     * @Return java.util.Optional<com.bingo.study.common.core.dict.IDictTranslateModel>
      * @Date 2023-06-13 09:37
      */
-    Optional<IDictTranslateModel> getDictOpt(String code, String type);
+    Optional<D> getDictOpt(String code, String type);
 
     /**
      * 字典翻译
@@ -28,5 +30,5 @@ public interface IDictTranslateService {
      * @Return void
      * @Date 2023-06-13 09:38
      */
-    void dictTran(String code, String type, Consumer<IDictTranslateModel> consumer);
+    void dictTran(String code, String type, Consumer<D> consumer);
 }
