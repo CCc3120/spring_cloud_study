@@ -8,57 +8,45 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.function.Consumer;
 
 /**
  * @Author h-bingo
  * @Date 2023-08-11 10:22
  * @Version 1.0
  */
-public abstract class DictServiceImpl<C extends IDictCategoryModel, D extends IDictDataModel>
-        implements IDictService<C, D> {
+public abstract class AbstractDictService<C extends IDictCategoryModel, D extends IDictDataModel>
+        extends AbstractDictTranslateService<D> implements IDictService<C, D> {
 
     @Autowired
     private IDictCacheService<C, D> dictCacheService;
 
     @Override
     public List<D> getDict(String type) {
-        return dictCacheService.getDictCache(type);
+        return dictCacheService.getDict(type);
     }
 
     @Override
     public D getDict(String code, String type) {
-        return dictCacheService.getDictCache(code, type);
+        return dictCacheService.getDict(code, type);
     }
 
     @Override
     public Map<C, List<D>> getDict() {
-        return dictCacheService.getDictCache();
+        return dictCacheService.getDict();
     }
 
     @Override
     public void removeDict(String type) {
-        dictCacheService.removeDictCache(type);
+        dictCacheService.removeDict(type);
     }
 
     @Override
     public void refreshDict(C type, List<D> dictList) {
-        dictCacheService.refreshDictCache(type, dictList);
+        dictCacheService.refreshDict(type, dictList);
     }
 
     @Override
     public void refreshDict(Map<C, List<D>> dictMap) {
-        dictCacheService.refreshDictCache(dictMap);
-    }
-
-    @Override
-    public Optional<D> getDictOpt(String code, String type) {
-        return dictCacheService.getDictOpt(code, type);
-    }
-
-    @Override
-    public void dictTran(String code, String type, Consumer<D> consumer) {
-        dictCacheService.dictTran(code, type, consumer);
+        dictCacheService.refreshDict(dictMap);
     }
 }

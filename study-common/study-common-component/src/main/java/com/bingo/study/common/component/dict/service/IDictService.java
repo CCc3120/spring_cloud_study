@@ -29,7 +29,7 @@ public interface IDictService<C extends IDictCategoryModel, D extends IDictDataM
     List<D> getDict(String type);
 
     /***
-     * 精准查询字典缓存
+     * 精准查询字典
      * @Param [code, type]
      * @Return M
      * @Date 2023-08-10 16:17

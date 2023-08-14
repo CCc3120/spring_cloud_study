@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 字典缓存接口
+ * 字典缓存接口，默认走redis
  *
  * @Author h-bingo
  * @Date 2023-08-10 15:46
@@ -22,7 +22,7 @@ public interface IDictCacheService<C extends IDictCategoryModel, D extends IDict
      * @Return void
      * @Date 2023-08-10 16:17
      */
-    void setDictCache(Map<C, List<D>> dictMap);
+    void setDict(Map<C, List<D>> dictMap);
 
     /***
      * 设置 指定 type 字典缓存
@@ -30,7 +30,7 @@ public interface IDictCacheService<C extends IDictCategoryModel, D extends IDict
      * @Return void
      * @Date 2023-08-10 17:36
      */
-    void setDictCache(C type, List<D> dictList);
+    void setDict(C type, List<D> dictList);
 
     /***
      * 查询 指定 type 字典
@@ -38,7 +38,7 @@ public interface IDictCacheService<C extends IDictCategoryModel, D extends IDict
      * @Return java.util.List<D>
      * @Date 2023-08-11 09:32
      */
-    List<D> getDictCache(String type);
+    List<D> getDict(String type);
 
     /***
      * 精准查询字典缓存
@@ -46,7 +46,7 @@ public interface IDictCacheService<C extends IDictCategoryModel, D extends IDict
      * @Return M
      * @Date 2023-08-10 16:17
      */
-    D getDictCache(String code, String type);
+    D getDict(String code, String type);
 
     /***
      * 查询全部字典
@@ -54,7 +54,7 @@ public interface IDictCacheService<C extends IDictCategoryModel, D extends IDict
      * @Return java.util.Map<C, java.util.List < D>>
      * @Date 2023-08-11 09:33
      */
-    Map<C, List<D>> getDictCache();
+    Map<C, List<D>> getDict();
 
     /***
      * 移除全部字典缓存
@@ -62,7 +62,7 @@ public interface IDictCacheService<C extends IDictCategoryModel, D extends IDict
      * @Return void
      * @Date 2023-08-10 16:17
      */
-    void removeDictCache();
+    void removeDict();
 
     /***
      * 移除指定 type 字典缓存
@@ -70,7 +70,7 @@ public interface IDictCacheService<C extends IDictCategoryModel, D extends IDict
      * @Return void
      * @Date 2023-08-10 16:17
      */
-    void removeDictCache(String type);
+    void removeDict(String type);
 
     /***
      * 刷新指定 type 的字典
@@ -78,7 +78,7 @@ public interface IDictCacheService<C extends IDictCategoryModel, D extends IDict
      * @Return void
      * @Date 2023-08-10 16:17
      */
-    void refreshDictCache(C type, List<D> dictList);
+    void refreshDict(C type, List<D> dictList);
 
     /***
      * 批量刷新字典
@@ -86,5 +86,5 @@ public interface IDictCacheService<C extends IDictCategoryModel, D extends IDict
      * @Return void
      * @Date 2023-08-10 16:18
      */
-    void refreshDictCache(Map<C, List<D>> dictMap);
+    void refreshDict(Map<C, List<D>> dictMap);
 }

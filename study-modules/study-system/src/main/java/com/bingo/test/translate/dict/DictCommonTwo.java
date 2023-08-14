@@ -10,5 +10,6 @@ import org.springframework.stereotype.Component;
  * @Version 1.0
  */
 @Component
-public class DictCommon extends AbstractDictService<DictType, DictData> implements IDictService<DictType, DictData> {
+public class DictCommonTwo extends AbstractDictService<DictTypeTwo, DictDataTwo>
+        implements IDictService<DictTypeTwo, DictDataTwo> {
 }

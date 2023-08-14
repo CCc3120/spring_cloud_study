@@ -14,6 +14,14 @@ import java.util.function.Consumer;
  */
 public interface IDictTranslateService<D extends IDictDataModel> {
 
+    /***
+     * 精准查询字典
+     * @Param [code, type]
+     * @Return M
+     * @Date 2023-08-10 16:17
+     */
+    D getDict(String code, String type);
+
     /**
      * 查询字典
      *

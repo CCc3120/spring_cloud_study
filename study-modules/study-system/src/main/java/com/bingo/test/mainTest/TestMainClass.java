@@ -1,8 +1,5 @@
 package com.bingo.test.mainTest;
 
-import cn.hutool.core.exceptions.ExceptionUtil;
-import org.apache.commons.lang.exception.ExceptionUtils;
-
 /**
  * @Author h-bingo
  * @Date 2023-06-08 15:03
@@ -11,29 +8,31 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 public class TestMainClass {
     public static void main(String[] args) {
 
-        try {
-            int a = 1 / 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-
-            String s = ExceptionUtil.stacktraceToString(e);
-
-            System.out.println(s);
-
-            String s1 = ExceptionUtil.stacktraceToOneLineString(e);
-
-            System.out.println(s1);
-
-            String stackTrace = ExceptionUtils.getStackTrace(e);
-
-            System.out.println(stackTrace);
-
-            String stackTrace1 = org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace(e);
 
 
-            System.out.println(stackTrace1);
-
-        }
+        // try {
+        //     int a = 1 / 0;
+        // } catch (Exception e) {
+        //     e.printStackTrace();
+        //
+        //     String s = ExceptionUtil.stacktraceToString(e);
+        //
+        //     System.out.println(s);
+        //
+        //     String s1 = ExceptionUtil.stacktraceToOneLineString(e);
+        //
+        //     System.out.println(s1);
+        //
+        //     String stackTrace = ExceptionUtils.getStackTrace(e);
+        //
+        //     System.out.println(stackTrace);
+        //
+        //     String stackTrace1 = org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace(e);
+        //
+        //
+        //     System.out.println(stackTrace1);
+        //
+        // }
 
 
 

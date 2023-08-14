@@ -32,7 +32,7 @@ public class TranslateUtil implements InitializingBean {
 
     private static final Map<Class<?>, List<TranslateFieldWrapper>> TRAN_FIELD_CACHE = new ConcurrentHashMap<>();
 
-    private static  IDictTranslateService<? extends IDictDataModel> dictTranslateService;
+    private static IDictTranslateService<? extends IDictDataModel> dictTranslateService;
 
     /*
     @TODO 待完成，多类型字典翻译
@@ -40,6 +40,20 @@ public class TranslateUtil implements InitializingBean {
     public <D extends IDictDataModel> void setDictTranslateService(IDictTranslateService<D> dictTranslateService) {
         TranslateUtil.dictTranslateService = dictTranslateService;
     } */
+
+    // public static  <D extends IDictDataModel> void getDictTranslateService(IDictTranslateService<D>
+    // dictTranslateService) {
+    //     TranslateUtil.dictTranslateService = dictTranslateService;
+    // }
+
+    public <D extends IDictDataModel> IDictTranslateService<D> getDictTranslateService() {
+
+        // IDictTranslateService<D> dictTranslateService1 = null;
+        //
+        // Supplier<IDictTranslateService<D>> supplier = () -> dictTranslateService1;
+
+        return null;
+    }
 
     /**
      * 翻译列表
@@ -80,8 +94,9 @@ public class TranslateUtil implements InitializingBean {
             } else if (fieldWrapper.getTranslateType() == TranslateType.DICT && dictTranslateService != null) {
                 // 字典翻译
                 dictTranslateService.dictTran((String) ReflectUtil.getFieldValue(t, fieldWrapper.getField()),
-                        fieldWrapper.getDictType(), dictTranslateModel -> ReflectUtil.setFieldValue(t,
-                                fieldWrapper.getFullField(), dictTranslateModel.getName()));
+                        fieldWrapper.getDictType(), dictTranslateModel ->
+                                ReflectUtil.setFieldValue(t, fieldWrapper.getFullField(),
+                                        dictTranslateModel.getName()));
             }
         }
     }
@@ -183,6 +198,7 @@ public class TranslateUtil implements InitializingBean {
      * @Return T[]
      * @Date 2023-04-24 16:04
      */
+    @SuppressWarnings("unchecked")
     private static <T extends CodeDescEnum<?>> T[] getEnumValues(Class<T> clazz) {
         if (!clazz.isEnum()) {
             log.info("{} 不是枚举类", clazz.getTypeName());

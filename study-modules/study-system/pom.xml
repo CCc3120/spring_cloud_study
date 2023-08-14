@@ -74,6 +74,18 @@
             <version>1.0-alpha1</version>
         </dependency>
 
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.9.3</version>
+        </dependency>
+<!--        （用spring的间接依赖也可以，不必显式添加）-->
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib-nodep</artifactId>
+            <version>3.2.4</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.opencv/opencv -->
 <!--        <dependency>-->
 <!--            <groupId>org.opencv</groupId>-->

@@ -1,7 +1,7 @@
 package com.bingo.test.translate.dict;
 
 import com.bingo.study.common.component.dict.service.IDictCacheService;
-import com.bingo.study.common.component.dict.service.impl.DictCacheServiceImpl;
+import com.bingo.study.common.component.dict.service.impl.AbstractDictRedisCacheService;
 import org.springframework.stereotype.Component;
 
 /**
@@ -10,18 +10,11 @@ import org.springframework.stereotype.Component;
  * @Version 1.0
  */
 @Component
-public class DictCommonCache extends DictCacheServiceImpl<DictType, DictData>
+public class DictCommonCache extends AbstractDictRedisCacheService<DictType, DictData>
         implements IDictCacheService<DictType, DictData> {
 
-    private final String dictType = "common";
-
     @Override
-    protected String getDictCategoryKey() {
-        return dictType;
-    }
-
-    @Override
-    protected String getDictDataKey() {
-        return dictType;
+    protected String getDictKeyPrefix() {
+        return "common";
     }
 }

@@ -13,7 +13,9 @@ import com.bingo.study.common.component.responseBodyHandle.annotation.ResponseBo
 import com.bingo.study.common.core.page.AjaxResult;
 import com.bingo.study.common.core.page.AjaxResultFactory;
 import com.bingo.test.translate.dict.DictData;
+import com.bingo.test.translate.dict.DictDataTwo;
 import com.bingo.test.translate.dict.DictType;
+import com.bingo.test.translate.dict.DictTypeTwo;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -43,6 +45,9 @@ public class TestController {
 
     @Autowired
     private IDictService<DictType, DictData> dictService;
+
+    @Autowired
+    private IDictService<DictTypeTwo, DictDataTwo> dictService2;
 
     @RequestMapping(path = "/testParam/{fdId}", method = RequestMethod.GET)
     public AjaxResult<List<String>> testParam(@PathVariable("fdId") String fdId, @RequestParam(value = "id", required = false) List<String> id) {
@@ -230,6 +235,24 @@ public class TestController {
             map.put(dictType, list);
         }
 
+        Map<DictTypeTwo, List<DictDataTwo>> map2 = new LinkedHashMap<>();
+        for (int i = 0; i < 5; i++) {
+            DictTypeTwo dictType = new DictTypeTwo();
+            dictType.setName("类型名" + i);
+            dictType.setType("type-" + i);
+
+            List<DictDataTwo> list = new ArrayList<>();
+            for (int j = 0; j < 5; j++) {
+                DictDataTwo data = new DictDataTwo();
+                data.setCode(i + "||" + j);
+                data.setName("字典数据" + j);
+                data.setType("type-" + i);
+                list.add(data);
+            }
+
+            map2.put(dictType, list);
+        }
+
         // dictCacheService.setDictCache(map);
 
         // List<DictData> dictCache = dictCacheService.getDictCache("type-0");
@@ -244,6 +267,8 @@ public class TestController {
         // dictCacheService.removeDictCache();
 
         dictService.refreshDict(map);
+
+        dictService2.refreshDict(map2);
 
         return AjaxResultFactory.success();
     }
