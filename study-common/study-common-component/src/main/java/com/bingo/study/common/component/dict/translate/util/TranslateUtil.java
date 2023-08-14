@@ -65,7 +65,6 @@ public class TranslateUtil {
         for (TranslateFieldWrapper fieldWrapper : list) {
             if (fieldWrapper.getTranslateType() == TranslateType.ENUM) {
                 // 枚举翻译
-
                 CodeDescEnum.enumTran(ReflectUtil.getFieldValue(t, fieldWrapper.getField()),
                         getEnumValues(fieldWrapper.getEnumClass()),
                         codeDescEnum -> ReflectUtil.setFieldValue(t, fieldWrapper.getFullField(),
