@@ -10,8 +10,6 @@ import com.bingo.study.common.core.dict.IDictDataModel;
 import com.bingo.study.common.core.enums.CodeDescEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -27,58 +25,38 @@ import java.util.concurrent.ConcurrentHashMap;
  * @Version 1.0
  */
 @Slf4j
-@ConditionalOnMissingBean(TranslateUtil.class)
-public class TranslateUtil implements InitializingBean {
+public class TranslateUtil {
 
     private static final Map<Class<?>, List<TranslateFieldWrapper>> TRAN_FIELD_CACHE = new ConcurrentHashMap<>();
 
-    private static IDictTranslateService<? extends IDictDataModel> dictTranslateService;
-
-    /*
-    @TODO 待完成，多类型字典翻译
-    @Autowired(required = false)
-    public <D extends IDictDataModel> void setDictTranslateService(IDictTranslateService<D> dictTranslateService) {
-        TranslateUtil.dictTranslateService = dictTranslateService;
-    } */
-
-    // public static  <D extends IDictDataModel> void getDictTranslateService(IDictTranslateService<D>
-    // dictTranslateService) {
-    //     TranslateUtil.dictTranslateService = dictTranslateService;
-    // }
-
-    public <D extends IDictDataModel> IDictTranslateService<D> getDictTranslateService() {
-
-        // IDictTranslateService<D> dictTranslateService1 = null;
-        //
-        // Supplier<IDictTranslateService<D>> supplier = () -> dictTranslateService1;
-
-        return null;
-    }
-
-    /**
+    /***
      * 翻译列表
-     *
-     * @Param [list]
+     * @Param [list, dictTranslateService]
      * @Return void
-     * @Date 2023-04-24 16:06
+     * @Date 2023-08-14 17:47
      */
-    public static <T> void translate(List<T> list) {
+    public static <T> void translate(List<T> list,
+            IDictTranslateService<? extends IDictDataModel> dictTranslateService) {
         if (CollectionUtil.isEmpty(list)) {
             return;
         }
         for (T t : list) {
-            translate(t);
+            translate(t, dictTranslateService);
         }
     }
 
-    /**
+    public static <T> void translate(List<T> list) {
+        translate(list, null);
+    }
+
+    /***
      * 翻译对象
-     *
-     * @Param [t]
+     * @Param [t, dictTranslateService]
      * @Return void
-     * @Date 2023-04-24 16:05
+     * @Date 2023-08-14 17:47
      */
-    public static <T> void translate(T t) {
+    @SuppressWarnings("unchecked")
+    public static <T> void translate(T t, IDictTranslateService<? extends IDictDataModel> dictTranslateService) {
         List<TranslateFieldWrapper> list = getObjectInfo(t);
         if (CollectionUtil.isEmpty(list)) {
             return;
@@ -87,18 +65,23 @@ public class TranslateUtil implements InitializingBean {
         for (TranslateFieldWrapper fieldWrapper : list) {
             if (fieldWrapper.getTranslateType() == TranslateType.ENUM) {
                 // 枚举翻译
+
                 CodeDescEnum.enumTran(ReflectUtil.getFieldValue(t, fieldWrapper.getField()),
                         getEnumValues(fieldWrapper.getEnumClass()),
-                        stringCodeDescEnum -> ReflectUtil.setFieldValue(t, fieldWrapper.getFullField(),
-                                stringCodeDescEnum.getDesc()));
+                        codeDescEnum -> ReflectUtil.setFieldValue(t, fieldWrapper.getFullField(),
+                                codeDescEnum.getDesc()));
             } else if (fieldWrapper.getTranslateType() == TranslateType.DICT && dictTranslateService != null) {
                 // 字典翻译
                 dictTranslateService.dictTran((String) ReflectUtil.getFieldValue(t, fieldWrapper.getField()),
-                        fieldWrapper.getDictType(), dictTranslateModel ->
-                                ReflectUtil.setFieldValue(t, fieldWrapper.getFullField(),
-                                        dictTranslateModel.getName()));
+                        fieldWrapper.getDictType(),
+                        dictDataModel -> ReflectUtil.setFieldValue(t, fieldWrapper.getFullField(),
+                                dictDataModel.getName()));
             }
         }
+    }
+
+    public static <T> void translate(T t) {
+        translate(t, null);
     }
 
     /**
@@ -211,10 +194,5 @@ public class TranslateUtil implements InitializingBean {
             log.warn("{} 枚举值获取异常", clazz.getTypeName());
             return (T[]) new CodeDescEnum[0];
         }
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        log.info("字典 or 枚举翻译功能已开启，详情使用 @Translate 注解");
     }
 }
