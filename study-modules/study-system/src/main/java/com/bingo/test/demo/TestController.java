@@ -220,15 +220,15 @@ public class TestController {
         Map<DictType, List<DictData>> map = new LinkedHashMap<>();
         for (int i = 0; i < 5; i++) {
             DictType dictType = new DictType();
-            dictType.setName("类型名" + i);
-            dictType.setType("type-" + i);
+            dictType.setFdName("类型名" + i);
+            dictType.setFdType("type-" + i);
 
             List<DictData> list = new ArrayList<>();
             for (int j = 0; j < 5; j++) {
                 DictData data = new DictData();
-                data.setCode(i + "||" + j);
-                data.setName("字典数据" + j);
-                data.setType("type-" + i);
+                data.setFdCode(i + "||" + j);
+                data.setFdName("字典数据" + j);
+                data.setFdType("type-" + i);
                 list.add(data);
             }
 
@@ -238,15 +238,15 @@ public class TestController {
         Map<DictTypeTwo, List<DictDataTwo>> map2 = new LinkedHashMap<>();
         for (int i = 0; i < 5; i++) {
             DictTypeTwo dictType = new DictTypeTwo();
-            dictType.setName("类型名" + i);
-            dictType.setType("type-" + i);
+            dictType.setFdName("类型名" + i);
+            dictType.setFdType("type-" + i);
 
             List<DictDataTwo> list = new ArrayList<>();
             for (int j = 0; j < 5; j++) {
                 DictDataTwo data = new DictDataTwo();
-                data.setCode(i + "||" + j);
-                data.setName("字典数据" + j);
-                data.setType("type-" + i);
+                data.setFdCode(i + "||" + j);
+                data.setFdName("字典数据" + j);
+                data.setFdType("type-" + i);
                 list.add(data);
             }
 

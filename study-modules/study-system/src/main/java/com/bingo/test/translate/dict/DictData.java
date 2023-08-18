@@ -11,8 +11,8 @@ import lombok.Data;
 @Data
 public class DictData implements IDictDataModel {
 
-    private String name;
-    private String code;
-    private String type;
+    private String fdName;
+    private String fdCode;
+    private String fdType;
 
 }

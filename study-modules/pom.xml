@@ -17,6 +17,7 @@
     <modules>
         <module>study-system</module>
         <module>file-check</module>
+        <module>sys-dict</module>
     </modules>
 
     <packaging>pom</packaging>

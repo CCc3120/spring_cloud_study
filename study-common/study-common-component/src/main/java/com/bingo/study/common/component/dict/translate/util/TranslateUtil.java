@@ -74,7 +74,7 @@ public class TranslateUtil {
                 dictTranslateService.dictTran((String) ReflectUtil.getFieldValue(t, fieldWrapper.getField()),
                         fieldWrapper.getDictType(),
                         dictDataModel -> ReflectUtil.setFieldValue(t, fieldWrapper.getFullField(),
-                                dictDataModel.getName()));
+                                dictDataModel.getFdName()));
             }
         }
     }

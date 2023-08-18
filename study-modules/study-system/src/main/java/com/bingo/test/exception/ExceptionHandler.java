@@ -1,7 +1,7 @@
 package com.bingo.test.exception;
 
 import com.bingo.study.common.core.controller.BaseController;
-import com.bingo.study.common.core.page.AjaxResult;
+import com.bingo.study.common.core.response.RSX;
 
 /**
  * @Author h-bingo
@@ -12,8 +12,8 @@ import com.bingo.study.common.core.page.AjaxResult;
 public class ExceptionHandler extends BaseController {
 
     @org.springframework.web.bind.annotation.ExceptionHandler(Exception.class)
-    public AjaxResult<String> exception(Exception e) {
+    public RSX<Void> exception(Exception e) {
 
-        return error(e.getMessage());
+        return fail(e.getMessage());
     }
 }

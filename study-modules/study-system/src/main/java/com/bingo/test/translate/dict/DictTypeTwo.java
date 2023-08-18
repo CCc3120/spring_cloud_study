@@ -12,8 +12,8 @@ import lombok.Data;
 public class DictTypeTwo implements IDictCategoryModel {
 
 
-    private String name;
+    private String fdName;
 
-    private String type;
+    private String fdType;
 
 }

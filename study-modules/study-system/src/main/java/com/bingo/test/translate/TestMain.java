@@ -5,7 +5,6 @@ import com.bingo.study.common.component.dict.translate.util.TranslateUtil;
 import com.bingo.study.common.component.dict.translate.wrapper.TranslateFieldWrapper;
 import com.bingo.study.common.component.responseBodyHandle.IgnoreField;
 import com.bingo.study.common.core.dict.IDictDataModel;
-import com.bingo.test.translate.dict.DictCommon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,19 +33,19 @@ public class TestMain {
         list.add(student);
         list.add(student1);
         long time = System.currentTimeMillis();
-        // System.out.println(list);
+        System.out.println(list);
 
-        TranslateUtil.translate(student, null);
+        // TranslateUtil.translate(student, null);
+        // System.out.println(System.currentTimeMillis() - time);
+
+        // TranslateUtil.translate(student1, null);
+        TranslateUtil.translate(list);
         System.out.println(System.currentTimeMillis() - time);
+        System.out.println(list);
 
-        TranslateUtil.translate(student1, null);
-        // TranslateUtil.translate(list);
-        System.out.println(System.currentTimeMillis() - time);
-        // System.out.println(list);
+        // DictCommon dictCommon = new DictCommon();
 
-        DictCommon dictCommon = new DictCommon();
-
-        TranslateUtil.translate(student, dictCommon);
+        // TranslateUtil.translate(student, dictCommon);
 
         // Consumer
         // Supplier
@@ -62,6 +61,10 @@ public class TestMain {
         //         };
         //     }
         // });
+    }
+
+    public static Void get() throws InstantiationException, IllegalAccessException {
+        return Void.TYPE.newInstance();
     }
 
     public static <T> void translate(T t, BiFunction<String, String, Function<IDictDataModel, Object>> f) {

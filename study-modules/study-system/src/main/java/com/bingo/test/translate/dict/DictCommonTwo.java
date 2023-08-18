@@ -1,6 +1,5 @@
 package com.bingo.test.translate.dict;
 
-import com.bingo.study.common.component.dict.service.IDictService;
 import com.bingo.study.common.component.dict.service.impl.AbstractDictService;
 import org.springframework.stereotype.Component;
 
@@ -10,6 +9,5 @@ import org.springframework.stereotype.Component;
  * @Version 1.0
  */
 @Component
-public class DictCommonTwo extends AbstractDictService<DictTypeTwo, DictDataTwo>
-        implements IDictService<DictTypeTwo, DictDataTwo> {
+public class DictCommonTwo extends AbstractDictService<DictTypeTwo, DictDataTwo> {
 }

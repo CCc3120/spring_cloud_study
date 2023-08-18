@@ -12,12 +12,12 @@ public interface IDictDataModel extends IDictCategoryModel {
      *
      * @return
      */
-    String getCode();
+    String getFdCode();
 
     /**
      * 字典名称
      *
      * @return
      */
-    String getName();
+    String getFdName();
 }

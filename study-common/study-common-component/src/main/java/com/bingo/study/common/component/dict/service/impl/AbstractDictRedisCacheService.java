@@ -66,8 +66,8 @@ public abstract class AbstractDictRedisCacheService<C extends IDictCategoryModel
     }
 
     private void setDict(C type, List<D> dictList, String categoryKey, String dataKey) {
-        redisService.opsForHash().put(categoryKey, type.getType(), dictList);
-        redisService.opsForHash().put(dataKey, type.getType(), dictList);
+        redisService.opsForHash().put(categoryKey, type.getFdType(), dictList);
+        redisService.opsForHash().put(dataKey, type.getFdType(), dictList);
     }
 
     @Override
@@ -81,7 +81,7 @@ public abstract class AbstractDictRedisCacheService<C extends IDictCategoryModel
     public D getDict(String code, String type) {
         List<D> dictCache = this.getDict(type);
         for (D dictDataModel : dictCache) {
-            if (dictDataModel.getCode().equals(code)) {
+            if (dictDataModel.getFdCode().equals(code)) {
                 return dictDataModel;
             }
         }
@@ -131,7 +131,7 @@ public abstract class AbstractDictRedisCacheService<C extends IDictCategoryModel
     }
 
     public void refreshDict(C type, List<D> dictList, String categoryKey, String dataKey) {
-        this.removeDict(type.getType(), categoryKey, dataKey);
+        this.removeDict(type.getFdType(), categoryKey, dataKey);
         this.setDict(type, dictList, categoryKey, dataKey);
     }
 

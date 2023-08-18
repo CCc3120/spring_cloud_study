@@ -3,7 +3,7 @@ package com.bingo.imageCheck.controller;
 import com.bingo.imageCheck.response.CheckResult;
 import com.bingo.imageCheck.service.IImageCheckService;
 import com.bingo.study.common.core.controller.BaseController;
-import com.bingo.study.common.core.page.AjaxResult;
+import com.bingo.study.common.core.response.RSX;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,12 +26,12 @@ public class ImageCheckController extends BaseController {
     private IImageCheckService imageCheckService;
 
     @RequestMapping(path = "/check", method = RequestMethod.POST)
-    public AjaxResult<CheckResult> check(@RequestParam("file") MultipartFile multipartFile) {
+    public RSX<CheckResult> check(@RequestParam("file") MultipartFile multipartFile) {
         return success(imageCheckService.checkImage(multipartFile));
     }
 
     @RequestMapping(path = "/checks", method = RequestMethod.POST)
-    public AjaxResult<List<CheckResult>> checks(@RequestParam("files") List<MultipartFile> fileList) {
+    public RSX<List<CheckResult>> checks(@RequestParam("files") List<MultipartFile> fileList) {
         return success(imageCheckService.checkImage(fileList));
     }
 }

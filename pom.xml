@@ -199,6 +199,12 @@
                 <artifactId>study-common-datasource</artifactId>
                 <version>${study.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.bingo</groupId>
+                <artifactId>sys-dict</artifactId>
+                <version>${study.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

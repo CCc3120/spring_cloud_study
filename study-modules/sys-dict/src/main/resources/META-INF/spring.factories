@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.bingo.dict.config.SysDictAutoConfig,\
+com.bingo.dict.config.ControllerRegisterConfiguration

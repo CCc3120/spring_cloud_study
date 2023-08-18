@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 该类是包装一层操作缓存的数据，组合大于继承
+ *
  * @Author h-bingo
  * @Date 2023-08-11 10:22
  * @Version 1.0

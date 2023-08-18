@@ -117,6 +117,18 @@ public class TestMainClass {
 
         // Date date = ((((((((((new Date()))))))))));
         // System.out.println(date);
+
+        //     userId     deptName    deptId
+        //     1            aa          22
+        //     2            aa          22
+        //     3            aa          22
+        //     4            aa          22
+        //     5            aa          22
+
+
+        // 合并后的数据
+        //     1,2,3,4,5    aa           22
+
     }
 
     public static void hashValue(Object key) {

@@ -1,6 +1,5 @@
 package com.bingo.test.translate.dict;
 
-import com.bingo.study.common.component.dict.service.IDictCacheService;
 import com.bingo.study.common.component.dict.service.impl.AbstractDictRedisCacheService;
 import org.springframework.stereotype.Component;
 
@@ -10,8 +9,7 @@ import org.springframework.stereotype.Component;
  * @Version 1.0
  */
 @Component
-public class DictCommonCache extends AbstractDictRedisCacheService<DictType, DictData>
-        implements IDictCacheService<DictType, DictData> {
+public class DictCommonCache extends AbstractDictRedisCacheService<DictType, DictData> {
 
     @Override
     protected String getDictKeyPrefix() {
