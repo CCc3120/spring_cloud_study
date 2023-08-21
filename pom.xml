@@ -28,12 +28,13 @@
         <lombok.version>1.18.12</lombok.version>
         <mysql.version>8.0.16</mysql.version>
         <druid.version>1.2.8</druid.version>
+        <mybatis-plus.version>3.5.2</mybatis-plus.version>
         <commons-lang.version>2.6</commons-lang.version>
         <commons-lang3.version>3.4</commons-lang3.version>
         <fastjson.version>1.2.83</fastjson.version>
         <hutool.version>5.8.5</hutool.version>
         <pinyin4j.version>2.5.1</pinyin4j.version>
-        <pagehelper.version>1.4.6</pagehelper.version>
+        <!--        <pagehelper.version>1.4.6</pagehelper.version>-->
         <elasticsearch.version>6.8.22</elasticsearch.version>
         <springfox.version>3.0.0</springfox.version>
         <redission.version>3.17.6</redission.version>
@@ -86,6 +87,12 @@
                 <version>${druid.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+
             <!-- https://mvnrepository.com/artifact/commons-lang/commons-lang -->
             <dependency>
                 <groupId>commons-lang</groupId>
@@ -125,11 +132,11 @@
             </dependency>
 
             <!-- pagehelper 分页插件 -->
-            <dependency>
-                <groupId>com.github.pagehelper</groupId>
-                <artifactId>pagehelper-spring-boot-starter</artifactId>
-                <version>${pagehelper.version}</version>
-            </dependency>
+            <!--            <dependency>-->
+            <!--                <groupId>com.github.pagehelper</groupId>-->
+            <!--                <artifactId>pagehelper-spring-boot-starter</artifactId>-->
+            <!--                <version>${pagehelper.version}</version>-->
+            <!--            </dependency>-->
 
             <!--elasticsearch-->
             <dependency>
@@ -197,6 +204,12 @@
             <dependency>
                 <groupId>com.bingo</groupId>
                 <artifactId>study-common-datasource</artifactId>
+                <version>${study.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.bingo</groupId>
+                <artifactId>study-common-mybatis-plus</artifactId>
                 <version>${study.version}</version>
             </dependency>
 

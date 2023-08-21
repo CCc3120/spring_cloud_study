@@ -22,6 +22,7 @@
         <module>study-common-mongo</module>
         <module>study-common-redis</module>
         <module>study-common-swagger</module>
+        <module>study-common-mybatis-plus</module>
     </modules>
 
     <packaging>pom</packaging>

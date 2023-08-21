@@ -1,5 +1,6 @@
 package com.bingo.dict.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.bingo.dict.model.SysDictCategory;
 
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.List;
  * @Date 2023-08-17 14:27
  * @Version 1.0
  */
-public interface ISysDictCategoryService {
+public interface ISysDictCategoryService extends IService<SysDictCategory> {
 
     /***
      * 查询所有字典类别

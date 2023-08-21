@@ -2,12 +2,12 @@ package com.bingo.study.common.es.service;
 
 
 import com.bingo.study.common.core.interfaces.IBaseModel;
-import com.bingo.study.common.core.page.BaseSearchModel;
-import com.bingo.study.common.core.page.PageResult;
+import com.bingo.study.common.core.web.page.PageResult;
 import com.bingo.study.common.core.utils.FieldUtil;
 import com.bingo.study.common.core.utils.JsonMapper;
 import com.bingo.study.common.core.utils.SFunction;
 import com.bingo.study.common.core.utils.StringUtil;
+import com.bingo.study.common.core.web.request.BaseSearchModel;
 import com.bingo.study.common.es.constant.ElasticSearchConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
@@ -41,6 +41,7 @@ import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -52,6 +53,7 @@ import java.util.Map;
  */
 @Slf4j
 @Service
+@ConditionalOnMissingBean(ElasticSearchServiceImpl.class)
 public class ElasticSearchServiceImpl implements ElasticSearchService {
 
     @Autowired
@@ -218,8 +220,8 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
         searchSourceBuilder.from((int) from).size(model.getPageSize().intValue());
 
         // 排序
-        if (StringUtil.isNotNull(model.getOrderProp())) {
-            searchSourceBuilder.sort(StringUtil.join(model.getOrderProp(), ElasticSearchConstant.KEYWORD),
+        if (StringUtil.isNotNull(model.getOrderField())) {
+            searchSourceBuilder.sort(StringUtil.join(model.getOrderField(), ElasticSearchConstant.KEYWORD),
                     SortOrder.fromString(model.getOrderType()));
         }
 

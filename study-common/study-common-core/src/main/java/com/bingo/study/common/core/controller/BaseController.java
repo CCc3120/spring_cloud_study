@@ -1,8 +1,8 @@
 package com.bingo.study.common.core.controller;
 
 
-import com.bingo.study.common.core.response.RSX;
-import com.bingo.study.common.core.response.RSXFactory;
+import com.bingo.study.common.core.web.response.RSX;
+import com.bingo.study.common.core.web.response.RSXFactory;
 
 /**
  * @author bingo
@@ -61,4 +61,12 @@ public abstract class BaseController {
     protected <T> RSX<T> error(String errCode, String errMsg, String module) {
         return RSXFactory.error(errCode, errMsg, module);
     }
+
+    // protected <T> RSX<PageResult<T>> pageInfo(IPage<T> page) {
+    //     return success(PageHelper.getPageResult(page));
+    // }
+    //
+    // protected <O, N> RSX<PageResult<N>> pageInfo(IPage<O> page, Function<O, N> f) {
+    //     return success(PageHelper.getPageResult(page, f));
+    // }
 }

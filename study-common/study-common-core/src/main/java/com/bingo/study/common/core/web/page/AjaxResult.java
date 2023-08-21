@@ -1,4 +1,4 @@
-package com.bingo.study.common.core.page;
+package com.bingo.study.common.core.web.page;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -12,6 +12,7 @@ import java.io.Serializable;
  */
 @Data
 @ApiModel("响应结果")
+@Deprecated
 public class AjaxResult<T> implements Serializable {
 
     @ApiModelProperty("状态码")

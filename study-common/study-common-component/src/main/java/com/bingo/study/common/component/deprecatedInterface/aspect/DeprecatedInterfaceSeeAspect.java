@@ -1,7 +1,7 @@
 package com.bingo.study.common.component.deprecatedInterface.aspect;
 
 import com.bingo.study.common.component.deprecatedInterface.annotation.DeprecatedInterfaceSee;
-import com.bingo.study.common.core.page.AjaxResult;
+import com.bingo.study.common.core.web.page.AjaxResult;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;

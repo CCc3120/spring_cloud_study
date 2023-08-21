@@ -1,4 +1,4 @@
-package com.bingo.study.common.core.response;
+package com.bingo.study.common.core.web.response;
 
 import com.bingo.study.common.core.enums.CodeDescEnum;
 

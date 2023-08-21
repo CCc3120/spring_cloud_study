@@ -1,4 +1,4 @@
-package com.bingo.study.common.core.page;
+package com.bingo.study.common.core.web.page;
 
 import org.springframework.util.Assert;
 
@@ -6,6 +6,7 @@ import org.springframework.util.Assert;
  * @author bingo
  * @date 2022-03-24 13:45
  */
+@Deprecated
 public class AjaxResultFactory {
 
     public static <T> AjaxResult<T> success() {

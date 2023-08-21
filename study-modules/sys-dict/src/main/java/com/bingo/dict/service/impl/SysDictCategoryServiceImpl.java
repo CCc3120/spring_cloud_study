@@ -1,5 +1,7 @@
 package com.bingo.dict.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.bingo.dict.dao.SysDictCategoryMapper;
 import com.bingo.dict.model.SysDictCategory;
 import com.bingo.dict.service.ISysDictCategoryService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -12,7 +14,8 @@ import java.util.List;
  * @Version 1.0
  */
 @ConditionalOnMissingBean(SysDictCategoryServiceImpl.class)
-public class SysDictCategoryServiceImpl implements ISysDictCategoryService {
+public class SysDictCategoryServiceImpl extends ServiceImpl<SysDictCategoryMapper, SysDictCategory>
+        implements ISysDictCategoryService {
     @Override
     public List<SysDictCategory> getSysDictCategory() {
         return null;

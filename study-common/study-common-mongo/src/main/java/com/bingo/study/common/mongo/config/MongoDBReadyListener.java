@@ -2,6 +2,7 @@ package com.bingo.study.common.mongo.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -23,6 +24,7 @@ import org.springframework.data.mongodb.core.convert.MongoConverter;
  */
 @Configuration
 @ConditionalOnBean(MongoTemplate.class)
+@ConditionalOnMissingBean(MongoDBReadyListener.class)
 public class MongoDBReadyListener implements ApplicationListener<ContextRefreshedEvent> {
 
     @Autowired

@@ -1,5 +1,6 @@
-package com.bingo.study.common.core.page;
+package com.bingo.study.common.core.web.page;
 
+import com.bingo.study.common.core.web.interfaces.IPageModel;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -43,15 +44,19 @@ public class PageResult<T> implements Serializable {
         this.pageNum = pageNum;
     }
 
-    public static <T> PageResult<T> of(List<T> dataList, long count, BaseSearchModel model) {
-        return new PageResult<>(dataList, count, model.getPageSize(), model.getPageNum());
+    public static <T> PageResult<T> of(List<T> dataList, long count, long pageSize, long pageNum) {
+        return new PageResult<>(dataList, count, pageSize, pageNum);
     }
 
-    public static <T> PageResult<T> of(BaseSearchModel model) {
+    public static <T> PageResult<T> of(List<T> dataList, long count, IPageModel model) {
+        return of(dataList, count, model.getPageSize(), model.getPageNum());
+    }
+
+    public static <T> PageResult<T> of(IPageModel model) {
         return empty(model);
     }
 
-    public static <T> PageResult<T> empty(BaseSearchModel model) {
+    public static <T> PageResult<T> empty(IPageModel model) {
         return new PageResult<>(model.getPageSize(), model.getPageNum());
     }
 }

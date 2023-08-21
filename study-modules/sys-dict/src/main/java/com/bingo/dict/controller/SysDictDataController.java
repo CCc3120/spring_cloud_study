@@ -2,8 +2,8 @@ package com.bingo.dict.controller;
 
 import com.bingo.dict.model.SysDictData;
 import com.bingo.study.common.core.controller.BaseController;
-import com.bingo.study.common.core.response.RSX;
-import com.bingo.study.common.core.response.RSXFactory;
+import com.bingo.study.common.core.web.response.RSX;
+import com.bingo.study.common.core.web.response.RSXFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;

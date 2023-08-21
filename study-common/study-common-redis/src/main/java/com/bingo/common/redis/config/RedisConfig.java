@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
@@ -28,6 +29,7 @@ import java.time.Duration;
  */
 @EnableCaching // 开启缓存注解
 @Configuration
+@ConditionalOnMissingBean(RedisConfig.class)
 // org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration优先该类中的RedisTemplate的bean，
 // bean中就不会在此初始化了@ConditionalOnMissingBean(name = "redisTemplate")
 @AutoConfigureBefore(RedisAutoConfiguration.class)

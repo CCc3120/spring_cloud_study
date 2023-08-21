@@ -3,7 +3,7 @@ package com.bingo.imageCheck.controller;
 import com.bingo.imageCheck.response.CheckResult;
 import com.bingo.imageCheck.service.IImageCheckService;
 import com.bingo.study.common.core.controller.BaseController;
-import com.bingo.study.common.core.response.RSX;
+import com.bingo.study.common.core.web.response.RSX;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

@@ -1,5 +1,6 @@
 package com.bingo.dict.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.bingo.dict.model.SysDictData;
 
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.List;
  * @Date 2023-08-17 14:27
  * @Version 1.0
  */
-public interface ISysDictDataService {
+public interface ISysDictDataService extends IService<SysDictData> {
 
     /***
      * 查询 指定 type 字典

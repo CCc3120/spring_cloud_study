@@ -1,7 +1,7 @@
 package com.bingo.study.common.component.responseBodyHandle.handler;
 
 import cn.hutool.core.collection.CollectionUtil;
-import com.bingo.study.common.core.page.PageResult;
+import com.bingo.study.common.core.web.page.PageResult;
 import com.bingo.study.common.core.utils.JsonMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;

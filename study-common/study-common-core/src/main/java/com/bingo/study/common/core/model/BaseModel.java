@@ -1,6 +1,8 @@
 package com.bingo.study.common.core.model;
 
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.bingo.study.common.core.interfaces.IBaseModel;
 import com.bingo.study.common.core.utils.IDGenerator;
 import com.bingo.study.common.core.utils.ObjectUtil;
@@ -21,6 +23,7 @@ import java.lang.reflect.Method;
 public abstract class BaseModel implements IBaseModel, Serializable {
 
     @Id
+    @TableId(value = "fd_id", type = IdType.INPUT)
     private String fdId;
 
     @Override

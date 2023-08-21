@@ -9,6 +9,7 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.internal.MongoClientImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +27,7 @@ import java.util.Collections;
  */
 @Configuration
 @Import(MongoDBProperties.class)
+@ConditionalOnMissingBean(MongoDBConfig.class)
 @AutoConfigureBefore(MongoAutoConfiguration.class)
 public class MongoDBConfig {
 

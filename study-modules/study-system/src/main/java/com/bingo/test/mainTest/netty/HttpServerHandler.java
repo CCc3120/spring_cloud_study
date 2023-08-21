@@ -1,6 +1,6 @@
 package com.bingo.test.mainTest.netty;
 
-import com.bingo.study.common.core.page.AjaxResultFactory;
+import com.bingo.study.common.core.web.page.AjaxResultFactory;
 import com.bingo.study.common.core.utils.JsonMapper;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;

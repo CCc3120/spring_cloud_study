@@ -2,8 +2,8 @@ package com.bingo.study.common.es.service;
 
 
 import com.bingo.study.common.core.interfaces.IBaseModel;
-import com.bingo.study.common.core.page.BaseSearchModel;
-import com.bingo.study.common.core.page.PageResult;
+import com.bingo.study.common.core.web.request.BaseSearchModel;
+import com.bingo.study.common.core.web.page.PageResult;
 import com.bingo.study.common.core.utils.SFunction;
 
 import java.util.List;

@@ -1,5 +1,7 @@
-package com.bingo.study.common.core.response;
+package com.bingo.study.common.core.web.response;
 
+import cn.hutool.core.date.SystemClock;
+import com.bingo.study.common.core.web.interfaces.IBaseWebModel;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -13,13 +15,16 @@ import java.io.Serializable;
  */
 @Data
 @ApiModel("响应结果")
-public class RSX<T> implements Serializable {
+public class RSX<T> implements IBaseWebModel, Serializable {
 
     @ApiModelProperty("响应状态")
     private String status;
 
     @ApiModelProperty("响应提示")
     private String message;
+
+    @ApiModelProperty("时间戳")
+    private Long timestamp;
 
     @ApiModelProperty("响应数据")
     private T data;
@@ -43,6 +48,7 @@ public class RSX<T> implements Serializable {
         this.errCode = errCode;
         this.errMsg = errMsg;
         this.module = module;
+        this.timestamp = SystemClock.now();
     }
 
     public boolean success() {

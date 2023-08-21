@@ -1,7 +1,7 @@
 package com.bingo.dict.controller;
 
 import com.bingo.study.common.core.controller.BaseController;
-import com.bingo.study.common.core.response.RSX;
+import com.bingo.study.common.core.web.response.RSX;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;

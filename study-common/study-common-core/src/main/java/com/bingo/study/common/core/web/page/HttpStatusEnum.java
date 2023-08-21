@@ -1,9 +1,10 @@
-package com.bingo.study.common.core.page;
+package com.bingo.study.common.core.web.page;
 
 /**
  * @author bingo
  * @date 2022-03-24 11:36
  */
+@Deprecated
 public enum HttpStatusEnum {
     SUCCESS("200", "操作成功"),
     FAIL("201", "操作失败"),

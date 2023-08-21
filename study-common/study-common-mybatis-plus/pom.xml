@@ -4,32 +4,27 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.bingo</groupId>
-        <artifactId>study-modules</artifactId>
+        <artifactId>study-common</artifactId>
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>sys-dict</artifactId>
-    <version>1.0.0</version>
-    <name>sys-dict</name>
-    <description>sys-dict</description>
+    <artifactId>study-common-mybatis-plus</artifactId>
+
+    <name>study-common-mybatis-plus</name>
+    <description>study-common-mybatis-plus</description>
 
     <dependencies>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <scope>compile</scope>
+        </dependency>
+
         <dependency>
             <groupId>com.bingo</groupId>
             <artifactId>study-common-core</artifactId>
             <scope>compile</scope>
         </dependency>
-
-        <dependency>
-            <groupId>com.bingo</groupId>
-            <artifactId>study-common-mybatis-plus</artifactId>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.bingo</groupId>
-            <artifactId>study-common-component</artifactId>
-            <scope>compile</scope>
-        </dependency>
     </dependencies>
+
 </project>

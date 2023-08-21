@@ -1,7 +1,7 @@
 package com.bingo.test.eventPublisher;
 
-import com.bingo.study.common.core.page.AjaxResult;
-import com.bingo.study.common.core.page.AjaxResultFactory;
+import com.bingo.study.common.core.web.page.AjaxResult;
+import com.bingo.study.common.core.web.page.AjaxResultFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
