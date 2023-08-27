@@ -129,6 +129,10 @@ public class TestMainClass {
         // 合并后的数据
         //     1,2,3,4,5    aa           22
 
+
+        Integer a = null;
+
+        System.out.println(a == 2);
     }
 
     public static void hashValue(Object key) {

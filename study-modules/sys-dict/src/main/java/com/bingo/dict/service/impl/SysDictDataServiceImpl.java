@@ -18,11 +18,18 @@ public class SysDictDataServiceImpl extends ServiceImpl<SysDictDataMapper, SysDi
 
     @Override
     public List<SysDictData> getSysDictData(String type) {
-        return null;
+        return this.list(
+                this.lambdaQuery()
+                        .eq(SysDictData::getFdType, type)
+        );
     }
 
     @Override
     public SysDictData getSysDictData(String code, String type) {
-        return null;
+        return this.getOne(
+                this.lambdaQuery()
+                        .eq(SysDictData::getFdType, type)
+                        .eq(SysDictData::getFdCode, code)
+        );
     }
 }

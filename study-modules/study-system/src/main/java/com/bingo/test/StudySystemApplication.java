@@ -23,5 +23,4 @@ public class StudySystemApplication {
     public static void main(String[] args) {
         SpringApplication.run(StudySystemApplication.class, args);
     }
-
 }

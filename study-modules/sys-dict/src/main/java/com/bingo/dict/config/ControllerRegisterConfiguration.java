@@ -7,7 +7,6 @@ import com.bingo.study.common.core.utils.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.servlet.mvc.condition.PatternsRequestCondition;
@@ -25,7 +24,7 @@ import java.lang.reflect.Method;
  * @Version 1.0
  */
 @Slf4j
-@Configuration
+// @Configuration
 // @Import({TestController.class})
 @Import({SysDictDataController.class, SysDictCategoryController.class})
 @ConditionalOnMissingBean(ControllerRegisterConfiguration.class)

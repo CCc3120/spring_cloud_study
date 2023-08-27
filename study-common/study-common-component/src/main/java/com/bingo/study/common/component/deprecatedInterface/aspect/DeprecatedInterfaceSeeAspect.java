@@ -1,7 +1,7 @@
 package com.bingo.study.common.component.deprecatedInterface.aspect;
 
 import com.bingo.study.common.component.deprecatedInterface.annotation.DeprecatedInterfaceSee;
-import com.bingo.study.common.core.web.page.AjaxResult;
+import com.bingo.study.common.core.web.response.RSX;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -37,17 +37,17 @@ public class DeprecatedInterfaceSeeAspect implements InitializingBean {
     public Object doAround(ProceedingJoinPoint joinPoint, DeprecatedInterfaceSee deprecatedInterfaceSee)
             throws Throwable {
         Object proceed = joinPoint.proceed();
-        if (!(proceed instanceof AjaxResult)) {
+        if (!(proceed instanceof RSX)) {
             return proceed;
         }
 
-        AjaxResult<?> ajaxResult = (AjaxResult<?>) proceed;
-        if (!ajaxResult.success()) {
+        RSX<?> rsx = (RSX<?>) proceed;
+        if (!rsx.success()) {
             return proceed;
         }
 
         if (StringUtils.isNotBlank(deprecatedInterfaceSee.value())) {
-            ajaxResult.setMessage(String.format(DEPRECATED_INTERFACE_TIP, deprecatedInterfaceSee.value()));
+            rsx.setMessage(String.format(DEPRECATED_INTERFACE_TIP, deprecatedInterfaceSee.value()));
             return proceed;
         } else if (deprecatedInterfaceSee.clazz() != DeprecatedInterfaceSee.class
                 && StringUtils.isNotBlank(deprecatedInterfaceSee.method())) {
@@ -58,19 +58,19 @@ public class DeprecatedInterfaceSeeAspect implements InitializingBean {
                     FeignClient feignClient = deprecatedInterfaceSee.clazz().getAnnotation(FeignClient.class);
 
                     if (feignClient != null) {
-                        ajaxResult.setMessage(String.format(DEPRECATED_INTERFACE_TIP,
+                        rsx.setMessage(String.format(DEPRECATED_INTERFACE_TIP,
                                 feignClient.path() + getRequestMappingValue(requestMapping)));
                         return proceed;
                     }
 
                     RequestMapping typeMapping = deprecatedInterfaceSee.clazz().getAnnotation(RequestMapping.class);
                     if (typeMapping != null) {
-                        ajaxResult.setMessage(String.format(DEPRECATED_INTERFACE_TIP,
+                        rsx.setMessage(String.format(DEPRECATED_INTERFACE_TIP,
                                 getRequestMappingValue(typeMapping) + getRequestMappingValue(requestMapping)));
                         return proceed;
                     }
 
-                    ajaxResult.setMessage(String.format(DEPRECATED_INTERFACE_TIP,
+                    rsx.setMessage(String.format(DEPRECATED_INTERFACE_TIP,
                             getRequestMappingValue(requestMapping)));
                     return proceed;
                 }
