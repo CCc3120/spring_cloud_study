@@ -20,6 +20,7 @@ public class ChannelDemo {
         copyFile();
     }
 
+    // channel 文件拷贝
     public static void copyFile() throws Exception {
         File file = new File("C:\\Development\\uploadFile\\channel.txt");
         File copyFile = new File("C:\\Development\\uploadFile\\channel_copy.txt");
@@ -30,6 +31,7 @@ public class ChannelDemo {
         FileOutputStream fileOutputStream = new FileOutputStream(copyFile);
         FileChannel copyChannel = fileOutputStream.getChannel();
 
+        // 方式一
         // ByteBuffer buffer = ByteBuffer.allocate(SIZE);
         // while (channel.read(buffer) > 0) {
         //
@@ -40,17 +42,20 @@ public class ChannelDemo {
         //     buffer.clear();
         // }
 
+        // 方式二
         // long l = copyChannel.transferFrom(channel, 0, channel.size());
         // System.out.println(l);
 
+        // 方式二 1
         // int begin = 0;
         // while (copyChannel.transferFrom(channel, begin, SIZE) > 0) {
         //     begin += SIZE;
         // }
 
+        // 方式三
         // long l = channel.transferTo(0, channel.size(), copyChannel);
         // System.out.println(l);
-
+        // 方式三 1
         // int begin = 0;
         // while (channel.transferTo(begin, SIZE, copyChannel) > 0) {
         //     begin += SIZE;
