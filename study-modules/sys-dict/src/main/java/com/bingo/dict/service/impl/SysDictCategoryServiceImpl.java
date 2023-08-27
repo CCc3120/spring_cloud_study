@@ -18,6 +18,6 @@ public class SysDictCategoryServiceImpl extends ServiceImpl<SysDictCategoryMappe
         implements ISysDictCategoryService {
     @Override
     public List<SysDictCategory> getSysDictCategory() {
-        return null;
+        return this.list();
     }
 }

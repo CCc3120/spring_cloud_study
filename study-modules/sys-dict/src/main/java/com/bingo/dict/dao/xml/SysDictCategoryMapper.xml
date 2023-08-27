@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bingo.dict.dao.SysDictCategoryMapper">
+	<resultMap id="BaseResultMap" type="com.bingo.dict.model.SysDictCategory">
+		<id     property="fdId"          column="fd_id"/>
+		<result property="fdType"        column="fd_type"/>
+	</resultMap>
+
+	<sql id="BaseSql">
+		${mark}.fd_id, ${mark}.fd_type
+	</sql>
+
+</mapper>

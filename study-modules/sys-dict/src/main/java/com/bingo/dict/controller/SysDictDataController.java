@@ -1,9 +1,11 @@
 package com.bingo.dict.controller;
 
 import com.bingo.dict.model.SysDictData;
+import com.bingo.dict.service.ISysDictDataService;
 import com.bingo.study.common.core.controller.BaseController;
 import com.bingo.study.common.core.web.response.RSX;
 import com.bingo.study.common.core.web.response.RSXFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -20,6 +22,9 @@ import javax.servlet.http.HttpServletResponse;
 @ResponseBody
 @ConditionalOnMissingBean(SysDictDataController.class)
 public class SysDictDataController extends BaseController {
+
+    @Autowired
+    private ISysDictDataService sysDictDataService;
 
     public RSX<SysDictData> save(HttpServletRequest request, HttpServletResponse response,
             @RequestBody SysDictData data) {

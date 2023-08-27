@@ -4,9 +4,9 @@ import cn.hutool.core.util.ArrayUtil;
 import com.bingo.study.common.component.responseBodyHandle.annotation.ResponseBodyHandleMark;
 import com.bingo.study.common.component.responseBodyHandle.handler.DefaultResponseBodyHandler;
 import com.bingo.study.common.component.responseBodyHandle.handler.ResponseBodyHandler;
-import com.bingo.study.common.core.web.page.AjaxResult;
-import com.bingo.study.common.core.web.page.AjaxResultFactory;
 import com.bingo.study.common.core.utils.JsonMapper;
+import com.bingo.study.common.core.web.response.RSX;
+import com.bingo.study.common.core.web.response.RSXFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,19 +58,19 @@ public class DefaultResponseBodyWrapperFilter implements ResponseBodyAdvice<Obje
         ResponseBodyHandleMark responseBodyHandleMark = getMethodAnnotation(returnType.getMethod(),
                 ResponseBodyHandleMark.class);
 
-        if (body instanceof AjaxResult) {
-            AjaxResult result = (AjaxResult) body;
-            result.setData(process(result.getData(), responseBodyHandleMark));
-            return result;
+        if (body instanceof RSX) {
+            RSX rsx = (RSX) body;
+            rsx.setData(process(rsx.getData(), responseBodyHandleMark));
+            return rsx;
         } else {
             Object data = process(body, responseBodyHandleMark);
             if (body instanceof String) {
                 if (responseBodyHandleMark == null || responseBodyHandleMark.wrapper()) {
-                    return JsonMapper.getInstance().toJsonString(AjaxResultFactory.success(data));
+                    return JsonMapper.getInstance().toJsonString(RSXFactory.success(data));
                 }
             } else {
                 if (responseBodyHandleMark == null || responseBodyHandleMark.wrapper()) {
-                    return AjaxResultFactory.success(data);
+                    return RSXFactory.success(data);
                 }
             }
             return data;
