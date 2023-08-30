@@ -1,4 +1,4 @@
-package com.bingo.test.mainTest.netty;
+package com.bingo.test.mainTest.netty.http01;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;

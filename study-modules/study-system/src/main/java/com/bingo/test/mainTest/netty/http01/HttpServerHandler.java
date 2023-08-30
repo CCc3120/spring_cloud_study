@@ -1,4 +1,4 @@
-package com.bingo.test.mainTest.netty;
+package com.bingo.test.mainTest.netty.http01;
 
 import com.bingo.study.common.core.web.page.AjaxResultFactory;
 import com.bingo.study.common.core.utils.JsonMapper;
