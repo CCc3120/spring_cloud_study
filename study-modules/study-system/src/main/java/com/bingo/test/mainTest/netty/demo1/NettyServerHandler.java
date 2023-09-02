@@ -8,8 +8,6 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelPipeline;
 import io.netty.util.CharsetUtil;
 
-import java.util.concurrent.TimeUnit;
-
 /**
  * 自定义一个handler,继承netty 规定好的 handlerAdapter
  *
@@ -41,19 +39,19 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
 
         // 如果当前业务处理耗时严重(耗时长)会阻塞后面的 handler
         // 此时可以采用异步执行, 提交该 channel 对应的 NioEeventGroup 的 taskQueue
-        ctx.channel().eventLoop().submit(() -> {
-            // 处理耗时任务
-
-        });
+        // ctx.channel().eventLoop().submit(() -> { // 处理耗时任务
+        //
+        //
+        // });
         // ctx.executor().submit(() -> {
         //
         //
         // });
 
         // 提交定时任务, 该任务提交到 scheduleTaskQueue 中
-        ctx.channel().eventLoop().schedule(() -> {
-
-        }, 3, TimeUnit.SECONDS);
+        // ctx.channel().eventLoop().schedule(() -> {
+        //
+        // }, 3, TimeUnit.SECONDS);
         // ctx.executor().schedule(() -> {
         //
         // }, 1000, TimeUnit.SECONDS);

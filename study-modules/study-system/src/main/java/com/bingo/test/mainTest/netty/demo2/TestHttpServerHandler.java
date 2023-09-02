@@ -32,6 +32,8 @@ public class TestHttpServerHandler extends SimpleChannelInboundHandler<HttpObjec
         // 判断类型
         if (msg instanceof HttpRequest) {
 
+            // ctx.read();
+
             System.out.println("msg类型: " + msg.getClass());
             System.out.println("客户端地址: " + ctx.channel().remoteAddress());
 
@@ -53,5 +55,17 @@ public class TestHttpServerHandler extends SimpleChannelInboundHandler<HttpObjec
             httpResponse.headers().set(HttpHeaderNames.CONTENT_LENGTH, httpResponse.content().readableBytes());
             ctx.channel().writeAndFlush(httpResponse);
         }
+    }
+
+    // 处理器添加
+    @Override
+    public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
+        super.handlerAdded(ctx);
+    }
+
+    // 处理器移除
+    @Override
+    public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
+        super.handlerRemoved(ctx);
     }
 }

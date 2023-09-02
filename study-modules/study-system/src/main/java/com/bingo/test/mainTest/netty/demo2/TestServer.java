@@ -32,7 +32,8 @@ public class TestServer {
                     .option(ChannelOption.SO_BACKLOG, 128)
                     // 保持活动连接状态
                     .childOption(ChannelOption.SO_KEEPALIVE, true)
-                    .childHandler(new TestServerInitializer())
+                    .childHandler(new TestServerInitializer()) // 该 handler 对应的 workergroup
+                    // .handler(null) // 该 handler 对应的 bossgroup
             ;
 
             // 绑定端口并且同步，返回channelFuture对象，启动服务器并绑定端口
@@ -42,7 +43,7 @@ public class TestServer {
             channelFuture.channel().closeFuture().sync();
         } finally {
             boss.shutdownGracefully();
-            boss.shutdownGracefully();
+            worker.shutdownGracefully();
         }
     }
 }
