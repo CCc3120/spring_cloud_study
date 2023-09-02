@@ -2,6 +2,7 @@ package com.bingo.test.mainTest.netty.demo1;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
@@ -74,6 +75,21 @@ public class NettyServer {
 
             // 绑定端口并且同步，返回channelFuture对象，启动服务器并绑定端口
             ChannelFuture channelFuture = bootstrap.bind(8088).sync();
+
+            channelFuture.addListener(new ChannelFutureListener() {
+                @Override
+                public void operationComplete(ChannelFuture future) throws Exception {
+                    if (future.isSuccess()) {
+                        // 监听端口成功
+                    }
+                    // future.isDone() // 当前操作是否完成
+                    // future.isSuccess() // 已完成的操作是否成功
+                    // future.cause() // 已完成操作的失败异常
+                    // future.isCancelled() // 已完成的操作是否被取消
+
+
+                }
+            });
 
             // 对关闭通道进行监听
             channelFuture.channel().closeFuture().sync();
