@@ -21,7 +21,7 @@ public interface ISysDictService extends IDictService<SysDictCategory, SysDictDa
      * @Return java.util.List<D>
      * @Date 2023-08-11 09:32
      */
-    List<SysDictData> getDictFormDb(String type);
+    List<SysDictData> getDictFromDb(String type);
 
     /***
      * 查询数据库
@@ -30,7 +30,7 @@ public interface ISysDictService extends IDictService<SysDictCategory, SysDictDa
      * @Return M
      * @Date 2023-08-10 16:17
      */
-    SysDictData getDictFormDb(String code, String type);
+    SysDictData getDictFromDb(String code, String type);
 
     /***
      * 查询数据库
@@ -39,5 +39,5 @@ public interface ISysDictService extends IDictService<SysDictCategory, SysDictDa
      * @Return java.util.Map<C, java.util.List < D>>
      * @Date 2023-08-11 09:33
      */
-    Map<SysDictCategory, List<SysDictData>> getDictFormDb();
+    Map<SysDictCategory, List<SysDictData>> getDictFromDb();
 }

@@ -4,6 +4,7 @@ import com.bingo.study.common.core.utils.DateUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import io.netty.util.AttributeKey;
 
 import java.util.Date;
 
@@ -17,7 +18,7 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<TextWebS
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception {
-        System.out.println("服务器收到消息: " + msg.text());
+        System.out.println("服务器收到消息: " + msg.text() + "====" + ctx.channel().attr(AttributeKey.valueOf("UserId")).get());
 
         // 回复消息
         ctx.channel().writeAndFlush(new TextWebSocketFrame("服务器时间: " + DateUtil.convertDateToString(new Date())));

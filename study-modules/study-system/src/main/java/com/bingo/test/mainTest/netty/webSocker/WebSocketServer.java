@@ -45,6 +45,8 @@ public class WebSocketServer {
                                     // http 在数据传输过程中是分段的, HttpObjectAggregator 可以将多个段聚合起来
                                     // 这就是为什么 浏览器在发送大量数据时, 就会发出多次 http 请求
                                     .addLast(new HttpObjectAggregator(8 * 1024))
+                                    // 鉴权
+                                    .addLast(new AuthHandler())
                                     // 对于 websocker 是以 帧(frame) 形式传递
                                     // 可以看到 WebSocketFrame 下面有六个子类
                                     // 浏览器请求时 ws://localhost:8088/xxx 表示请求的 uri (websocket 请求地址)

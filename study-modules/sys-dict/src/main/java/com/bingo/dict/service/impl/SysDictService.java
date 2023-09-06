@@ -28,21 +28,21 @@ public class SysDictService extends AbstractDictService<SysDictCategory, SysDict
     private ISysDictCategoryService sysDictCategoryService;
 
     @Override
-    public List<SysDictData> getDictFormDb(String type) {
+    public List<SysDictData> getDictFromDb(String type) {
         return sysDictDataService.getSysDictData(type);
     }
 
     @Override
-    public SysDictData getDictFormDb(String code, String type) {
+    public SysDictData getDictFromDb(String code, String type) {
         return sysDictDataService.getSysDictData(code, type);
     }
 
     @Override
-    public Map<SysDictCategory, List<SysDictData>> getDictFormDb() {
+    public Map<SysDictCategory, List<SysDictData>> getDictFromDb() {
         Map<SysDictCategory, List<SysDictData>> rtnMap = new HashMap<>();
         List<SysDictCategory> dictCategoryList = sysDictCategoryService.getSysDictCategory();
         for (SysDictCategory category : dictCategoryList) {
-            rtnMap.put(category, this.getDictFormDb(category.getFdType()));
+            rtnMap.put(category, this.getDictFromDb(category.getFdType()));
         }
         return rtnMap;
     }
