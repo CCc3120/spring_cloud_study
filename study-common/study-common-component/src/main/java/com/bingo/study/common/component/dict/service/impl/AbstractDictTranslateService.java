@@ -26,7 +26,7 @@ public abstract class AbstractDictTranslateService<D extends IDictDataModel>
      * 在大量数据进行翻译的时候，减少redis 网络io次数
      * 定时清理，生效时间 1 分钟
      */
-    private final Map<String, Map<String, D>> LOCAL_CACHE = new ConcurrentHashMap<>();
+    private final Map<String, Map<String, D>> LOCAL_CACHE = new ConcurrentHashMap<>(8);
 
     @Override
     public Optional<D> getDictOpt(String code, String type) {
@@ -35,13 +35,14 @@ public abstract class AbstractDictTranslateService<D extends IDictDataModel>
 
     @Override
     public void dictTran(String code, String type, Consumer<D> consumer) {
-        Map<String, D> dictMap = LOCAL_CACHE.putIfAbsent(type, new ConcurrentHashMap<>());
-        if (dictMap.containsKey(code)) {
-            consumer.accept(dictMap.get(code));
+        Map<String, D> dictMap = this.LOCAL_CACHE.putIfAbsent(type, new ConcurrentHashMap<>());
+        D d = dictMap.get(code);
+        if (d != null) {
+            consumer.accept(d);
         } else {
-            this.getDictOpt(code, type).ifPresent(d -> {
-                dictMap.put(code, d);
-                consumer.accept(d);
+            this.getDictOpt(code, type).ifPresent(data -> {
+                dictMap.put(code, data);
+                consumer.accept(data);
             });
         }
     }

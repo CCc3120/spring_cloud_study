@@ -73,8 +73,7 @@ public abstract class AbstractDictRedisCacheService<C extends IDictCategoryModel
     @Override
     @SuppressWarnings("unchecked")
     public List<D> getDict(String type) {
-        String dataKey = this.getDictKey(DICT_DATA_KEY);
-        return (List<D>) redisService.opsForHash().get(dataKey, type);
+        return (List<D>) redisService.opsForHash().get(this.getDictKey(DICT_DATA_KEY), type);
     }
 
     @Override
@@ -107,17 +106,13 @@ public abstract class AbstractDictRedisCacheService<C extends IDictCategoryModel
 
     @Override
     public void removeDict() {
-        String categoryKey = this.getDictKey(DICT_CATEGORY_KEY);
-        String dataKey = this.getDictKey(DICT_DATA_KEY);
-        redisService.deleteObject(categoryKey);
-        redisService.deleteObject(dataKey);
+        redisService.deleteObject(this.getDictKey(DICT_CATEGORY_KEY));
+        redisService.deleteObject(this.getDictKey(DICT_DATA_KEY));
     }
 
     @Override
     public void removeDict(String type) {
-        String categoryKey = this.getDictKey(DICT_CATEGORY_KEY);
-        String dataKey = this.getDictKey(DICT_DATA_KEY);
-        this.removeDict(type, categoryKey, dataKey);
+        this.removeDict(type, this.getDictKey(DICT_CATEGORY_KEY), this.getDictKey(DICT_DATA_KEY));
     }
 
     private void removeDict(String type, String categoryKey, String dataKey) {
