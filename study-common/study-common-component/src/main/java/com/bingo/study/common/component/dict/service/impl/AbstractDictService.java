@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * 该类是包装一层操作缓存的数据，组合大于继承
@@ -25,7 +27,7 @@ import java.util.Map;
  * @Version 1.0
  */
 public abstract class AbstractDictService<C extends IDictCategoryModel, D extends IDictDataModel>
-        extends AbstractDictTranslateService<D> implements IDictService<C, D> {
+        implements IDictService<C, D> {
 
     @Autowired
     private IDictCacheService<C, D> dictCacheService;
@@ -64,6 +66,16 @@ public abstract class AbstractDictService<C extends IDictCategoryModel, D extend
     @Override
     public void refreshDict(Map<C, List<D>> dictMap) {
         dictCacheService.refreshDict(dictMap);
+    }
+
+    @Override
+    public Optional<D> getDictOpt(String code, String type) {
+        return dictCacheService.getDictOpt(code, type);
+    }
+
+    @Override
+    public void dictTran(String code, String type, Consumer<D> consumer) {
+        dictCacheService.dictTran(code, type, consumer);
     }
 
     @Override
