@@ -3,8 +3,6 @@ package com.bingo.dict.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.bingo.dict.model.SysDictCategory;
 
-import java.util.List;
-
 /**
  * @Author h-bingo
  * @Date 2023-08-17 14:27
@@ -12,11 +10,4 @@ import java.util.List;
  */
 public interface ISysDictCategoryService extends IService<SysDictCategory> {
 
-    /***
-     * 查询所有字典类别
-     * @Param []
-     * @Return java.util.List<com.bingo.dict.model.SysDictCategory>
-     * @Date 2023-08-17 14:51
-     */
-    List<SysDictCategory> getSysDictCategory();
 }
