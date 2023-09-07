@@ -67,4 +67,33 @@ public interface IDictService<C extends IDictCategoryModel, D extends IDictDataM
      * @Date 2023-08-10 16:18
      */
     void refreshDict(Map<C, List<D>> dictMap);
+
+    // *******************************以下三个查询 Db 的方法需要业务自己实现*********************************
+
+    /***
+     * 查询数据库
+     * 查询 指定 type 字典
+     * @Param [type]
+     * @Return java.util.List<D>
+     * @Date 2023-08-11 09:32
+     */
+    List<D> getDictFromDb(String type);
+
+    /***
+     * 查询数据库
+     * 精准查询字典
+     * @Param [code, type]
+     * @Return M
+     * @Date 2023-08-10 16:17
+     */
+    D getDictFromDb(String code, String type);
+
+    /***
+     * 查询数据库
+     * 查询全部字典
+     * @Param []
+     * @Return java.util.Map<C, java.util.List < D>>
+     * @Date 2023-08-11 09:33
+     */
+    Map<C, List<D>> getDictFromDb();
 }

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bingo.dict.dao.SysDictDataMapper;
 import com.bingo.dict.model.SysDictData;
 import com.bingo.dict.service.ISysDictDataService;
+import com.bingo.study.common.component.dict.service.IDictDataDbService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 
 import java.util.List;
@@ -14,10 +15,11 @@ import java.util.List;
  * @Version 1.0
  */
 @ConditionalOnMissingBean(SysDictDataServiceImpl.class)
-public class SysDictDataServiceImpl extends ServiceImpl<SysDictDataMapper, SysDictData> implements ISysDictDataService {
+public class SysDictDataServiceImpl extends ServiceImpl<SysDictDataMapper, SysDictData>
+        implements ISysDictDataService, IDictDataDbService<SysDictData> {
 
     @Override
-    public List<SysDictData> getSysDictData(String type) {
+    public List<SysDictData> getDictDataFromDb(String type) {
         return this.list(
                 this.lambdaQuery()
                         .eq(SysDictData::getFdType, type)
@@ -25,7 +27,7 @@ public class SysDictDataServiceImpl extends ServiceImpl<SysDictDataMapper, SysDi
     }
 
     @Override
-    public SysDictData getSysDictData(String code, String type) {
+    public SysDictData getDictDataFromDb(String code, String type) {
         return this.getOne(
                 this.lambdaQuery()
                         .eq(SysDictData::getFdType, type)
