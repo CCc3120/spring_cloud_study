@@ -47,6 +47,7 @@ public class NettyServer {
                         protected void initChannel(SocketChannel ch) throws Exception {
                             ch.pipeline()
                                     .addLast(new ByteToLongDecoder())
+                                    .addLast(new LongToByteEncoder())
                                     // 添加自己的处理器
                                     .addLast(new NettyServerHandler());
                         }

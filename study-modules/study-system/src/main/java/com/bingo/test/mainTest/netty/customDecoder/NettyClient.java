@@ -41,6 +41,7 @@ public class NettyClient {
                         protected void initChannel(SocketChannel ch) throws Exception {
                             ch.pipeline()
                                     .addLast(new LongToByteEncoder())
+                                    .addLast(new ByteToLongDecoder())
                                     .addLast(new NettyClientHandler())
                             ;
                         }
