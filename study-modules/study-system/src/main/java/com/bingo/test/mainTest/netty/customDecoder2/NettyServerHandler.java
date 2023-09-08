@@ -1,0 +1,24 @@
+package com.bingo.test.mainTest.netty.customDecoder2;
+
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
+
+/**
+ * 自定义一个handler,继承netty 规定好的 handlerAdapter
+ *
+ * @author h-bingo
+ * @date 2023/08/28 19:21
+ **/
+public class NettyServerHandler extends SimpleChannelInboundHandler<Long> {
+
+
+    @Override
+    protected void channelRead0(ChannelHandlerContext ctx, Long msg) throws Exception {
+
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        ctx.close();
+    }
+}
