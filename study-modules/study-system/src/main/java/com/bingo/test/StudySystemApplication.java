@@ -11,7 +11,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @EnableHttpLogInterceptor
 // @EnableRateLimiter
 // @EnableRedisLock
-// @EnableTranslate
 // @EnableDeprecatedInterfaceSee
 // @EnableResponseBodyHandler
 // @ServletComponentScan

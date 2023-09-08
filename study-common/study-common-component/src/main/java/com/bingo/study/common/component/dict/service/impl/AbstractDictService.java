@@ -32,10 +32,10 @@ public abstract class AbstractDictService<C extends IDictCategoryModel, D extend
     @Autowired
     private IDictCacheService<C, D> dictCacheService;
 
-    @Autowired
+    @Autowired(required = false)
     private IDictCategoryDbService<C> dictCategoryDbService;
 
-    @Autowired
+    @Autowired(required = false)
     private IDictDataDbService<D> dictDataDbService;
 
     @Override
