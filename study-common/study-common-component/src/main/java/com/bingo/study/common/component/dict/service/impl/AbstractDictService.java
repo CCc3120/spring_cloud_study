@@ -16,7 +16,7 @@ import java.util.function.Consumer;
  * 该类是包装一层操作缓存的数据，组合大于继承
  * <p>
  * 例：
- * 继承改类，并且注入Spring中，即可使用 {@link IDictService} 接口中的方法
+ * 继承该类，并且注入Spring中，即可使用 {@link IDictService} 接口中的方法
  * 1、字典类型数据 service 需实现 {@link IDictCategoryDbService}
  * 2、字典数据 service 需实现 {@link IDictDataDbService}
  *

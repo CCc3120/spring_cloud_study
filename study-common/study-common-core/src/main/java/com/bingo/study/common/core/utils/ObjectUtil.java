@@ -7,9 +7,7 @@ import org.springframework.aop.support.AopUtils;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 
 /**
  * @author bingo
@@ -158,6 +156,37 @@ public class ObjectUtil {
         } else { // cglib
             return getCglibProxyTargetObject(proxy);
         }
+    }
+
+    /**
+     * 获取类的范型参数，如果没有则返回 null
+     *
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+    public static <T> Class<T> paradigmParameterizedType(Class<?> clazz) {
+        Type[] types = paradigmParameterizedTypes(clazz);
+        if (types == null) {
+            return null;
+        }
+        return (Class<T>) types[0];
+    }
+
+    /**
+     * 获取类的范型参数（数组），如果没有则返回 null
+     *
+     * @param clazz
+     * @return
+     */
+    public static Type[] paradigmParameterizedTypes(Class<?> clazz) {
+        Type type = clazz.getGenericSuperclass();
+        if (type instanceof ParameterizedType) {
+            ParameterizedType parameterizedType = (ParameterizedType) type;
+            return parameterizedType.getActualTypeArguments();
+        }
+        log.info("{} 没有范型参数", clazz.getTypeName());
+        return null;
     }
 
     public static Object getCglibProxyTargetObject(Object proxy) throws Exception {

@@ -104,7 +104,8 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
 
         IndexRequest indexRequest = new IndexRequest()
                 .index(index)
-                .type(type)
+                // es 7 删除了type
+                // .type(type)
                 .id(model.getFdId())
                 // 设置超时时间
                 .timeout(TimeValue.timeValueSeconds(2))
@@ -121,7 +122,8 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
         // 判断是否存在文档
         GetRequest getRequest = new GetRequest()
                 .index(index)
-                .type(type)
+                // es 7 删除了type
+                // .type(type)
                 .id(id)
                 // 不获取返回的_source的上下文
                 .fetchSourceContext(new FetchSourceContext(false))
@@ -136,7 +138,8 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
         // 获取文档
         GetRequest getRequest = new GetRequest()
                 .index(index)
-                .type(type)
+                // es 7 删除了type
+                // .type(type)
                 .id(id);
         GetResponse getResponse = restHighLevelClient.get(getRequest, RequestOptions.DEFAULT);
         String sourceAsString = getResponse.getSourceAsString();
@@ -150,7 +153,8 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
         // 更新文档
         UpdateRequest updateRequest = new UpdateRequest()
                 .index(index)
-                .type(type)
+                // es 7 删除了type
+                // .type(type)
                 .id(model.getFdId())
                 .timeout(TimeValue.timeValueSeconds(1))
                 .doc(jsonString, XContentType.JSON);
@@ -169,7 +173,8 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
         // 删除文档
         DeleteRequest deleteRequest = new DeleteRequest()
                 .index(index)
-                .type(type)
+                // es 7 删除了type
+                // .type(type)
                 .id(id)
                 .timeout(TimeValue.timeValueSeconds(1));
         DeleteResponse deleteResponse = restHighLevelClient.delete(deleteRequest, RequestOptions.DEFAULT);
@@ -231,7 +236,7 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
 
         SearchResponse searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
         //  总数，分页查询可用
-        long totalHits = searchResponse.getHits().getTotalHits();
+        long totalHits = searchResponse.getHits().getTotalHits().value;
         List<T> data = new ArrayList<>();
         for (SearchHit searchHit : searchResponse.getHits().getHits()) {
             data.add(JsonMapper.getInstance().fromJson(searchHit.getSourceAsString(), clazz));
