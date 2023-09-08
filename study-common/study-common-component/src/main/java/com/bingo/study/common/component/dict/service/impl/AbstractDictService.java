@@ -6,12 +6,10 @@ import com.bingo.study.common.component.dict.service.IDictDataDbService;
 import com.bingo.study.common.component.dict.service.IDictService;
 import com.bingo.study.common.core.dict.IDictCategoryModel;
 import com.bingo.study.common.core.dict.IDictDataModel;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -26,6 +24,7 @@ import java.util.function.Consumer;
  * @Date 2023-08-11 10:22
  * @Version 1.0
  */
+@Slf4j
 public abstract class AbstractDictService<C extends IDictCategoryModel, D extends IDictDataModel>
         implements IDictService<C, D> {
 
@@ -80,17 +79,29 @@ public abstract class AbstractDictService<C extends IDictCategoryModel, D extend
 
     @Override
     public List<D> getDictFromDb(String type) {
+        if (dictDataDbService == null) {
+            log.warn("未实现字典Db查询接口 com.bingo.study.common.component.dict.service.IDictDataDbService");
+            return new ArrayList<>();
+        }
         return dictDataDbService.getDictDataFromDb(type);
     }
 
     @Override
     public D getDictFromDb(String code, String type) {
+        if (dictCategoryDbService == null) {
+            log.warn("未实现字典Db查询接口 com.bingo.study.common.component.dict.service.IDictCategoryDbService");
+            return null;
+        }
         return dictDataDbService.getDictDataFromDb(code, type);
     }
 
     @Override
     public Map<C, List<D>> getDictFromDb() {
         Map<C, List<D>> rtnMap = new HashMap<>();
+        if (dictCategoryDbService == null) {
+            log.warn("未实现字典Db查询接口 com.bingo.study.common.component.dict.service.IDictCategoryDbService");
+            return rtnMap;
+        }
         List<C> cList = dictCategoryDbService.getDictCategoryFromDb();
         for (C c : cList) {
             rtnMap.put(c, this.getDictFromDb(c.getFdType()));
