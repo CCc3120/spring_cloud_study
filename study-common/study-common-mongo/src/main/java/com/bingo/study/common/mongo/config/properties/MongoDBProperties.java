@@ -21,4 +21,6 @@ public class MongoDBProperties {
     private String password;
 
     private String database;
+
+    private String authDb;
 }

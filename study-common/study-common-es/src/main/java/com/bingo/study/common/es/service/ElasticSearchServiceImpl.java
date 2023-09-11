@@ -298,7 +298,6 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
 
         SearchResponse searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
 
-        // long totalHits = searchResponse.getHits().getTotalHits(); 总数，分页查询可用
         List<Map<String, Object>> results = new ArrayList<>();
         for (SearchHit searchHit : searchResponse.getHits().getHits()) {
             // 原来的结果

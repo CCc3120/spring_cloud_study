@@ -3,6 +3,8 @@ package com.bingo.study.common.component.nosql.service;
 import com.bingo.study.common.component.nosql.util.NoSqlUtil;
 import com.bingo.study.common.component.nosql.wrapper.NoSqlWrapper;
 import com.bingo.study.common.core.interfaces.IBaseModel;
+import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.UpdateResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -36,7 +38,8 @@ public class MongoUpdateService implements NoSqlService {
 
             NoSqlUtil.buildUpdate(update, wrapper);
 
-            mongoTemplate.updateFirst(query, update, wrapper.getCollection());
+            UpdateResult updateResult = mongoTemplate.updateFirst(query, update, wrapper.getCollection());
+            return updateResult.wasAcknowledged();
         } else {
             mongoTemplate.insert(wrapper.getModel(), wrapper.getCollection());
         }
@@ -50,8 +53,8 @@ public class MongoUpdateService implements NoSqlService {
         NoSqlWrapper wrapper = NoSqlUtil.build(model);
 
         Query query = new Query(Criteria.where("_id").is(wrapper.getModel().getFdId()));
-        mongoTemplate.remove(query, wrapper.getCollection());
-        return true;
+        DeleteResult deleteResult = mongoTemplate.remove(query, wrapper.getCollection());
+        return deleteResult.wasAcknowledged();
     }
 
     private void checkNull() {
