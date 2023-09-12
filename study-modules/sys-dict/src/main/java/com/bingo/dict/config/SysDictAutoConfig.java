@@ -28,7 +28,7 @@ public class SysDictAutoConfig {
     @Bean
     public MapperScannerConfigurer mapperScannerConfigurer(){
         MapperScannerConfigurer mapperScannerConfigurer = new MapperScannerConfigurer();
-        mapperScannerConfigurer.setBasePackage("com.bingo.dict");
+        mapperScannerConfigurer.setBasePackage("com.bingo.dict.dao");
         return mapperScannerConfigurer;
     }
 }

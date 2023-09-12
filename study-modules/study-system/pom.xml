@@ -28,6 +28,12 @@
         <dependency>
             <groupId>com.bingo</groupId>
             <artifactId>study-common-component</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>commons-logging</artifactId>
+                    <groupId>commons-logging</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -127,7 +133,24 @@
             <groupId>io.javalin</groupId>
             <artifactId>javalin</artifactId>
             <version>5.6.1</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>annotations</artifactId>
+                    <groupId>org.jetbrains</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.data</groupId>-->
+<!--            <artifactId>spring-data-jpa</artifactId>-->
+<!--&lt;!&ndash;            <scope>compile</scope>&ndash;&gt;-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.hibernate</groupId>-->
+<!--            <artifactId>ejb3-persistence</artifactId>-->
+<!--            <version>1.0.2.GA</version>-->
+<!--        </dependency>-->
     </dependencies>
 
     <build>

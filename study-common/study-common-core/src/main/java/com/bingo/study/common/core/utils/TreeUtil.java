@@ -19,7 +19,7 @@ public class TreeUtil {
     /**
      * 构造树结构(分组法)
      *
-     * @param treeModelList
+     * @param treeModelList 原始数据列表
      * @return
      */
     public static <T extends IBaseTreeModel> List<T> buildTreeToGroup(List<T> treeModelList) {
@@ -29,10 +29,10 @@ public class TreeUtil {
     /**
      * 构造树结构(分组法)
      *
-     * @param treeModelList
-     * @param sort
-     * @param comparator
-     * @param <T>
+     * @param treeModelList 原始数据列表
+     * @param sort          是否排序
+     * @param comparator    排序器
+     * @param <T>           <类型>
      * @return
      */
     public static <T extends IBaseTreeModel> List<T> buildTreeToGroup(List<T> treeModelList, boolean sort,
@@ -54,8 +54,8 @@ public class TreeUtil {
     /**
      * 递归查找树子集(分组法)
      *
-     * @param treeModelList
-     * @param map
+     * @param treeModelList 原始数据列表
+     * @param map           分组数据
      */
     private static <T extends IBaseTreeModel> void recursionFnTree(List<T> treeModelList,
             Map<String, List<IBaseTreeModel>> map) {
@@ -72,8 +72,8 @@ public class TreeUtil {
     /**
      * 构造树结构(向下查找法)
      *
-     * @param treeModelList
-     * @param <T>
+     * @param treeModelList 原始数据列表
+     * @param <T>           <类型>
      * @return
      */
     public static <T extends IBaseTreeModel> List<T> buildTreeToDown(List<T> treeModelList) {
@@ -83,10 +83,10 @@ public class TreeUtil {
     /**
      * 构造树结构(向下查找法)
      *
-     * @param treeModelList
-     * @param sort
-     * @param comparator
-     * @param <T>
+     * @param treeModelList 原始数据列表
+     * @param sort          是否排序
+     * @param comparator    排序器
+     * @param <T>           <类型>
      * @return
      */
     public static <T extends IBaseTreeModel> List<T> buildTreeToDown(List<T> treeModelList, boolean sort,
@@ -118,9 +118,9 @@ public class TreeUtil {
     /**
      * 递归获取子集
      *
-     * @param treeModelList
-     * @param t
-     * @param <T>
+     * @param treeModelList 原始数据列表
+     * @param t             当前数据
+     * @param <T>           <类型>
      */
     private static <T extends IBaseTreeModel> void recursionFnTree(List<T> treeModelList, T t) {
         // 获取子节点列表
@@ -136,9 +136,9 @@ public class TreeUtil {
     /**
      * 查找子节点
      *
-     * @param treeModelList
-     * @param t
-     * @param <T>
+     * @param treeModelList 原始数据列表
+     * @param t             当前数据
+     * @param <T>           <类型>
      * @return
      */
     private static <T extends IBaseTreeModel> List<T> getChirldList(List<T> treeModelList, T t) {
@@ -154,8 +154,8 @@ public class TreeUtil {
     /**
      * 构造树结构(向上查找法)
      *
-     * @param treeModelList
-     * @param <T>
+     * @param treeModelList 原始数据列表
+     * @param <T>           <类型>
      * @return
      */
     public static <T extends IBaseTreeModel> List<T> buildTreeToUp(List<T> treeModelList) {
@@ -165,10 +165,10 @@ public class TreeUtil {
     /**
      * 构造树结构(向上查找法)
      *
-     * @param treeModelList
-     * @param sort
-     * @param comparator
-     * @param <T>
+     * @param treeModelList 原始数据列表
+     * @param sort          是否排序
+     * @param comparator    排序器
+     * @param <T>           <类型>
      * @return
      */
     public static <T extends IBaseTreeModel> List<T> buildTreeToUp(List<T> treeModelList, boolean sort,
@@ -189,8 +189,8 @@ public class TreeUtil {
     /**
      * 递归查找父级(向上查找法)
      *
-     * @param map
-     * @param <T>
+     * @param map 分组数据
+     * @param <T> <类型>
      * @return
      */
     private static <T extends IBaseTreeModel> List<T> recursionFnTree(Map<String, T> map) {

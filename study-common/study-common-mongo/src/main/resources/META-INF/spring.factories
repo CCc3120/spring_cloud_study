@@ -1,3 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.bingo.study.common.mongo.config.MongoDBConfig,\
-com.bingo.study.common.mongo.config.MongoDBReadyListener
+com.bingo.study.common.mongo.config.MongoDBConfig

@@ -9,6 +9,9 @@ import com.bingo.study.common.core.utils.SFunction;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * es 7.4 中，可以移除 type 参数
+ */
 public interface ElasticSearchService {
 
     /**
