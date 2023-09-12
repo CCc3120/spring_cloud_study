@@ -9,6 +9,8 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.util.concurrent.DefaultEventExecutorGroup;
+import io.netty.util.concurrent.EventExecutorGroup;
 
 /**
  * @author h-bingo
@@ -49,6 +51,11 @@ public class NettyServer {
                             // 每一个新的连接都会走这个初始化方法,并且 SocketChannel 就是当前用户的连接
                             // 可以在此将 SocketChannel 添加都指定的容器中进行管理, 方便及时推送信息
 
+                            // 方式一 自定义普通任务
+                            // ch.eventLoop().execute(() -> {
+                            //
+                            // });
+
                             // ch.eventLoop().submit(() -> {
                             //
                             //
@@ -66,9 +73,14 @@ public class NettyServer {
                             //
                             // }, 1000, TimeUnit.SECONDS);
 
+                            EventExecutorGroup eventExecutors = new DefaultEventExecutorGroup(16);
+
                             ch.pipeline()
+                                    // 给处理器添加指定的线程池处理, 实现整真正的耗时 i/o 异步
+                                    // .addLast(eventExecutors, new NettyServerHandler())
                                     // 添加自己的处理器
-                                    .addLast(new NettyServerHandler());
+                                    .addLast(new NettyServerHandler())
+                            ;
                         }
                     })
             ;
