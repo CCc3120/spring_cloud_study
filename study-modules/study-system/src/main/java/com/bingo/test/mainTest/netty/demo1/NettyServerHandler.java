@@ -8,8 +8,6 @@ import io.netty.util.CharsetUtil;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import io.netty.util.concurrent.EventExecutorGroup;
 
-import java.util.concurrent.Callable;
-
 /**
  * 自定义一个handler,继承netty 规定好的 handlerAdapter
  *
@@ -35,9 +33,9 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
 
         // ByteBuf 是 netty 提供的, 不是 nio 的 ByteBuffer
         ByteBuf byteBuf = (ByteBuf) msg;
-
         System.out.println("客户端发送的消息: " + byteBuf.toString(CharsetUtil.UTF_8));
         System.out.println("客户端地址: " + ctx.channel().remoteAddress());
+        ctx.writeAndFlush(Unpooled.copiedBuffer("hello, 客户端~", CharsetUtil.UTF_8));
 
         // 方式一 自定义普通任务
         // ctx.channel().eventLoop().execute(() -> {
@@ -65,25 +63,25 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
 
 
         // handler 中使用自己的线程池, 这样就不会阻塞 netty 的 i/o 线程
-        Callable<Object> task = new Callable<Object>() {
-            @Override
-            public Object call() throws Exception {
-                byte[] bytes = new byte[byteBuf.readableBytes()];
-                byteBuf.readBytes(bytes);
+        // Callable<Object> task = new Callable<Object>() {
+        //     @Override
+        //     public Object call() throws Exception {
+        //         byte[] bytes = new byte[byteBuf.readableBytes()];
+        //         byteBuf.readBytes(bytes);
+        //
+        //         System.out.println(new String(bytes, CharsetUtil.UTF_8));
+        //         System.out.println("thread name " + Thread.currentThread());
+        //
+        //         // 该步骤会将这个任务交给 i/o 线程
+        //         ctx.writeAndFlush(Unpooled.copiedBuffer("hello, 客户端~", CharsetUtil.UTF_8));
+        //         return "end";
+        //     }
+        // };
+        // EVENT_EXECUTORS.submit(task);
 
-                System.out.println(new String(bytes, CharsetUtil.UTF_8));
-                System.out.println("thread name " + Thread.currentThread());
-
-                // 该步骤会将这个任务交给 i/o 线程
-                ctx.writeAndFlush(Unpooled.copiedBuffer("hello, 客户端~", CharsetUtil.UTF_8));
-                return "end";
-            }
-        };
-        EVENT_EXECUTORS.submit(task);
-
-        Object call = task.call();
-
-        System.out.println("call: " + call);
+        // Object call = task.call();
+        //
+        // System.out.println("call: " + call);
     }
 
     // 定义自己的线程池

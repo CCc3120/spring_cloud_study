@@ -73,13 +73,14 @@ public class NettyServer {
                             //
                             // }, 1000, TimeUnit.SECONDS);
 
+                            // 创建业务线程池
                             EventExecutorGroup eventExecutors = new DefaultEventExecutorGroup(16);
 
                             ch.pipeline()
                                     // 给处理器添加指定的线程池处理, 实现整真正的耗时 i/o 异步
-                                    // .addLast(eventExecutors, new NettyServerHandler())
+                                    .addLast(eventExecutors, new NettyServerHandler())
                                     // 添加自己的处理器
-                                    .addLast(new NettyServerHandler())
+                                    // .addLast(new NettyServerHandler())
                             ;
                         }
                     })
