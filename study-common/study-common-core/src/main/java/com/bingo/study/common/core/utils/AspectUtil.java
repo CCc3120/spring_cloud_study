@@ -4,7 +4,10 @@ import cn.hutool.core.collection.CollectionUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.core.annotation.AnnotationUtils;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,5 +42,19 @@ public class AspectUtil {
         }
         res.append(")");
         return res.toString();
+    }
+
+    /***
+     * 获取方法上的注解，如果没有则找方法类上的注解
+     * @Param [method, clazz]
+     * @Return T
+     * @Date 2023-09-14 14:49
+     */
+    public static <T extends Annotation> T getMethodAnnotation(Method method, Class<T> clazz) {
+        T annotation = AnnotationUtils.findAnnotation(method, clazz);
+        if (annotation == null) {
+            annotation = AnnotationUtils.findAnnotation(method.getDeclaringClass(), clazz);
+        }
+        return annotation;
     }
 }

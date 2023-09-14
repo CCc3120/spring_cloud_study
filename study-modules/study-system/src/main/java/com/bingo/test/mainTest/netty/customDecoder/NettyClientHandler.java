@@ -31,6 +31,6 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<Long> {
     protected void channelRead0(ChannelHandlerContext ctx, Long msg) throws Exception {
         System.out.println("msg= " + msg);
 
-        ctx.writeAndFlush(984651L);
+        // ctx.writeAndFlush(984651L);
     }
 }

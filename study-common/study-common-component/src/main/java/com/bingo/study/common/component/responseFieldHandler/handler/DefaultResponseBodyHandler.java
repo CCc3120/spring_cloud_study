@@ -1,4 +1,4 @@
-package com.bingo.study.common.component.responseBodyHandle.handler;
+package com.bingo.study.common.component.responseFieldHandler.handler;
 
 import com.bingo.study.common.core.utils.JsonMapper;
 import lombok.extern.slf4j.Slf4j;

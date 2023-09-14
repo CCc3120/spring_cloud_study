@@ -10,6 +10,9 @@ import java.util.function.Consumer;
  */
 public interface CodeDescEnum<T> extends DescEnum, CodeEnum<T> {
 
+    String CODE_KEY = "code";
+    String DESC_KEY = "desc";
+
     static <T> Optional<CodeDescEnum<T>> getEnumOpt(T code, CodeDescEnum<T>[] enums) {
         if (code == null || enums == null) {
             return Optional.empty();
@@ -31,8 +34,8 @@ public interface CodeDescEnum<T> extends DescEnum, CodeEnum<T> {
         List<Map<String, Object>> list = new ArrayList<>();
         for (CodeDescEnum<T> anEnum : enums) {
             Map<String, Object> map = new HashMap<>();
-            map.put("code", anEnum.getCode());
-            map.put("desc", anEnum.getDesc());
+            map.put(CODE_KEY, anEnum.getCode());
+            map.put(DESC_KEY, anEnum.getDesc());
             list.add(map);
         }
         return list;

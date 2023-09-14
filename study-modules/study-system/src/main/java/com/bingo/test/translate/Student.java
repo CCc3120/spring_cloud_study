@@ -2,7 +2,7 @@ package com.bingo.test.translate;
 
 import com.bingo.study.common.component.dict.translate.annotation.Translate;
 import com.bingo.study.common.component.dict.translate.constant.TranslateType;
-import com.bingo.study.common.component.responseBodyHandle.IgnoreField;
+import com.bingo.study.common.component.responseFieldHandler.IgnoreField;
 import lombok.Data;
 
 /**

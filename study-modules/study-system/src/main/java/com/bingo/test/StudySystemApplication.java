@@ -1,24 +1,27 @@
 package com.bingo.test;
 
+import com.bingo.study.common.component.deprecatedInterface.annotation.EnableDeprecatedInterfaceSee;
 import com.bingo.study.common.component.httpLog.EnableHttpLogInterceptor;
+import com.bingo.study.common.component.limiter.annotation.EnableRateLimiter;
+import com.bingo.study.common.component.lock.annotation.EnableRedisLock;
+import com.bingo.study.common.component.responseFieldHandler.annotation.EnableResponseFieldHandler;
+import com.bingo.study.common.datasource.annotation.EnableDynamicDB;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 
 // @EnableAspectJAutoProxy // 启用AOP，springboot自动装配所以不用加
 // @EnableDynamicTransaction
-// @EnableDynamicDB
+@EnableDynamicDB
 @EnableHttpLogInterceptor
-// @EnableRateLimiter
-// @EnableRedisLock
-// @EnableDeprecatedInterfaceSee
-// @EnableResponseBodyHandler
+@EnableRateLimiter
+@EnableRedisLock
+@EnableDeprecatedInterfaceSee
+@EnableResponseFieldHandler
 // @ServletComponentScan
 // @SpringBootApplication(exclude = {DruidDataSourceAutoConfigure.class})
 // @EnableRetry // 启用spring retry 功能
 @SpringBootApplication
-// @EnableMongoRepositories(basePackages = {"com.bingo.test.esAndMongo"})
 public class StudySystemApplication {
 
     public static void main(String[] args) {

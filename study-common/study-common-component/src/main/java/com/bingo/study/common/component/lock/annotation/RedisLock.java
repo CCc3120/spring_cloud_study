@@ -17,7 +17,8 @@ import java.lang.annotation.*;
 public @interface RedisLock {
 
     /**
-     * 值为 true时 ：取 {@link LockKey} 标记的参数作为加锁key值的一部分，配合 {@link LockKey} 使用
+     * 值为 true时 ：取 {@link LockKey} 标记的参数作为加锁key值的一部分
+     * 配合 {@link LockKey} 或 {@link RedisLock#paramName()} 使用， {@link RedisLock#paramName()} 的优先级高
      * <p>
      * 值为 false时：任何情况都对整个方法加锁
      * <p>
@@ -39,7 +40,16 @@ public @interface RedisLock {
      *
      * @return
      */
-    String key() default "";
+    String keyPrefix() default "";
+
+    /**
+     * 通过EL表达式解析参数作为 redis key 的一部分
+     * <p>
+     * 一般用户对某个具体的数据进行加锁
+     *
+     * @return
+     */
+    String paramName() default "";
 
     /**
      * 最大等待时间，单位：ms，默认100秒
