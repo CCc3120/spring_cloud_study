@@ -1,5 +1,6 @@
 package com.bingo.study.common.component.lock.aspect;
 
+import cn.hutool.core.util.ArrayUtil;
 import com.bingo.common.redis.util.RedisKeyUtil;
 import com.bingo.study.common.component.lock.LockType;
 import com.bingo.study.common.component.lock.RedisLockCallBack;
@@ -20,6 +21,11 @@ import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
+import org.springframework.expression.Expression;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -45,22 +51,22 @@ public class RedisLockAspect implements InitializingBean {
     private RedissonClient redissonClient;
 
     @Pointcut("@annotation(com.bingo.study.common.component.lock.annotation.RedisLock)")
-    public void redisLock() {
+    public void pointcut() {
     }
 
-    @Around(value = "redisLock()&&@annotation(lock)")
+    @Around(value = "pointcut()&&@annotation(lock)")
     public Object doAround(ProceedingJoinPoint joinPoint, RedisLock lock) throws Throwable {
-        Object lockId = checkParam(joinPoint, lock);
-        String lockKey = getLockKey(joinPoint, lockId, lock);
+        String lockId = this.getLockId(joinPoint, lock);
+        String lockKey = this.getLockKey(joinPoint, lockId, lock);
 
         if (lock.lockType() == LockType.MUTEX) {
-            return doLock(joinPoint, 0, lock.leaseTime(), lockKey, joinPoint::proceed);
+            return this.doLock(joinPoint, 0, lock.leaseTime(), lockKey, joinPoint::proceed);
         } else if (lock.lockType() == LockType.AUTO_RENEWAL_MUTEX) {
-            return doLock(joinPoint, 0, -1, lockKey, joinPoint::proceed);
+            return this.doLock(joinPoint, 0, -1, lockKey, joinPoint::proceed);
         } else if (lock.lockType() == LockType.SYNC) {
-            return doLock(joinPoint, lock.waitTime(), lock.leaseTime(), lockKey, joinPoint::proceed);
+            return this.doLock(joinPoint, lock.waitTime(), lock.leaseTime(), lockKey, joinPoint::proceed);
         } else if (lock.lockType() == LockType.AUTO_RENEWAL_SYNC) {
-            return doLock(joinPoint, lock.waitTime(), -1, lockKey, joinPoint::proceed);
+            return this.doLock(joinPoint, lock.waitTime(), -1, lockKey, joinPoint::proceed);
         }
         String methodName = AspectUtil.getMethodIntactName(joinPoint);
         log.warn("RedisLock锁类型异常[{}]", methodName);
@@ -83,7 +89,7 @@ public class RedisLockAspect implements InitializingBean {
                 throw new RedisLockException(String.format("RedisLock获取锁失败[%s]", methodName));
             }
         } finally {
-            unLock(rLock);
+            this.unLock(rLock);
         }
     }
 
@@ -100,7 +106,7 @@ public class RedisLockAspect implements InitializingBean {
      * @Return void
      * @Date 2023-04-25 11:02
      */
-    private Object checkParam(ProceedingJoinPoint joinPoint, RedisLock lock) {
+    private String getLockId(ProceedingJoinPoint joinPoint, RedisLock lock) {
         if (!lock.singleton()) {
             return null;
         }
@@ -109,45 +115,63 @@ public class RedisLockAspect implements InitializingBean {
         MethodSignature ms = (MethodSignature) joinPoint.getSignature();
         Method method = ms.getMethod();
         Parameter[] parameters = method.getParameters();
-        if (parameters != null && parameters.length > 0) {
-            for (int i = 0; i < parameters.length; i++) {
-                LockKey annotation = parameters[i].getAnnotation(LockKey.class);
-                if (annotation != null) {
-                    if (StringUtils.isBlank(annotation.alias())) {
-                        return args[i];
+        if (StringUtils.isNotBlank(lock.paramName())) {
+            ExpressionParser parser = new SpelExpressionParser();
+            StandardEvaluationContext context = new StandardEvaluationContext();
+            LocalVariableTableParameterNameDiscoverer localVariableTable =
+                    new LocalVariableTableParameterNameDiscoverer();
+            String[] parameterNameArr = localVariableTable.getParameterNames(method);
+            if (ArrayUtil.isNotEmpty(parameterNameArr)) {
+                for (int i = 0; i < parameterNameArr.length; i++) {
+                    context.setVariable(parameterNameArr[i], args[i]);
+                }
+                Expression expression = parser.parseExpression(lock.paramName());
+                return expression.getValue(context, String.class);
+            }
+        } else {
+            if (parameters != null && parameters.length > 0) {
+                for (int i = 0; i < parameters.length; i++) {
+                    LockKey annotation = parameters[i].getAnnotation(LockKey.class);
+                    if (annotation != null) {
+                        if (StringUtils.isBlank(annotation.alias())) {
+                            return args[i].toString();
+                        }
+                        @SuppressWarnings("rawtypes")
+                        HashMap hashMap =
+                                JsonMapper.getInstance().fromJson(JsonMapper.getInstance().toJsonString(args[i]),
+                                        HashMap.class);
+                        return hashMap.get(annotation.alias()).toString();
                     }
-                    HashMap hashMap =
-                            JsonMapper.getInstance().fromJson(JsonMapper.getInstance().toJsonString(args[i]),
-                                    HashMap.class);
-                    return hashMap.get(annotation.alias());
                 }
             }
         }
+
         String methodName = AspectUtil.getMethodIntactName(joinPoint);
-        log.error("缺少 @LockKey 标识的唯一参数，method = {}，args = {}", methodName, Arrays.toString(args));
+        log.error("缺少 paramName 属性 或 @LockKey 标识的唯一参数，method = {}，args = {}", methodName, Arrays.toString(args));
         throw new RedisLockException("缺少 @LockKey 标识的唯一参数");
     }
 
     /**
      * 如果 {@link RedisLock#singleton()} 为false
-     * key 组成 applicationName + {@link RedisLockAspect#REDIS_KEY_PREFIX} + {@link RedisLock#key()}
+     * key 组成 applicationName + {@link RedisLockAspect#REDIS_KEY_PREFIX} + {@link RedisLock#keyPrefix()}
      * <p>
      * 如果 {@link RedisLock#singleton()} 为true
-     * key 组成 applicationName + {@link RedisLockAspect#REDIS_KEY_PREFIX} + {@link RedisLock#key()} + 方法 @LockKey 参数
+     * key 组成 applicationName + {@link RedisLockAspect#REDIS_KEY_PREFIX} + {@link RedisLock#keyPrefix()} +
+     * 方法 @LockKey 参数
      * <p>
-     * {@link RedisLock#key()} 为空则用方法名取代
+     * {@link RedisLock#keyPrefix()} ()} 为空则用方法名取代
      *
      * @Param [joinPoint, lockId, lock]
      * @Return java.lang.String
      * @Date 2023-04-25 10:54
      */
-    private String getLockKey(ProceedingJoinPoint joinPoint, Object lockId, RedisLock lock) throws NoSuchMethodException {
+    private String getLockKey(ProceedingJoinPoint joinPoint, String lockId, RedisLock lock) {
         StringBuilder key = new StringBuilder(REDIS_KEY_PREFIX);
 
-        if (StringUtils.isBlank(lock.key())) {
+        if (StringUtils.isBlank(lock.keyPrefix())) {
             key.append(AspectUtil.getMethodIntactName(joinPoint));
         } else {
-            key.append(lock.key());
+            key.append(lock.keyPrefix());
         }
 
         if (lock.singleton()) {

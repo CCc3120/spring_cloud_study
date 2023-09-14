@@ -1,4 +1,4 @@
-package com.bingo.study.common.component.responseBodyHandle.handler;
+package com.bingo.study.common.component.responseFieldHandler.handler;
 
 import org.springframework.core.Ordered;
 

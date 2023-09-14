@@ -3,7 +3,7 @@ package com.bingo.test.translate;
 import com.bingo.study.common.component.dict.translate.constant.TranslateType;
 import com.bingo.study.common.component.dict.translate.util.TranslateUtil;
 import com.bingo.study.common.component.dict.translate.wrapper.TranslateFieldWrapper;
-import com.bingo.study.common.component.responseBodyHandle.IgnoreField;
+import com.bingo.study.common.component.responseFieldHandler.IgnoreField;
 import com.bingo.study.common.core.dict.IDictDataModel;
 
 import java.util.ArrayList;

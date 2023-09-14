@@ -1,9 +1,10 @@
-package com.bingo.study.common.component.responseBodyHandle;
+package com.bingo.study.common.component.responseFieldHandler;
 
 import cn.hutool.core.util.ArrayUtil;
-import com.bingo.study.common.component.responseBodyHandle.annotation.ResponseBodyHandleMark;
-import com.bingo.study.common.component.responseBodyHandle.handler.DefaultResponseBodyHandler;
-import com.bingo.study.common.component.responseBodyHandle.handler.ResponseBodyHandler;
+import com.bingo.study.common.component.responseFieldHandler.annotation.ResponseField;
+import com.bingo.study.common.component.responseFieldHandler.handler.DefaultResponseBodyHandler;
+import com.bingo.study.common.component.responseFieldHandler.handler.ResponseBodyHandler;
+import com.bingo.study.common.core.utils.AspectUtil;
 import com.bingo.study.common.core.utils.JsonMapper;
 import com.bingo.study.common.core.web.response.RSX;
 import com.bingo.study.common.core.web.response.RSXFactory;
@@ -12,7 +13,6 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.core.MethodParameter;
-import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServerHttpRequest;
@@ -20,8 +20,6 @@ import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 import java.util.List;
 
 /**
@@ -32,6 +30,7 @@ import java.util.List;
  * @Version 1.0
  */
 @Slf4j
+@SuppressWarnings({"rawtypes", "unchecked"})
 @ControllerAdvice
 @ConditionalOnMissingBean(DefaultResponseBodyWrapperFilter.class)
 public class DefaultResponseBodyWrapperFilter implements ResponseBodyAdvice<Object>, InitializingBean {
@@ -55,21 +54,21 @@ public class DefaultResponseBodyWrapperFilter implements ResponseBodyAdvice<Obje
             Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request,
             ServerHttpResponse response) {
 
-        ResponseBodyHandleMark responseBodyHandleMark = getMethodAnnotation(returnType.getMethod(),
-                ResponseBodyHandleMark.class);
+        ResponseField responseField = AspectUtil.getMethodAnnotation(returnType.getMethod(),
+                ResponseField.class);
 
         if (body instanceof RSX) {
             RSX rsx = (RSX) body;
-            rsx.setData(process(rsx.getData(), responseBodyHandleMark));
+            rsx.setData(this.process(rsx.getData(), responseField));
             return rsx;
         } else {
-            Object data = process(body, responseBodyHandleMark);
+            Object data = this.process(body, responseField);
             if (body instanceof String) {
-                if (responseBodyHandleMark == null || responseBodyHandleMark.wrapper()) {
+                if (responseField == null || responseField.wrapper()) {
                     return JsonMapper.getInstance().toJsonString(RSXFactory.success(data));
                 }
             } else {
-                if (responseBodyHandleMark == null || responseBodyHandleMark.wrapper()) {
+                if (responseField == null || responseField.wrapper()) {
                     return RSXFactory.success(data);
                 }
             }
@@ -77,17 +76,17 @@ public class DefaultResponseBodyWrapperFilter implements ResponseBodyAdvice<Obje
         }
     }
 
-    private Object process(Object data, ResponseBodyHandleMark responseBodyHandleMark) {
+    private Object process(Object data, ResponseField responseField) {
         if (data == null) {
             return null;
-        } else if (responseBodyHandleMark == null) {
-            return processIgnore(data, defaultIgnore);
-        } else if (!responseBodyHandleMark.filedFilter()) {
+        } else if (responseField == null) {
+            return this.processIgnore(data, defaultIgnore);
+        } else if (!responseField.filedFilter()) {
             return data;
-        } else if (responseBodyHandleMark.specify().length > 0) {
-            return processSpecify(data, responseBodyHandleMark.specify());
+        } else if (responseField.specify().length > 0) {
+            return this.processSpecify(data, responseField.specify());
         } else {
-            return processIgnore(data, responseBodyHandleMark.ignore());
+            return this.processIgnore(data, responseField.ignore());
         }
     }
 
@@ -115,14 +114,6 @@ public class DefaultResponseBodyWrapperFilter implements ResponseBodyAdvice<Obje
             }
         }
         return defaultResponseBodyHandler.ignore(obj, ignore);
-    }
-
-    private <T extends Annotation> T getMethodAnnotation(Method method, Class<T> clazz) {
-        T annotation = AnnotationUtils.findAnnotation(method, clazz);
-        if (annotation == null) {
-            annotation = AnnotationUtils.findAnnotation(method.getDeclaringClass(), clazz);
-        }
-        return annotation;
     }
 
     @Override

@@ -52,22 +52,22 @@ public class RateLimiterAspect implements InitializingBean {
     private LimitUserFactory limitUserFactory;
 
     @Pointcut("@annotation(com.bingo.study.common.component.limiter.annotation.RateLimiter)")
-    public void rateLimiter() {
+    public void pointcut() {
     }
 
-    @Before("rateLimiter()&&@annotation(limiter)")
+    @Before("pointcut()&&@annotation(limiter)")
     public void doBefore(JoinPoint point, RateLimiter limiter) {
         if (LimitRealize.TOKEN_BUCKET == limiter.limitRealize()) { // 令牌桶
-            tokenBucket(point, limiter);
+            this.tokenBucket(point, limiter);
         } else if (LimitRealize.FIXED_WINDOW == limiter.limitRealize()) { // 固定窗口
-            fixedWindow(point, limiter);
+            this.fixedWindow(point, limiter);
         } else if (LimitRealize.SLIDING_WINDOW == limiter.limitRealize()) { // 滑动窗口
-            slidingWindow(point, limiter);
+            this.slidingWindow(point, limiter);
         }
     }
 
     private void tokenBucket(JoinPoint point, RateLimiter limiter) {
-        String redisLimiterKey = getRedisLimiterKey(point, limiter);
+        String redisLimiterKey = this.getRedisLimiterKey(point, limiter);
         RRateLimiter rateLimiter = redissonClient.getRateLimiter(redisLimiterKey);
 
         if (!rateLimiter.isExists()) {
@@ -92,7 +92,7 @@ public class RateLimiterAspect implements InitializingBean {
     }
 
     private void fixedWindow(JoinPoint point, RateLimiter limiter) {
-        String redisLimiterKey = getRedisLimiterKey(point, limiter);
+        String redisLimiterKey = this.getRedisLimiterKey(point, limiter);
         Long number = redisService.redisTemplate().execute(redisScript, Collections.singletonList(redisLimiterKey),
                 limiter.count(), limiter.time());
         if (number != null && number > limiter.count()) {
@@ -102,7 +102,7 @@ public class RateLimiterAspect implements InitializingBean {
     }
 
     private void slidingWindow(JoinPoint point, RateLimiter limiter) {
-        String redisLimiterKey = getRedisLimiterKey(point, limiter);
+        String redisLimiterKey = this.getRedisLimiterKey(point, limiter);
         long currentTime = SystemClock.now();
         Set<Object> range = redisService.opsForZSet().rangeByScore(redisLimiterKey,
                 currentTime - limiter.time() * 1000, currentTime);

@@ -30,10 +30,10 @@ public class DeprecatedInterfaceSeeAspect implements InitializingBean {
     private static final String DEPRECATED_INTERFACE_TIP = "接口已失效，请使用：%s";
 
     @Pointcut("@annotation(com.bingo.study.common.component.deprecatedInterface.annotation.DeprecatedInterfaceSee)")
-    public void interfaceSee() {
+    public void pointcut() {
     }
 
-    @Around(value = "interfaceSee()&&@annotation(deprecatedInterfaceSee)")
+    @Around(value = "pointcut()&&@annotation(deprecatedInterfaceSee)")
     public Object doAround(ProceedingJoinPoint joinPoint, DeprecatedInterfaceSee deprecatedInterfaceSee)
             throws Throwable {
         Object proceed = joinPoint.proceed();
@@ -59,19 +59,19 @@ public class DeprecatedInterfaceSeeAspect implements InitializingBean {
 
                     if (feignClient != null) {
                         rsx.setMessage(String.format(DEPRECATED_INTERFACE_TIP,
-                                feignClient.path() + getRequestMappingValue(requestMapping)));
+                                feignClient.path() + this.getRequestMappingValue(requestMapping)));
                         return proceed;
                     }
 
                     RequestMapping typeMapping = deprecatedInterfaceSee.clazz().getAnnotation(RequestMapping.class);
                     if (typeMapping != null) {
                         rsx.setMessage(String.format(DEPRECATED_INTERFACE_TIP,
-                                getRequestMappingValue(typeMapping) + getRequestMappingValue(requestMapping)));
+                                this.getRequestMappingValue(typeMapping) + this.getRequestMappingValue(requestMapping)));
                         return proceed;
                     }
 
                     rsx.setMessage(String.format(DEPRECATED_INTERFACE_TIP,
-                            getRequestMappingValue(requestMapping)));
+                            this.getRequestMappingValue(requestMapping)));
                     return proceed;
                 }
             }

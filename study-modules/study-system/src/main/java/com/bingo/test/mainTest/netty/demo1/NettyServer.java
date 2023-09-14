@@ -5,7 +5,6 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -27,8 +26,11 @@ public class NettyServer {
         // workerLoopGroup 处理客户端业务
         // bossLoopGroup 和 workerLoopGroup 含有的子线程个数 默认是 cpu 核数 * 2
         // boss组线程用不到8,可以自己设置线程数
-        EventLoopGroup bossLoopGroup = new NioEventLoopGroup(1);
-        EventLoopGroup workerLoopGroup = new NioEventLoopGroup();
+        NioEventLoopGroup bossLoopGroup = new NioEventLoopGroup(1);
+        // 调优参数，io与非io处理时间占比，（0-100）越大表示 io 时间占比越高
+        bossLoopGroup.setIoRatio(50);
+
+        NioEventLoopGroup workerLoopGroup = new NioEventLoopGroup();
 
         try {
             // 服务启动器
