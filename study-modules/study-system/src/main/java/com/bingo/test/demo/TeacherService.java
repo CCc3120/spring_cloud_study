@@ -48,7 +48,7 @@ public class TeacherService extends AbstractNoSqlUpdate {
     // @Autowired
     // private SpringUtil springUtil;
 
-    @RedisLock(singleton = true, lockType = LockType.AUTO_RENEWAL_MUTEX, key = "testLock")
+    @RedisLock(singleton = true, lockType = LockType.AUTO_RENEWAL_MUTEX, keyPrefix = "testLock")
     public String testLock(Teacher teacher, @LockKey String fdId) throws InterruptedException {
         log.info(Thread.currentThread().getName() + "===执行中");
         Thread.sleep(3 * 1000);
