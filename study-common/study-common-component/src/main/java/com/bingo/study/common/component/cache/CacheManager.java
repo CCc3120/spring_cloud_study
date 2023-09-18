@@ -8,9 +8,9 @@ import java.util.concurrent.TimeUnit;
 
 public class CacheManager {
 
-    private String cacheType;
+    private final String cacheType;
 
-    private static Map<String, Cache> cacheMap = new ConcurrentHashMap<>();
+    private static final Map<String, Cache> cacheMap = new ConcurrentHashMap<>();
 
     private CacheManager(String cacheType) {
         this.cacheType = cacheType;

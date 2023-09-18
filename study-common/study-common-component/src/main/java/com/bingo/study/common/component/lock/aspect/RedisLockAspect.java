@@ -175,7 +175,7 @@ public class RedisLockAspect implements InitializingBean {
         }
 
         if (lock.singleton()) {
-            key.append(":").append(lockId);
+            key.append(RedisKeyUtil.SEPARATOR_COLON).append(lockId);
         }
 
         return RedisKeyUtil.getCacheKey(key.toString(), false, true);

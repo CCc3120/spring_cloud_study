@@ -23,6 +23,19 @@ import java.util.Map;
 public class TestMainClass {
     public static void main(String[] args) throws Exception {
 
+    }
+
+    static int test04(int n) {
+        try {
+            return 5 / n;
+        } catch (Exception exception) {
+            return 1;
+        } finally {
+            return 0;
+        }
+    }
+
+    public void test04() throws NoSuchMethodException {
         // AntPathMatcher matcher = new AntPathMatcher();
         // System.out.println(matcher.match("{uuid}", "xxxx"));
         // Map<String, String> result = matcher.extractUriTemplateVariables("{uuid}", "xxx");

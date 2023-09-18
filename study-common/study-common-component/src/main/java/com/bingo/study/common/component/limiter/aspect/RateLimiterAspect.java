@@ -129,16 +129,16 @@ public class RateLimiterAspect implements InitializingBean {
     private String getRedisLimiterKey(JoinPoint point, RateLimiter limiter) {
         StringBuilder builder = new StringBuilder(LIMITER_KEY);
         builder.append(AspectUtil.getMethodIntactName(point));
-        builder.append(":").append(limiter.limitRealize().name());
+        builder.append(RedisKeyUtil.SEPARATOR_COLON).append(limiter.limitRealize().name());
 
         if (limiter.limitType() == LimitType.IP) {
-            builder.append(":").append(IPUtil.getIpAddr(ServletUtil.getRequest()));
+            builder.append(RedisKeyUtil.SEPARATOR_COLON).append(IPUtil.getIpAddr(ServletUtil.getRequest()));
         } else if (limiter.limitType() == LimitType.USER) {
             if (limitUserFactory == null) {
                 log.warn("未实现获取用户id方法: {}", LimitUserFactory.class.getTypeName());
                 throw new RateLimiterException("未实现获取用户id方法");
             }
-            builder.append(":").append(limitUserFactory.getUserId());
+            builder.append(RedisKeyUtil.SEPARATOR_COLON).append(limitUserFactory.getUserId());
         }
 
         return RedisKeyUtil.getCacheKey(builder.toString(), false, true);

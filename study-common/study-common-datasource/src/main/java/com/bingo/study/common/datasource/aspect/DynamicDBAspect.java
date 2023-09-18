@@ -32,10 +32,10 @@ public class DynamicDBAspect implements InitializingBean {
      */
     @Pointcut("@within(com.bingo.study.common.datasource.annotation.DynamicDB)" +
             "||@annotation(com.bingo.study.common.datasource.annotation.DynamicDB)")
-    public void dynamicDB() {
+    public void pointcut() {
     }
 
-    @Around("dynamicDB()&&@annotation(db)")
+    @Around("pointcut()&&@annotation(db)")
     public Object doAround(ProceedingJoinPoint joinPoint, DynamicDB db) throws Throwable {
         db = getDynamicDB(joinPoint, db);
 
