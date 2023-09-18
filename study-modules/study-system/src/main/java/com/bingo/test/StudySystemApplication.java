@@ -1,8 +1,8 @@
 package com.bingo.test;
 
-import com.bingo.study.common.component.responseFieldHandler.annotation.EnableResponseFieldHandler;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 
 
 // @EnableAspectJAutoProxy // 启用AOP，springboot自动装配所以不用加
@@ -12,7 +12,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 // @EnableRateLimiter
 // @EnableRedisLock
 // @EnableDeprecatedInterfaceSee
-@EnableResponseFieldHandler
+// @EnableResponseFieldHandler
+// @EnableNoSql
 // @ServletComponentScan
 // @SpringBootApplication(exclude = {DruidDataSourceAutoConfigure.class})
 // @EnableRetry // 启用spring retry 功能

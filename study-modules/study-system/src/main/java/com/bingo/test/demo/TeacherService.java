@@ -33,7 +33,7 @@ public class TeacherService extends AbstractNoSqlUpdate {
     @Autowired(required = false)
     private MongoTemplate mongoTemplate;
 
-    @Autowired
+    @Autowired(required = false)
     private ElasticSearchService elasticSearchService;
 
     // @Autowired

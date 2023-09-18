@@ -24,12 +24,10 @@ import java.util.List;
 @Service
 public class EsAndMongoModelService extends AbstractNoSqlUpdate {
 
-    @Autowired
+    @Autowired(required = false)
     private ElasticSearchService elasticSearchService;
-    @Autowired
+    @Autowired(required = false)
     private MongoTemplate mongoTemplate;
-    @Autowired
-    private EsAndMongoModelRepository esAndMongoModelRepository;
 
     public void insert(EsAndMongoModel model) {
         this.updateNoSql(model);

@@ -12,7 +12,6 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -29,7 +28,6 @@ import java.time.Duration;
  * @date 2022-04-11 16:01
  */
 @EnableCaching // 开启缓存注解
-@Configuration
 @ConditionalOnMissingBean(RedisConfig.class)
 // org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration优先该类中的RedisTemplate的bean，
 // bean中就不会在此初始化了@ConditionalOnMissingBean(name = "redisTemplate")

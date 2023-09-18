@@ -3,8 +3,6 @@ package com.bingo.common.redis.util;
 import com.bingo.study.common.core.utils.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.stereotype.Component;
 
 /**
  * redis key 操作工具类
@@ -14,8 +12,6 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @SuppressWarnings("unused")
-@Component
-@ConditionalOnMissingBean(RedisKeyUtil.class)
 public class RedisKeyUtil {
 
     /**

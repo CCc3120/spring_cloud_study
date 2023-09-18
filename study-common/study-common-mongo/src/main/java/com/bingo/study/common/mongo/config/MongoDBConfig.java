@@ -11,9 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoClientDatabaseFactory;
@@ -28,10 +27,9 @@ import java.util.Collections;
  * @Date 2023-04-23 11:48
  * @Version 1.0
  */
-@Configuration
-@Import(MongoDBProperties.class)
 @ConditionalOnMissingBean(MongoDBConfig.class)
 @AutoConfigureBefore(MongoAutoConfiguration.class)
+@EnableConfigurationProperties(MongoDBProperties.class)
 public class MongoDBConfig {
 
     @Autowired

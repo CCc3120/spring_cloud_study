@@ -21,7 +21,7 @@ import java.util.Map;
  * @Version 1.0
  */
 // @Component
-@Import({DynamicDBProviderImpl.class})
+@Import({DefaultDynamicDBProvider.class})
 @AutoConfigureBefore({DruidDataSourceAutoConfigure.class})
 public class DynamicDataSource extends AbstractRoutingDataSource {
 

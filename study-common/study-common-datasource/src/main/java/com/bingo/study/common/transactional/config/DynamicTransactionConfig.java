@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Bean;
 @ConditionalOnMissingBean(DynamicTransactionConfig.class)
 public class DynamicTransactionConfig {
 
-
     @Bean
     @ConditionalOnMissingBean(DynamicTransactionManager.class)
     public DynamicTransactionManager dynamicTransactionManager() {

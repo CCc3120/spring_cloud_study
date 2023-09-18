@@ -1,5 +1,6 @@
 package com.bingo.study.common.component.limiter.annotation;
 
+import com.bingo.common.redis.config.EnableRedis;
 import com.bingo.study.common.component.limiter.aspect.RateLimiterAspect;
 import org.springframework.context.annotation.Import;
 
@@ -14,5 +15,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Import({RateLimiterAspect.class})
+@EnableRedis
 public @interface EnableRateLimiter {
 }

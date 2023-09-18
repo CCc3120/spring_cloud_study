@@ -1,8 +1,6 @@
 package com.bingo.common.redis.service;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.data.redis.core.*;
-import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
@@ -15,8 +13,6 @@ import java.util.concurrent.TimeUnit;
  * @Version 1.0
  */
 @SuppressWarnings({"unused"})
-@Component
-@ConditionalOnMissingBean(RedisService.class)
 public class RedisService {
 
     private final RedisTemplate<Object, Object> redisTemplate;

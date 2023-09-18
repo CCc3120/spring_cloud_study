@@ -15,6 +15,8 @@ import java.util.Set;
 
 /**
  * 采用redis 双Map缓存字典数据，分别缓存 IDictCategoryModel 和 IDictDataModel
+ * <p>
+ * 依赖 Redis 服务
  *
  * @Author h-bingo
  * @Date 2023-08-10 16:19
@@ -28,7 +30,7 @@ public abstract class AbstractDictRedisCacheService<C extends IDictCategoryModel
 
     private static final String DICT_DATA_KEY = "dict:%s:dictData";
 
-    @Autowired
+    @Autowired(required = false)
     private RedisService redisService;
 
     /***

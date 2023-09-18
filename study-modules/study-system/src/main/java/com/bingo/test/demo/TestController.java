@@ -31,7 +31,7 @@ import java.util.*;
 @RequestMapping(path = "/test")
 public class TestController {
 
-    @Autowired
+    @Autowired(required = false)
     private RedisService redisService;
 
     @Autowired
@@ -40,7 +40,7 @@ public class TestController {
     // @Autowired
     // private IDictCacheService dictCacheService;
 
-    @Autowired
+    @Autowired(required = false)
     private RedissonClient redissonClient;
 
     @Autowired

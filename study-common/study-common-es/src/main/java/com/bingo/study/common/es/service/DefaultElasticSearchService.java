@@ -2,11 +2,11 @@ package com.bingo.study.common.es.service;
 
 
 import com.bingo.study.common.core.interfaces.IBaseModel;
-import com.bingo.study.common.core.web.page.PageResult;
 import com.bingo.study.common.core.utils.FieldUtil;
 import com.bingo.study.common.core.utils.JsonMapper;
 import com.bingo.study.common.core.utils.SFunction;
 import com.bingo.study.common.core.utils.StringUtil;
+import com.bingo.study.common.core.web.page.PageResult;
 import com.bingo.study.common.core.web.request.BaseSearchModel;
 import com.bingo.study.common.es.constant.ElasticSearchConstant;
 import lombok.extern.slf4j.Slf4j;
@@ -41,8 +41,6 @@ import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,9 +50,7 @@ import java.util.Map;
  * es7.0以下版本，不允许一个index下有多个type
  */
 @Slf4j
-@Service
-@ConditionalOnMissingBean(ElasticSearchServiceImpl.class)
-public class ElasticSearchServiceImpl implements ElasticSearchService {
+public class DefaultElasticSearchService implements ElasticSearchService {
 
     @Autowired
     private RestHighLevelClient restHighLevelClient;

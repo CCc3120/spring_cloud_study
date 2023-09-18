@@ -7,7 +7,7 @@ import com.bingo.study.common.datasource.properties.DynamicDBProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
@@ -21,9 +21,9 @@ import java.util.Map;
  * @Version 1.0
  */
 @Slf4j
-@Import(DynamicDBProperties.class)
-@ConditionalOnMissingBean({DynamicDBProviderImpl.class})
-public class DynamicDBProviderImpl implements DynamicDBProvider {
+@EnableConfigurationProperties(DynamicDBProperties.class)
+@ConditionalOnMissingBean({DefaultDynamicDBProvider.class})
+public class DefaultDynamicDBProvider implements DynamicDBProvider {
 
     @Autowired
     private DynamicDBProperties dynamicDBProperties;

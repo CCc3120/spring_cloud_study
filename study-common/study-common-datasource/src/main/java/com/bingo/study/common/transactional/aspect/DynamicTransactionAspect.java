@@ -30,10 +30,10 @@ public class DynamicTransactionAspect implements InitializingBean {
 
     @Pointcut("@within(com.bingo.study.common.transactional.annotation.DynamicTransaction)" +
             "||@annotation(com.bingo.study.common.transactional.annotation.DynamicTransaction)")
-    public void dynamicTransaction() {
+    public void pointcut() {
     }
 
-    @Around("dynamicTransaction()&&@annotation(dt)")
+    @Around("pointcut()&&@annotation(dt)")
     public Object doAround(ProceedingJoinPoint joinPoint, DynamicTransaction dt) throws Throwable {
         dt = getDynamicTransaction(joinPoint, dt);
 

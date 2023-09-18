@@ -1,6 +1,7 @@
 package com.bingo.study.common.mongo.config.properties;
 
 import lombok.Data;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -10,6 +11,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @Data
 @ConfigurationProperties(prefix = "mongodb")
+@ConditionalOnMissingBean(MongoDBProperties.class)
 public class MongoDBProperties {
 
     private String host;

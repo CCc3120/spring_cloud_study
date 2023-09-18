@@ -2,8 +2,8 @@ package com.bingo.study.common.datasource.properties;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import lombok.Data;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 
 import java.util.Map;
 
@@ -13,7 +13,7 @@ import java.util.Map;
  * @Version 1.0
  */
 @Data
-@Configuration
+@ConditionalOnMissingBean(DynamicDBProperties.class)
 @ConfigurationProperties(prefix = "spring.datasource.druid")
 public class DynamicDBProperties {
 

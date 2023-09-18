@@ -1,2 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.bingo.study.common.component.nosql.config.NoSqlAutoConfig
