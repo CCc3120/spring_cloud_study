@@ -2,7 +2,6 @@ package com.bingo.test;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 
 
 // @EnableAspectJAutoProxy // 启用AOP，springboot自动装配所以不用加

@@ -9,9 +9,9 @@ import com.bingo.study.common.core.enums.CodeDescEnum;
  */
 public enum RSXStatusEnum implements CodeDescEnum<String> {
 
-    SUCCESS_STATUS("SUCCESS", "操作成功"),
+    SUCCESS_STATUS("SUCCESS", "请求成功"),
 
-    FAIL_STATUS("FAIL", "操作失败"),
+    FAIL_STATUS("FAIL", "请求失败"),
 
     ERROR_STATUS("ERROR", "系统错误"),
     ;

@@ -7,7 +7,6 @@ import com.bingo.study.common.core.web.model.TimeModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -18,7 +17,7 @@ import java.util.List;
  * @Version 1.0
  */
 @Data
-public class BaseSearchModel extends TimeModel implements IOrderModel, IPageModel, ISearchModel, Serializable {
+public class BaseSearchModel extends TimeModel implements IOrderModel, IPageModel, ISearchModel {
 
     @ApiModelProperty("搜索内容")
     private String searchContent;

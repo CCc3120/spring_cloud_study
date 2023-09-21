@@ -1,5 +1,8 @@
 package com.bingo.test.demo;
 
+import io.netty.util.concurrent.DefaultEventExecutorGroup;
+import io.netty.util.concurrent.EventExecutorGroup;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +19,7 @@ public class FutureTest {
 
     public static ExecutorService executorService = Executors.newFixedThreadPool(10);
 
+    static EventExecutorGroup EVENT_EXECUTORS = new DefaultEventExecutorGroup(16);
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         // test1();
         //
@@ -32,6 +36,16 @@ public class FutureTest {
         // test7();
         //
         // test8();
+
+        ExecutorService fixedThreadPool = Executors.newFixedThreadPool(16);
+        CompletableFuture.supplyAsync(new Supplier<String>() {
+            @Override
+            public String get() {
+
+                return "";
+            }
+        }, fixedThreadPool);
+
 
 
         List<String> orderNo = new ArrayList<>();
