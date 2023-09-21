@@ -177,6 +177,11 @@
             <version>31.0.1-jre</version>
             <classifier></classifier>
         </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>transmittable-thread-local</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

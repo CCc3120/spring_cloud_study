@@ -3,7 +3,6 @@ package com.bingo.study.common.component.lock.aspect;
 import cn.hutool.core.util.ArrayUtil;
 import com.bingo.common.redis.util.RedisKeyUtil;
 import com.bingo.study.common.component.lock.LockType;
-import com.bingo.study.common.component.lock.RedisLockCallBack;
 import com.bingo.study.common.component.lock.annotation.LockKey;
 import com.bingo.study.common.component.lock.annotation.RedisLock;
 import com.bingo.study.common.component.lock.exception.RedisLockException;
@@ -60,21 +59,21 @@ public class RedisLockAspect implements InitializingBean {
         String lockKey = this.getLockKey(joinPoint, lockId, lock);
 
         if (lock.lockType() == LockType.MUTEX) {
-            return this.doLock(joinPoint, 0, lock.leaseTime(), lockKey, joinPoint::proceed);
+            return this.doLock(joinPoint, 0, lock.leaseTime(), lockKey);
         } else if (lock.lockType() == LockType.AUTO_RENEWAL_MUTEX) {
-            return this.doLock(joinPoint, 0, -1, lockKey, joinPoint::proceed);
+            return this.doLock(joinPoint, 0, -1, lockKey);
         } else if (lock.lockType() == LockType.SYNC) {
-            return this.doLock(joinPoint, lock.waitTime(), lock.leaseTime(), lockKey, joinPoint::proceed);
+            return this.doLock(joinPoint, lock.waitTime(), lock.leaseTime(), lockKey);
         } else if (lock.lockType() == LockType.AUTO_RENEWAL_SYNC) {
-            return this.doLock(joinPoint, lock.waitTime(), -1, lockKey, joinPoint::proceed);
+            return this.doLock(joinPoint, lock.waitTime(), -1, lockKey);
         }
         String methodName = AspectUtil.getMethodIntactName(joinPoint);
         log.warn("RedisLock锁类型异常[{}]", methodName);
         throw new RedisLockException(String.format("RedisLock锁类型异常[%s]", methodName));
     }
 
-    private Object doLock(ProceedingJoinPoint joinPoint, long waitTime, long leaseTime, String lockKey,
-            RedisLockCallBack callBack) throws Throwable {
+    private Object doLock(ProceedingJoinPoint joinPoint, long waitTime, long leaseTime, String lockKey)
+            throws Throwable {
         log.info("RedisLock Key: {}", lockKey);
 
         RLock rLock = redissonClient.getLock(lockKey);
@@ -82,7 +81,7 @@ public class RedisLockAspect implements InitializingBean {
             boolean tryLock = rLock.tryLock(waitTime, leaseTime, TimeUnit.MILLISECONDS);
             if (tryLock) {
                 // 执行方法
-                return callBack.doWork();
+                return joinPoint.proceed();
             } else {
                 String methodName = AspectUtil.getMethodIntactName(joinPoint);
                 log.info("RedisLock获取锁失败[{}]", methodName);

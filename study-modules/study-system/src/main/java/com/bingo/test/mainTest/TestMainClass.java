@@ -1,6 +1,7 @@
 package com.bingo.test.mainTest;
 
 import com.bingo.study.common.component.lock.annotation.LockKey;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
@@ -14,6 +15,10 @@ import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author h-bingo
@@ -21,7 +26,42 @@ import java.util.Map;
  * @Version 1.0
  */
 public class TestMainClass {
+    /*
+       table A                     table B
+           a_id    a_name              b_id    a_id    b_name      b_head      b_tail      b_create_time
+           b_update_time
+            1       张三                 1       1       b王五         a           c        2023-09-19 11:03
+            2023-09-19 11:03
+            2       李四                 2       1       b赵六         b           d        2023-09-19 11:04
+            2023-09-19 11:05
+                                        3       1       b赵七         r           x        2023-09-19 11:05
+                                        2023-09-19 11:07
+
+           问：如何查询出 A 数据，条件是在B表中有关联的数据, 且b_head存在值为a的，b_tail存在d的，
+                   并且把 b_head值为a的 b_create_time（最小一个b_create_time）
+                   和 b_tail值为d的 b_update_time（最大一个b_update_time）的差值计算出来，具体到分钟
+
+
+        */
     public static void main(String[] args) throws Exception {
+        test05();
+    }
+
+    static void test05() {
+        ThreadFactory lightTaskExecuteFactory = new com.google.common.util.concurrent.ThreadFactoryBuilder().setNameFormat("powerjob-worker-light-task-execute-%d").build();
+
+        // new ThreadFactory()
+
+        ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("").build();
+        ThreadPoolExecutor threadPoolExecutor =
+                new ThreadPoolExecutor(
+                        2,
+                        16,
+                        3000,
+                        TimeUnit.MINUTES,
+                        new LinkedBlockingQueue(8096),
+                        threadFactory);
+
 
     }
 

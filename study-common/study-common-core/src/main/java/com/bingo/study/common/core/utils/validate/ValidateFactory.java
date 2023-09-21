@@ -2,7 +2,7 @@ package com.bingo.study.common.core.utils.validate;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ReflectUtil;
-import com.bingo.study.common.core.utils.ProcessResult;
+import com.bingo.study.common.core.utils.BusinessResult;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -43,9 +43,9 @@ public class ValidateFactory {
         return this;
     }
 
-    public ProcessResult<String> validate() {
+    public BusinessResult<String> validate() {
         if (validateFieldMap.isEmpty()) {
-            return ProcessResult.success();
+            return BusinessResult.success();
         }
 
         StringBuilder errMsg = new StringBuilder();
@@ -53,7 +53,7 @@ public class ValidateFactory {
 
         }
 
-        return ProcessResult.success();
+        return BusinessResult.success();
     }
 
     private boolean canInstance(Class<?> clazz) {
@@ -61,7 +61,7 @@ public class ValidateFactory {
                 && !Modifier.isAbstract(clazz.getModifiers());
     }
 
-    private ProcessResult<FieldInfo> getFieldInfo(String fieldName) {
+    private BusinessResult<FieldInfo> getFieldInfo(String fieldName) {
         Object obj = this.validateObj;
         Field field = null;
         String[] split = fieldName.split("\\.");
@@ -74,39 +74,39 @@ public class ValidateFactory {
                 }
                 if (obj == null) {
                     // 如果是接口或抽象类中的属性，则跳过验证
-                    return ProcessResult.fail();
+                    return BusinessResult.fail();
                 }
             }
         } catch (InstantiationException | IllegalAccessException e) {
-            return ProcessResult.fail();
+            return BusinessResult.fail();
         }
-        return ProcessResult.success(new FieldInfo(field, obj));
+        return BusinessResult.success(new FieldInfo(field, obj));
     }
 
-    private ProcessResult<String> validateField(ValidateField validateField) throws InstantiationException,
+    private BusinessResult<String> validateField(ValidateField validateField) throws InstantiationException,
             IllegalAccessException {
         List<ValidateType> validateTypeList = validateField.getValidateTypeList();
         if (CollectionUtil.isEmpty(validateTypeList) || StringUtils.isBlank(validateField.getFieldName())) {
-            return ProcessResult.success();
+            return BusinessResult.success();
         }
 
-        ProcessResult<FieldInfo> fieldInfo = getFieldInfo(validateField.getFieldName());
+        BusinessResult<FieldInfo> fieldInfo = getFieldInfo(validateField.getFieldName());
         if (!fieldInfo.isSuccess()) {
-            return ProcessResult.success();
+            return BusinessResult.success();
         }
         Field field = fieldInfo.getResult().getField();
         Object fieldValue = fieldInfo.getResult().getFieldValue();
         for (ValidateType validateType : validateTypeList) {
             if (validateType == ValidateType.NOT_NULL) {
                 if (fieldValue == null) {
-                    return ProcessResult.fail(String.format(validateType.getMessage(), validateField.getFieldDesc(),
+                    return BusinessResult.fail(String.format(validateType.getMessage(), validateField.getFieldDesc(),
                             validateField.getFieldName()));
                 }
             } else if (validateType == ValidateType.NOT_BLANK) {
                 if (field.getType().getTypeName().equals(String.class.getTypeName())) {
                     String stringValue = (String) fieldValue;
                     if (StringUtils.isBlank(stringValue)) {
-                        return ProcessResult.fail(String.format(validateType.getMessage(), validateField.getFieldDesc(),
+                        return BusinessResult.fail(String.format(validateType.getMessage(), validateField.getFieldDesc(),
                                 validateField.getFieldName()));
                     }
                 }
@@ -115,14 +115,14 @@ public class ValidateFactory {
                     if (field.getType().getTypeName().equals(String.class.getTypeName())) {
                         String stringValue = (String) fieldValue;
                         if (StringUtils.isNotBlank(stringValue) && stringValue.length() > validateField.getMaxLength()) {
-                            return ProcessResult.fail(String.format(validateType.getMessage(),
+                            return BusinessResult.fail(String.format(validateType.getMessage(),
                                     validateField.getFieldDesc(), validateField.getFieldName(),
                                     validateField.getMaxLength()));
                         }
                     } else if (field.getType().newInstance() instanceof Collection) {
                         Collection<?> collectionValue = (Collection<?>) fieldValue;
                         if (collectionValue != null && collectionValue.size() > validateField.getMaxLength()) {
-                            return ProcessResult.fail(String.format(validateType.getMessage(),
+                            return BusinessResult.fail(String.format(validateType.getMessage(),
                                     validateField.getFieldDesc(), validateField.getFieldName(),
                                     validateField.getMaxLength()));
                         }
@@ -133,14 +133,14 @@ public class ValidateFactory {
                     if (field.getType().getTypeName().equals(String.class.getTypeName())) {
                         String stringValue = (String) fieldValue;
                         if (StringUtils.isNotBlank(stringValue) && stringValue.length() < validateField.getMinLength()) {
-                            return ProcessResult.fail(String.format(validateType.getMessage(),
+                            return BusinessResult.fail(String.format(validateType.getMessage(),
                                     validateField.getFieldDesc(), validateField.getFieldName(),
                                     validateField.getMaxLength()));
                         }
                     } else if (field.getType().newInstance() instanceof Collection) {
                         Collection<?> collectionValue = (Collection<?>) fieldValue;
                         if (collectionValue != null && collectionValue.size() < validateField.getMinLength()) {
-                            return ProcessResult.fail(String.format(validateType.getMessage(),
+                            return BusinessResult.fail(String.format(validateType.getMessage(),
                                     validateField.getFieldDesc(), validateField.getFieldName(),
                                     validateField.getMaxLength()));
                         }
@@ -152,7 +152,7 @@ public class ValidateFactory {
                     String stringValue = (String) fieldValue;
                     boolean matches = stringValue.matches(validateField.getRegex());
                     if (!matches) {
-                        return ProcessResult.fail(String.format(validateType.getMessage(),
+                        return BusinessResult.fail(String.format(validateType.getMessage(),
                                 validateField.getFieldDesc(), validateField.getFieldName()));
                     }
                 }
@@ -174,7 +174,7 @@ public class ValidateFactory {
                 }
             }
         }
-        return ProcessResult.success();
+        return BusinessResult.success();
     }
 
     @Data

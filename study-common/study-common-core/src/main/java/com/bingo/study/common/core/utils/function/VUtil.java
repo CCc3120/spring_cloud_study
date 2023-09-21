@@ -1,9 +1,5 @@
-package com.bingo.study.common.core.utils;
+package com.bingo.study.common.core.utils.function;
 
-
-import com.bingo.study.common.core.utils.function.BooleanHandlerFunction;
-import com.bingo.study.common.core.utils.function.PresentOrElseHandlerFunction;
-import com.bingo.study.common.core.utils.function.ThrowExceptionFunction;
 
 import java.util.Objects;
 import java.util.Optional;

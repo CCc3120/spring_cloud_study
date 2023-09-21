@@ -38,6 +38,7 @@
         <elasticsearch.version>7.4.0</elasticsearch.version>
         <springfox.version>3.0.0</springfox.version>
         <redission.version>3.17.6</redission.version>
+        <transmittable-thread-local.version>2.14.2</transmittable-thread-local.version>
         <netty.version>4.1.6.Final</netty.version>
     </properties>
 
@@ -184,6 +185,12 @@
                 <groupId>org.redisson</groupId>
                 <artifactId>redisson-spring-boot-starter</artifactId>
                 <version>${redission.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>transmittable-thread-local</artifactId>
+                <version>${transmittable-thread-local.version}</version>
             </dependency>
 
             <dependency>

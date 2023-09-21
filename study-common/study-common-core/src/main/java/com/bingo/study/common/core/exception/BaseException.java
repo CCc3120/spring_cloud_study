@@ -19,17 +19,17 @@ public abstract class BaseException extends RuntimeException {
     /**
      * 异常模块
      */
-    private String module;
+    private final String module;
 
     /**
      * 异常代码
      */
-    private String code;
+    private final String code;
 
     /**
      * 异常描述
      */
-    private String desc;
+    private final String desc;
 
     public BaseException(String message, String module, ExceptionType exceptionType) {
         super(message);

@@ -1,4 +1,4 @@
-package com.bingo.study.common.core.utils;
+package com.bingo.study.common.core.utils.tree;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.bingo.study.common.core.interfaces.IBaseTreeModel;
