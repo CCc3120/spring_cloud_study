@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.util.ReflectionUtils;
-import org.springframework.web.servlet.mvc.condition.PatternsRequestCondition;
-import org.springframework.web.servlet.mvc.condition.RequestMethodsRequestCondition;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
@@ -43,13 +41,21 @@ public class ControllerRegisterConfiguration {
         // 找到处理该路由的方法
         Method targetMethod = ReflectionUtils.findMethod(registerEnum.getBeanClass(), registerEnum.getMethodName(),
                 registerEnum.getParamClass());
+        if (targetMethod == null) {
+            return;
+        }
 
-        PatternsRequestCondition patternsRequestCondition = new PatternsRequestCondition(registerEnum.getPath());
-        RequestMethodsRequestCondition requestMethodsRequestCondition =
-                new RequestMethodsRequestCondition(registerEnum.getRequestMethod());
+        // PatternsRequestCondition patternsRequestCondition = new PatternsRequestCondition(registerEnum.getPath());
+        // RequestMethodsRequestCondition requestMethodsRequestCondition =
+        //         new RequestMethodsRequestCondition(registerEnum.getRequestMethod());
         // 构造RequestMappingInfo对象
-        RequestMappingInfo requestMappingInfo = new RequestMappingInfo(patternsRequestCondition,
-                requestMethodsRequestCondition, null, null, null, null, null);
+        // RequestMappingInfo requestMappingInfo = new RequestMappingInfo(patternsRequestCondition,
+        //         requestMethodsRequestCondition, null, null, null, null, null);
+        RequestMappingInfo requestMappingInfo = RequestMappingInfo
+                .paths(registerEnum.getPath())
+                .methods(registerEnum.getRequestMethod())
+                .build();
+
         // 注册映射处理
         mapping.registerMapping(requestMappingInfo, SpringUtil.getBean(registerEnum.getBeanClass()), targetMethod);
     }

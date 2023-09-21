@@ -44,8 +44,8 @@ public class TranslateUtil {
         if (CollectionUtil.isEmpty(list)) {
             return;
         }
-
-        if (list.size() > BATCH_SIZE * 10) {
+        // 默认的 8 倍以上就用多线程处理
+        if (list.size() >= BATCH_SIZE << 3) {
             ThreadUtil.groupHandle(list, BATCH_SIZE, ts -> ts.forEach(t -> translate(t, dictTranslateService)));
         } else {
             list.forEach(t -> translate(t, dictTranslateService));

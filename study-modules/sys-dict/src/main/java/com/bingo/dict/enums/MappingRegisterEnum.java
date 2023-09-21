@@ -4,6 +4,7 @@ import com.bingo.dict.controller.SysDictCategoryController;
 import com.bingo.dict.controller.SysDictDataController;
 import com.bingo.dict.model.SysDictCategory;
 import com.bingo.dict.model.SysDictData;
+import lombok.Getter;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
  * @Date 2023-08-17 16:12
  * @Version 1.0
  */
+@Getter
 public enum MappingRegisterEnum {
 
     // ***************************SysDictDataController***************************** //
@@ -72,28 +74,4 @@ public enum MappingRegisterEnum {
      * 映射处理方法参数类型数组
      */
     private Class<?>[] paramClass;
-
-    public String getName() {
-        return name;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public Class<?> getBeanClass() {
-        return beanClass;
-    }
-
-    public String getMethodName() {
-        return methodName;
-    }
-
-    public RequestMethod getRequestMethod() {
-        return requestMethod;
-    }
-
-    public Class<?>[] getParamClass() {
-        return paramClass;
-    }
 }
