@@ -8,6 +8,7 @@ import com.bingo.study.common.component.dict.translate.constant.TranslateType;
 import com.bingo.study.common.component.dict.translate.wrapper.TranslateFieldWrapper;
 import com.bingo.study.common.core.dict.IDictDataModel;
 import com.bingo.study.common.core.enums.CodeDescEnum;
+import com.bingo.study.common.core.utils.thread.ThreadUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -29,6 +30,9 @@ public class TranslateUtil {
 
     private static final Map<Class<?>, List<TranslateFieldWrapper>> TRAN_FIELD_CACHE = new ConcurrentHashMap<>();
 
+    // 分组处理大小
+    private static final int BATCH_SIZE = 500;
+
     /***
      * 翻译列表
      * @Param [list, dictTranslateService]
@@ -40,8 +44,11 @@ public class TranslateUtil {
         if (CollectionUtil.isEmpty(list)) {
             return;
         }
-        for (T t : list) {
-            translate(t, dictTranslateService);
+
+        if (list.size() > BATCH_SIZE * 10) {
+            ThreadUtil.groupHandle(list, BATCH_SIZE, ts -> ts.forEach(t -> translate(t, dictTranslateService)));
+        } else {
+            list.forEach(t -> translate(t, dictTranslateService));
         }
     }
 
@@ -67,14 +74,12 @@ public class TranslateUtil {
                 // 枚举翻译
                 CodeDescEnum.enumTran(ReflectUtil.getFieldValue(t, fieldWrapper.getField()),
                         getEnumValues(fieldWrapper.getEnumClass()),
-                        codeDescEnum -> ReflectUtil.setFieldValue(t, fieldWrapper.getFullField(),
-                                codeDescEnum.getDesc()));
+                        e -> ReflectUtil.setFieldValue(t, fieldWrapper.getFullField(), e.getDesc()));
             } else if (fieldWrapper.getTranslateType() == TranslateType.DICT && dictTranslateService != null) {
                 // 字典翻译
                 dictTranslateService.dictTran((String) ReflectUtil.getFieldValue(t, fieldWrapper.getField()),
                         fieldWrapper.getDictType(),
-                        dictDataModel -> ReflectUtil.setFieldValue(t, fieldWrapper.getFullField(),
-                                dictDataModel.getFdName()));
+                        m -> ReflectUtil.setFieldValue(t, fieldWrapper.getFullField(), m.getFdName()));
             }
         }
     }
@@ -96,13 +101,14 @@ public class TranslateUtil {
         }
 
         // 类翻译字段缓存
-        if (TRAN_FIELD_CACHE.containsKey(obj.getClass())) {
-            return TRAN_FIELD_CACHE.get(obj.getClass());
+        List<TranslateFieldWrapper> wrapperList = TRAN_FIELD_CACHE.get(obj.getClass());
+        if (wrapperList != null) {
+            return wrapperList;
         }
 
-        List<TranslateFieldWrapper> list = getTranslateField(obj.getClass());
-        TRAN_FIELD_CACHE.put(obj.getClass(), list);
-        return list;
+        wrapperList = getTranslateField(obj.getClass());
+        TRAN_FIELD_CACHE.put(obj.getClass(), wrapperList);
+        return wrapperList;
     }
 
     /**

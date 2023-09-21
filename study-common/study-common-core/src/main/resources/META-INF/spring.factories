@@ -1,2 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.bingo.study.common.core.utils.SpringUtil
+com.bingo.study.common.core.utils.SpringUtil,\
+com.bingo.study.common.core.utils.thread.ThreadPoolManager

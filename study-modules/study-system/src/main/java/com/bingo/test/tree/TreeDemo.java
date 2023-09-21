@@ -1,6 +1,6 @@
 package com.bingo.test.tree;
 
-import com.bingo.study.common.core.utils.TreeUtil;
+import com.bingo.study.common.core.utils.tree.TreeUtil;
 import com.google.common.base.Stopwatch;
 
 import java.util.*;
